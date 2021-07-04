@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { api } from "./useApi";
 
 export type Season = {
   id: number;
@@ -21,7 +22,7 @@ const initialState: SeasonState = {
 };
 
 export const fetchSeasons = createAsyncThunk("seasons/fetchSeasons", async () => {
-  const response = await fetch("https://localhost:5001/api/v2/seasons");
+  const response = await fetch(`${api}/api/v2/seasons`);
   return (await response.json()).result as Season[];
 });
 

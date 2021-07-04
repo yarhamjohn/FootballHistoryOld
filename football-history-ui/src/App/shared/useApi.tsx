@@ -13,4 +13,9 @@ const ApiProvider: FunctionComponent = (props) => {
 
 const useApi = () => useContext(ApiContext);
 
+export const api =
+  process.env.NODE_ENV === "development"
+    ? "https://localhost:5001"
+    : "https://football-history-api.azurewebsites.net";
+
 export { ApiProvider, useApi };

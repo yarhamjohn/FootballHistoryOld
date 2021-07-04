@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { api } from "./useApi";
 
 export type Team = {
   id: number;
@@ -22,7 +23,7 @@ const initialState: TeamState = {
 };
 
 export const fetchTeams = createAsyncThunk("teams/fetchTeams", async () => {
-  const response = await fetch("https://localhost:5001/api/v2/teams");
+  const response = await fetch(`${api}/api/v2/teams`);
   return (await response.json()).result as Team[];
 });
 
