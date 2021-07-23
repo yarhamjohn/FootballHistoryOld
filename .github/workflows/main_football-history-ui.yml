@@ -23,9 +23,11 @@ jobs:
 
     - name: yarn install, build, and test
       working-directory: ./football-history-ui
+      env:
+        CI: false # Avoid treating warnings as errors (default = true)
       run: |
         yarn install
-        CI=false yarn run build
+        yarn run build
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
