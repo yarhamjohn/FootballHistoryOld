@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - football-history-api
+name: Build and deploy Football History Api
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
         name: api-test-results
         path: APITestResults
       if: ${{ always() }}
-      
+
     - name: Publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
