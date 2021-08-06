@@ -5,12 +5,13 @@ import { AppHeader } from "./components/AppHeader";
 import { TeamPage } from "./TeamPage";
 import { Icon } from "semantic-ui-react";
 import { LeaguePage } from "./LeaguePage";
+import { SeasonPage } from "./SeasonPage";
 import { useAppDispatch } from "../reduxHooks";
 import { fetchSeasons } from "./shared/seasonsSlice";
 import { fetchTeams } from "./shared/teamsSlice";
 import { fetchCompetitions } from "./shared/competitionsSlice";
 
-export type AppPage = "Home" | "Team" | "League";
+export type AppPage = "Home" | "Team" | "League" | "Season";
 
 const App: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -51,8 +52,10 @@ const App: FunctionComponent = () => {
           <HomePage />
         ) : activePage === "Team" ? (
           <TeamPage />
-        ) : (
+        ) : activePage === "League" ? (
           <LeaguePage />
+        ) : (
+          <SeasonPage />
         )}
       </div>
       <div

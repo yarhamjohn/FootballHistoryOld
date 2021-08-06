@@ -1,9 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Menu } from "semantic-ui-react";
+import { AppPage } from "../App";
 
 const AppHeader: FunctionComponent<{
-  activePage: "Home" | "Team" | "League";
-  setActivePage: (activePage: "Home" | "Team" | "League") => void;
+  activePage: AppPage;
+  setActivePage: (activePage: AppPage) => void;
   style: React.CSSProperties;
 }> = ({ activePage, setActivePage, style }) => {
   return (
@@ -25,6 +26,13 @@ const AppHeader: FunctionComponent<{
         onClick={() => setActivePage("League")}
       >
         League
+      </Menu.Item>
+      <Menu.Item
+        name="Season"
+        active={activePage === "Season"}
+        onClick={() => setActivePage("Season")}
+      >
+        Season
       </Menu.Item>
     </Menu>
   );
