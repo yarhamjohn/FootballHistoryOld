@@ -5,8 +5,8 @@ import { LeagueTableDrillDown } from "../DrillDown/DrillDown";
 import { LeagueTableRowCell } from "./Cell";
 import { useLeagueTableRow } from "./useLeagueTableRow";
 import { selectTeamById, setSelectedTeam, Team } from "../../../shared/teamsSlice";
-import { CompetitionRules } from "../../../shared/useFetchCompetitions";
 import { useAppDispatch, useAppSelector } from "../../../../reduxHooks";
+import { CompetitionRules } from "../../../shared/competitionsSlice";
 
 const LeagueTableRow: FunctionComponent<{
   row: Row;

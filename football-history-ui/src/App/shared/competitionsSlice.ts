@@ -1,6 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Competition } from "./useFetchCompetitions";
 import { api } from "./useApi";
+import { Season } from "./seasonsSlice";
+
+export type CompetitionRules = {
+  pointsForWin: number;
+  totalPlaces: number;
+  promotionPlaces: number;
+  relegationPlaces: number;
+  playOffPlaces: number;
+  relegationPlayOffPlaces: number;
+  reElectionPlaces: number;
+  failedReElectionPosition: number | null;
+};
+
+export type Competition = {
+  id: number;
+  name: string;
+  season: Season;
+  level: string;
+  comment: string | null;
+  rules: CompetitionRules;
+};
 
 type CompetitionState = {
   status: "UNLOADED" | "LOADING" | "LOADED" | "LOAD_FAILED";
