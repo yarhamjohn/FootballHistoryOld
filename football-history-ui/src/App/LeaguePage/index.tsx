@@ -1,10 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { Divider } from "semantic-ui-react";
 import { CompetitionFilter } from "../components/Filters/CompetitionFilter";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
 import { Matches } from "./Matches";
 import { League } from "../components/League";
-import { useAppSelector } from "../../reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../reduxHooks";
+import { setSelectedCompetition } from "../shared/competitionsSlice";
 
 const LeaguePage: FunctionComponent = () => {
   const seasonState = useAppSelector((state) => state.season);

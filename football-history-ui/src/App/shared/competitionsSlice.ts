@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { api } from "./useApi";
 import { Season } from "./seasonsSlice";
 
@@ -36,10 +36,10 @@ const initialState: CompetitionState = {
   error: undefined,
 };
 
-export const fetchCompetitionsBySeasonId = createAsyncThunk(
-  "competitions/fetchBySeasonId",
+export const fetchCompetitions = createAsyncThunk(
+  "competitions/fetchAll",
   async (seasonId: number) => {
-    const response = await fetch(`${api}/api/v2/competitions/season/${seasonId}`);
+    const response = await fetch(`${api}/api/v2/competitions`);
     return (await response.json()).result as Competition[];
   }
 );
@@ -48,7 +48,7 @@ export const competitionsSlice = createSlice({
   name: "competitions",
   initialState,
   reducers: {
-    selectCompetition: (state, action) => {
+    setSelectedCompetition: (state, action: PayloadAction<Competition>) => {
       state.selectedCompetition = action.payload;
     },
     clearSelectedCompetition: (state) => {
@@ -56,23 +56,27 @@ export const competitionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchCompetitionsBySeasonId.pending, (state, _) => {
+    builder.addCase(fetchCompetitions.pending, (state, _) => {
       state.status = "LOADING";
     });
-    builder.addCase(fetchCompetitionsBySeasonId.fulfilled, (state, action) => {
+    builder.addCase(fetchCompetitions.fulfilled, (state, action) => {
       state.status = "LOADED";
       state.competitions = action.payload;
-      state.selectedCompetition = action.payload.filter(
-        (x) => x.level === state.selectedCompetition?.level
-      )[0];
     });
-    builder.addCase(fetchCompetitionsBySeasonId.rejected, (state, action) => {
+    builder.addCase(fetchCompetitions.rejected, (state, action) => {
       state.status = "LOAD_FAILED";
       state.error = action.error.message;
     });
   },
 });
 
-export const { selectCompetition, clearSelectedCompetition } = competitionsSlice.actions;
+const selectCompetitions = (state: CompetitionState) => state.competitions;
+const selectSeasonId = (state: CompetitionState, seasonId: number) => seasonId;
+export const selectCompetitionsBySeasonId = createSelector(
+  [selectCompetitions, selectSeasonId],
+  (competitions, seasonId) => competitions.filter((x) => x.season.id === seasonId)
+);
+
+export const { setSelectedCompetition, clearSelectedCompetition } = competitionsSlice.actions;
 
 export default competitionsSlice.reducer;

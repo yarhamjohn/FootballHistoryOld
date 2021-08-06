@@ -1,7 +1,10 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { Dropdown, DropdownItemProps } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import { fetchCompetitionsBySeasonId, selectCompetition } from "../../shared/competitionsSlice";
+import {
+  selectCompetitionsBySeasonId,
+  setSelectedCompetition,
+} from "../../shared/competitionsSlice";
 
 const CompetitionFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +13,11 @@ const CompetitionFilter: FunctionComponent = () => {
 
   useEffect(() => {
     if (seasonState.selectedSeason !== undefined) {
-      dispatch(fetchCompetitionsBySeasonId(seasonState.selectedSeason.id));
+      const competitions = selectCompetitionsBySeasonId(
+        competitionState,
+        seasonState.selectedSeason.id
+      );
+      dispatch(setSelectedCompetition(competitions[0]));
     }
   }, [seasonState.selectedSeason, dispatch]);
 
@@ -23,13 +30,15 @@ const CompetitionFilter: FunctionComponent = () => {
       return [];
     }
 
-    return competitionState.competitions.map((c) => {
-      return {
-        key: c.id,
-        text: `${c.name} (${c.level})`,
-        value: c.id,
-      };
-    });
+    return selectCompetitionsBySeasonId(competitionState, seasonState.selectedSeason.id).map(
+      (c) => {
+        return {
+          key: c.id,
+          text: `${c.name} (${c.level})`,
+          value: c.id,
+        };
+      }
+    );
   }
 
   function chooseCompetition(id: number | undefined) {
@@ -38,7 +47,7 @@ const CompetitionFilter: FunctionComponent = () => {
     }
 
     const competition = competitionState.competitions.filter((x) => x.id === id)[0];
-    dispatch(selectCompetition(competition));
+    dispatch(setSelectedCompetition(competition));
   }
 
   return (

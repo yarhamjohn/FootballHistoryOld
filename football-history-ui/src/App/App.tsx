@@ -8,6 +8,7 @@ import { LeaguePage } from "./LeaguePage";
 import { useAppDispatch } from "../reduxHooks";
 import { fetchSeasons } from "./shared/seasonsSlice";
 import { fetchTeams } from "./shared/teamsSlice";
+import { fetchCompetitions } from "./shared/competitionsSlice";
 
 export type AppPage = "Home" | "Team" | "League";
 
@@ -19,6 +20,7 @@ const App: FunctionComponent = () => {
   useEffect(() => {
     dispatch(fetchSeasons());
     dispatch(fetchTeams());
+    dispatch(fetchCompetitions());
   }, [dispatch]);
 
   return (
