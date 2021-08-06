@@ -21,16 +21,3 @@ export type Competition = {
   comment: string | null;
   rules: CompetitionRules;
 };
-
-const useFetchCompetitions = (seasonId: number) => {
-  const api = useApi();
-
-  const url = `${api}/api/v2/competitions/season/${seasonId}`;
-  const result = useFetch(url);
-
-  return result.status === "LOAD_SUCCESSFUL"
-    ? { ...result, data: result.data as Competition[] }
-    : result;
-};
-
-export { useFetchCompetitions };

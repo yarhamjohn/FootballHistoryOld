@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Competition } from "./useFetchCompetitions";
+import { api } from "./useApi";
 
 type CompetitionState = {
   status: "UNLOADED" | "LOADING" | "LOADED" | "LOAD_FAILED";
@@ -18,7 +19,7 @@ const initialState: CompetitionState = {
 export const fetchCompetitionsBySeasonId = createAsyncThunk(
   "competitions/fetchBySeasonId",
   async (seasonId: number) => {
-    const response = await fetch(`https://localhost:5001/api/v2/competitions/season/${seasonId}`);
+    const response = await fetch(`${api}/api/v2/competitions/season/${seasonId}`);
     return (await response.json()).result as Competition[];
   }
 );
