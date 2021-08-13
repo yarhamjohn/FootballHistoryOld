@@ -68,7 +68,7 @@ export const competitionsSlice = createSlice({
 });
 
 const selectCompetitions = (state: CompetitionState) => state.competitions;
-const selectSeasonId = (_, seasonId: number) => seasonId;
+const selectSeasonId = (_: CompetitionState, seasonId: number | undefined) => seasonId;
 export const selectCompetitionsBySeasonId = createSelector(
   [selectCompetitions, selectSeasonId],
   (competitions, seasonId) => competitions.filter((x) => x.season.id === seasonId)

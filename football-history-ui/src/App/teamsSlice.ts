@@ -54,7 +54,7 @@ export const teamsSlice = createSlice({
 });
 
 const selectTeams = (state: TeamState) => state.teams;
-const selectTeamId = (_, id: number) => id;
+const selectTeamId = (_: TeamState, id: number) => id;
 export const selectTeamById = createSelector(
   [selectTeams, selectTeamId],
   (teams, id) => teams.filter((x) => x.id === id)[0]
