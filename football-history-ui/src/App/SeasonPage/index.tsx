@@ -1,9 +1,19 @@
 import React, { FunctionComponent } from "react";
-import { useAppSelector } from "../../reduxHooks";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
-import { Divider } from "semantic-ui-react";
+import { Divider, Tab } from "semantic-ui-react";
+import { selectCompetitionsBySeasonId } from "../competitionsSlice";
+import { useAppSelector } from "../../reduxHooks";
+import { ErrorMessage } from "../components/ErrorMessage";
 
 const SeasonPage: FunctionComponent = () => {
+  const competitionState = useAppSelector((state) => state.competition);
+  const selectedSeasonId = useAppSelector((state) => state.season.selectedSeason?.id);
+
+  const competitionsInSeason =
+    selectedSeasonId === undefined
+      ? []
+      : selectCompetitionsBySeasonId(competitionState, selectedSeasonId);
+
   return (
     <>
       <SeasonFilter />
@@ -12,7 +22,27 @@ const SeasonPage: FunctionComponent = () => {
       <p>Here will go some stuff about the season</p>
       <Divider />
       <h1>Leagues</h1>
-      <p>here will go some tabs for each competition</p>
+      {competitionsInSeason === undefined ? (
+        <ErrorMessage
+          header={"No competitions were found for the selected season"}
+          content={"Please ensure a season is selected."}
+        />
+      ) : (
+        <Tab
+          panes={competitionsInSeason.map((x) => {
+            return { menuItem: x.name, render: () => <Tab.Pane>Something</Tab.Pane> };
+          })}
+          defaultActiveIndex={
+            competitionsInSeason.findIndex(
+              (x) => x.id === competitionState.selectedCompetition?.id
+            ) === -1
+              ? 0
+              : competitionsInSeason.findIndex(
+                  (x) => x.id === competitionState.selectedCompetition?.id
+                )
+          }
+        />
+      )}
     </>
   );
 };
