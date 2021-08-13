@@ -5,7 +5,7 @@ import { SeasonFilter } from "../components/Filters/SeasonFilter";
 import { Matches } from "./Matches";
 import { League } from "../components/League";
 import { useAppDispatch, useAppSelector } from "../../reduxHooks";
-import { setSelectedCompetition } from "../shared/competitionsSlice";
+import { setSelectedCompetition } from "../competitionsSlice";
 
 const LeaguePage: FunctionComponent = () => {
   const seasonState = useAppSelector((state) => state.season);

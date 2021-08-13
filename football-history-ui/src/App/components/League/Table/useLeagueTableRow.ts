@@ -1,6 +1,6 @@
 import { Row } from "../../../shared/useFetchLeague";
 import { Color, getLeagueStatusColor } from "../../../shared/functions";
-import { Team } from "../../../shared/teamsSlice";
+import { Team } from "../../../teamsSlice";
 
 const useLeagueTableRow = (row: Row, selectedTeam: Team | undefined) => {
   const isSelectedRow = row.team === selectedTeam?.name;

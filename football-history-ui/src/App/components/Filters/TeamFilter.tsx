@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Dropdown, DropdownItemProps } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import { selectTeamById, setSelectedTeam } from "../../shared/teamsSlice";
+import { selectTeamById, setSelectedTeam } from "../../teamsSlice";
 
 const TeamFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();

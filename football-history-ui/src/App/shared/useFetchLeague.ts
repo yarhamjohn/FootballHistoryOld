@@ -1,6 +1,6 @@
 import { useApi } from "./useApi";
 import { useFetch } from "./useFetch";
-import { Competition } from "./competitionsSlice";
+import { Competition } from "../competitionsSlice";
 
 export type Row = {
   position: number;

@@ -4,9 +4,9 @@ import { Icon, Table } from "semantic-ui-react";
 import { LeagueTableDrillDown } from "../DrillDown/DrillDown";
 import { LeagueTableRowCell } from "./Cell";
 import { useLeagueTableRow } from "./useLeagueTableRow";
-import { selectTeamById, setSelectedTeam, Team } from "../../../shared/teamsSlice";
+import { selectTeamById, setSelectedTeam, Team } from "../../../teamsSlice";
 import { useAppDispatch, useAppSelector } from "../../../../reduxHooks";
-import { CompetitionRules } from "../../../shared/competitionsSlice";
+import { CompetitionRules } from "../../../competitionsSlice";
 
 const LeagueTableRow: FunctionComponent<{
   row: Row;

@@ -4,9 +4,9 @@ import { PointDeductionSummary } from "./PointDeductionSummary";
 import { useFetchLeague } from "../../shared/useFetchLeague";
 import { ErrorMessage } from "../ErrorMessage";
 import { LeagueTable } from "./Table/Table";
-import { Season } from "../../shared/seasonsSlice";
-import { Team } from "../../shared/teamsSlice";
-import { Competition } from "../../shared/competitionsSlice";
+import { Season } from "../../seasonsSlice";
+import { Team } from "../../teamsSlice";
+import { Competition } from "../../competitionsSlice";
 
 type FetchLeagueProps =
   | {

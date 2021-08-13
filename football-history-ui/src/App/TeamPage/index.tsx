@@ -6,7 +6,7 @@ import { Matches } from "./Matches";
 import { HistoricalPositions } from "../components/HistoricalPositions";
 import { League } from "../components/League";
 import { useAppSelector } from "../../reduxHooks";
-import { Team } from "../shared/teamsSlice";
+import { Team } from "../teamsSlice";
 
 const TeamPage: FunctionComponent = () => {
   const seasonState = useAppSelector((state) => state.season);

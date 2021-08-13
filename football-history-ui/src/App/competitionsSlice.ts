@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { api } from "./useApi";
+import { api } from "./shared/useApi";
 import { Season } from "./seasonsSlice";
 
 export type CompetitionRules = {
@@ -36,13 +36,10 @@ const initialState: CompetitionState = {
   error: undefined,
 };
 
-export const fetchCompetitions = createAsyncThunk(
-  "competitions/fetchAll",
-  async (seasonId: number) => {
-    const response = await fetch(`${api}/api/v2/competitions`);
-    return (await response.json()).result as Competition[];
-  }
-);
+export const fetchCompetitions = createAsyncThunk("competitions/fetchAll", async () => {
+  const response = await fetch(`${api}/api/v2/competitions`);
+  return (await response.json()).result as Competition[];
+});
 
 export const competitionsSlice = createSlice({
   name: "competitions",

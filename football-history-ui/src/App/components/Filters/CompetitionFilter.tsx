@@ -1,10 +1,7 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { Dropdown, DropdownItemProps } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import {
-  selectCompetitionsBySeasonId,
-  setSelectedCompetition,
-} from "../../shared/competitionsSlice";
+import { selectCompetitionsBySeasonId, setSelectedCompetition } from "../../competitionsSlice";
 
 const CompetitionFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();

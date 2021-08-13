@@ -7,9 +7,9 @@ import { Icon } from "semantic-ui-react";
 import { LeaguePage } from "./LeaguePage";
 import { SeasonPage } from "./SeasonPage";
 import { useAppDispatch } from "../reduxHooks";
-import { fetchSeasons } from "./shared/seasonsSlice";
-import { fetchTeams } from "./shared/teamsSlice";
-import { fetchCompetitions } from "./shared/competitionsSlice";
+import { fetchSeasons } from "./seasonsSlice";
+import { fetchTeams } from "./teamsSlice";
+import { fetchCompetitions } from "./competitionsSlice";
 
 export type AppPage = "Home" | "Team" | "League" | "Season";
 

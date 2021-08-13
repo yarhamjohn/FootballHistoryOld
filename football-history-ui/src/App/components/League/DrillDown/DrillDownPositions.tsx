@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { LeaguePosition } from "../../../shared/useFetchLeaguePositions";
 import { ResponsiveLine } from "@nivo/line";
 import { useDrillDownPositions } from "./useDrillDownPositions";
-import { CompetitionRules } from "../../../shared/competitionsSlice";
+import { CompetitionRules } from "../../../competitionsSlice";
 
 const LeagueTableDrillDownPositions: FunctionComponent<{
   positions: LeaguePosition[];

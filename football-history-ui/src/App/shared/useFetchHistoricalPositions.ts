@@ -1,8 +1,8 @@
 import { Reducer, useEffect, useReducer, useState } from "react";
 import { useApi } from "./useApi";
 import { HistoricalPositionRange } from "../components/HistoricalPositions";
-import { Season } from "./seasonsSlice";
-import { Competition } from "./competitionsSlice";
+import { Season } from "../seasonsSlice";
+import { Competition } from "../competitionsSlice";
 
 export type HistoricalPosition = {
   seasonId: number;

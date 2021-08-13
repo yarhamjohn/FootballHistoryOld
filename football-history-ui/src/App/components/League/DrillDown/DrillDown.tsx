@@ -4,7 +4,7 @@ import { ErrorMessage } from "../../ErrorMessage";
 import { LeagueTableDrillDownForm } from "./DrillDownForm";
 import { LeagueTableDrillDownPositions } from "./DrillDownPositions";
 import { useFetchDrillDown } from "../../../shared/useFetchDrillDown";
-import { CompetitionRules } from "../../../shared/competitionsSlice";
+import { CompetitionRules } from "../../../competitionsSlice";
 
 const LeagueTableDrillDown: FunctionComponent<{
   teamId: number;
