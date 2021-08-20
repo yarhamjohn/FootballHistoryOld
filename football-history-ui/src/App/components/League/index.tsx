@@ -7,6 +7,7 @@ import { LeagueTable } from "./Table/Table";
 import { Season } from "../../seasonsSlice";
 import { Team } from "../../teamsSlice";
 import { Competition } from "../../competitionsSlice";
+import { findLastIndex } from "lodash";
 
 type FetchLeagueProps =
   | {
@@ -30,7 +31,11 @@ const League: FunctionComponent<{ props: FetchLeagueProps }> = ({ props }) => {
   }
 
   if (league.status === "LOADING") {
-    return <Loader />;
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Loader active inline size={"huge"} />
+      </div>
+    );
   }
 
   if (league.status === "LOAD_FAILED") {
