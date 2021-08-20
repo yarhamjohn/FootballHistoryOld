@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useState } from "react";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
-import { Divider } from "semantic-ui-react";
+import { Divider, Table } from "semantic-ui-react";
 import { CompetitionsInSeason } from "./CompetitionsInSeason";
 import { useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { Competition, selectCompetitionsBySeasonId } from "../competitionsSlice";
 import { useEffect } from "react";
+import { CombinedStatistics } from "./CombinedStatistics";
 
 const SeasonPage: FunctionComponent = () => {
   const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
@@ -75,6 +76,8 @@ const SeasonPage: FunctionComponent = () => {
         different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a win.
       </p>
       {/* assumes the same number of points for a win for each competition */}
+      <h4>Combined Statistics</h4>
+      <CombinedStatistics />
       <Divider />
       <h1>Competitions</h1>
       <CompetitionsInSeason />

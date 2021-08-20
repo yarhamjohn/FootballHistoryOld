@@ -3,7 +3,6 @@ import { Row } from "../../../shared/useFetchLeague";
 import { Icon, Table } from "semantic-ui-react";
 import { LeagueTableDrillDown } from "../DrillDown/DrillDown";
 import { LeagueTableRowCell } from "./Cell";
-import { useLeagueTableRow } from "./useLeagueTableRow";
 import { selectTeamById, setSelectedTeam, Team } from "../../../teamsSlice";
 import { useAppDispatch, useAppSelector } from "../../../../reduxHooks";
 import { CompetitionRules } from "../../../competitionsSlice";
