@@ -7,7 +7,6 @@ import { LeagueTable } from "./Table/Table";
 import { Season } from "../../seasonsSlice";
 import { Team } from "../../teamsSlice";
 import { Competition } from "../../competitionsSlice";
-import { findLastIndex } from "lodash";
 
 type FetchLeagueProps =
   | {
@@ -44,11 +43,7 @@ const League: FunctionComponent<{ props: FetchLeagueProps }> = ({ props }) => {
 
   return (
     <div>
-      <LeagueTable
-        league={league.data}
-        selectedTeam={"team" in props ? props.team : undefined}
-        seasonStartYear={props.season.startYear}
-      />
+      <LeagueTable league={league.data} highlightSelectedTeam={"team" in props} />
       <PointDeductionSummary leagueTable={league.data.table} />
     </div>
   );

@@ -4,6 +4,7 @@ import { Team } from "../../../teamsSlice";
 
 const useLeagueTableRow = (row: Row, selectedTeam: Team | undefined) => {
   const isSelectedRow = row.team === selectedTeam?.name;
+  console.log(selectedTeam);
 
   let color = getLeagueStatusColor(row.status);
   if (color === null && isSelectedRow) {

@@ -7,29 +7,35 @@ import { useLeagueTableRow } from "./useLeagueTableRow";
 import { selectTeamById, setSelectedTeam, Team } from "../../../teamsSlice";
 import { useAppDispatch, useAppSelector } from "../../../../reduxHooks";
 import { CompetitionRules } from "../../../competitionsSlice";
+import { Color, getLeagueStatusColor } from "../../../shared/functions";
 
 const LeagueTableRow: FunctionComponent<{
   row: Row;
-  selectedTeam: Team | undefined;
-  seasonStartYear: number;
   numRows: number;
   rules: CompetitionRules;
   competitionId: number;
-}> = ({ row, selectedTeam, seasonStartYear, numRows, rules, competitionId }) => {
+  highlightSelectedTeam: boolean;
+}> = ({ row, numRows, rules, competitionId, highlightSelectedTeam }) => {
   const dispatch = useAppDispatch();
   const teamState = useAppSelector((state) => state.team);
 
-  const { bold, color } = useLeagueTableRow(row, selectedTeam);
-  const [showDrillDown, setShowDrillDown] = useState<boolean>(false);
+  const [selectedTeam] = useState<boolean>(
+    highlightSelectedTeam && row.team === teamState.selectedTeam?.name
+  );
+  const [rowColor] = useState<Color | null>(
+    getLeagueStatusColor(row.status) == null && selectedTeam
+      ? Color.Grey
+      : getLeagueStatusColor(row.status)
+  );
 
-  useEffect(() => {
-    setShowDrillDown(false);
-  }, [selectedTeam, seasonStartYear]);
+  const [showDrillDown, setShowDrillDown] = useState<boolean>(
+    highlightSelectedTeam && selectedTeam
+  );
 
-  const switchToTeam = (teamId: number) => {
+  const selectTeam = (teamId: number) => {
     const team = selectTeamById(teamState, teamId);
+    setShowDrillDown(true);
     dispatch(setSelectedTeam(team));
-    // TODO: switch tab
   };
 
   return (
@@ -40,47 +46,47 @@ const LeagueTableRow: FunctionComponent<{
         }}
         onClick={() => setShowDrillDown(!showDrillDown)}
       >
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {showDrillDown ? <Icon name="chevron down" /> : <Icon name="chevron right" />}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.position}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
-          <a onClick={() => switchToTeam(row.teamId)}>{row.team}</a>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
+          {row.team}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.played}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.won}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.drawn}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.lost}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.goalsFor}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.goalsAgainst}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.goalDifference}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {Number(Math.round(parseFloat(row.goalAverage + "e4")) + "e-4")}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {Number(Math.round(parseFloat(row.pointsPerGame + "e2")) + "e-2")}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.points}
           {row.pointsDeducted > 0 ? " *" : ""}
         </LeagueTableRowCell>
-        <LeagueTableRowCell bold={bold} color={color}>
+        <LeagueTableRowCell bold={selectedTeam} color={rowColor}>
           {row.status}
         </LeagueTableRowCell>
       </Table.Row>
