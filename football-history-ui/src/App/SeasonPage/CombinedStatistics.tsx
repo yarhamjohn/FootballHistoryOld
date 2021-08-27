@@ -23,29 +23,35 @@ const CombinedStatistics: FunctionComponent<{ seasonId: number }> = ({ seasonId 
     return null;
   }
 
+  console.log(statistics.data);
+
   return (
-    <Table color="red">
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Category</Table.HeaderCell>
-          <Table.HeaderCell>Statistic</Table.HeaderCell>
-          <Table.HeaderCell>Value</Table.HeaderCell>
-          <Table.HeaderCell>Team</Table.HeaderCell>
-          <Table.HeaderCell>Competition</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {statistics.data.map((s, i) => (
-          <Table.Row key={i}>
-            <Table.Cell>{s.category}</Table.Cell>
-            <Table.Cell>{s.name}</Table.Cell>
-            <Table.Cell>{Number(s.value.toFixed(2))}</Table.Cell>
-            <Table.Cell>{s.teamName}</Table.Cell>
-            <Table.Cell>{s.competitionName}</Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
+    <>
+      {statistics.data.map((x) => (
+        <Table color="red" key={x.category}>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Category</Table.HeaderCell>
+              <Table.HeaderCell>Statistic</Table.HeaderCell>
+              <Table.HeaderCell>Value</Table.HeaderCell>
+              <Table.HeaderCell>Team</Table.HeaderCell>
+              <Table.HeaderCell>Competition</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {x.statistics.map((y, i) => (
+              <Table.Row key={i}>
+                {i == 0 && <Table.Cell rowSpan={x.statistics.length}>{x.category}</Table.Cell>}
+                <Table.Cell>{y.name}</Table.Cell>
+                <Table.Cell>{Number(y.value.toFixed(2))}</Table.Cell>
+                <Table.Cell>{y.teamName}</Table.Cell>
+                <Table.Cell>{y.competitionName}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      ))}
+    </>
   );
 };
 

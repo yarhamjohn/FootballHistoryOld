@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+
 namespace football.history.api.Builders.Team
 {
-    public record StatisticDto(
-        string Category, string Name, double Value, string TeamName, string CompetitionName);
+    public record StatisticsDto(string Category, List<StatisticDto> statistics);
+    
+    public record StatisticDto(string Name, double Value, string TeamName, string CompetitionName);
 }

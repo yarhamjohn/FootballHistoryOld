@@ -1,8 +1,12 @@
 import { useApi } from "./useApi";
 import { useFetch } from "./useFetch";
 
-export type Statistic = {
+export type Statistics = {
   category: "Points" | "Goals" | "Results";
+  statistics: Statistic[];
+};
+
+export type Statistic = {
   name: string;
   value: number;
   teamName: string;
@@ -16,7 +20,7 @@ const useFetchStatistics = (seasonId: number) => {
 
   const result = useFetch(url);
   return result.status === "LOAD_SUCCESSFUL"
-    ? { ...result, data: result.data as Statistic[] }
+    ? { ...result, data: result.data as Statistics[] }
     : result;
 };
 

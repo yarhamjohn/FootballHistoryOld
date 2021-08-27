@@ -25,7 +25,7 @@ namespace football.history.api.Controllers
         [HttpGet]
         [MapToApiVersion("2")]
         [Route("api/v{version:apiVersion}/statistics/season/{id:long}")]
-        public ApiResponse<List<StatisticDto>?> GetSeasonStatistics(long id)
+        public ApiResponse<List<StatisticsDto>?> GetSeasonStatistics(long id)
         {
             try
             {
