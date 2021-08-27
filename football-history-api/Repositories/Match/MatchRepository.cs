@@ -6,13 +6,19 @@ using football.history.api.Exceptions;
 
 namespace football.history.api.Repositories.Match
 {
+    public enum MatchType
+    {
+        League,
+        PlayOff
+    }
+    
     public interface IMatchRepository
     {
         public List<MatchModel> GetMatches(
             long? competitionId = null,
             long? seasonId = null,
             long? teamId = null,
-            string? type = null,
+            MatchType? type = null,
             DateTime? matchDate = null);
         public MatchModel GetMatch(long matchId);
         public List<MatchModel> GetLeagueMatches(long competitionId);
@@ -34,7 +40,7 @@ namespace football.history.api.Repositories.Match
             long? competitionId = null,
             long? seasonId = null,
             long? teamId = null,
-            string? type = null,
+            MatchType? type = null,
             DateTime? matchDate = null)
         {
             _connection.Open();
@@ -63,12 +69,12 @@ namespace football.history.api.Repositories.Match
 
         public List<MatchModel> GetLeagueMatches(long competitionId)
         {
-            return GetMatches(competitionId, seasonId: null, teamId: null, "League");
+            return GetMatches(competitionId, seasonId: null, teamId: null, MatchType.League);
         }
 
         public List<MatchModel> GetPlayOffMatches(long competitionId)
         {
-            return GetMatches(competitionId, seasonId: null, teamId: null, "PlayOff");
+            return GetMatches(competitionId, seasonId: null, teamId: null, MatchType.PlayOff);
         }
 
         private static List<MatchModel> GetMatchModels(DbCommand cmd)

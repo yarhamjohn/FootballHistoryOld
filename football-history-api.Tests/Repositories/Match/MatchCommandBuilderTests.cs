@@ -53,7 +53,7 @@ namespace football.history.api.Tests.Repositories.Match
                 .Returns(new MockDbCommand());
             var builder = new MatchCommandBuilder();
 
-            var dbCommand = builder.Build(mockDatabaseConnection.Object, 1, 2, 3, "League", new DateTime(2000, 1, 1));
+            var dbCommand = builder.Build(mockDatabaseConnection.Object, 1, 2, 3, MatchType.League, new DateTime(2000, 1, 1));
 
             dbCommand.CommandText.Should().Contain("FROM [dbo].[Matches] AS m");
             dbCommand.CommandText.Should()
@@ -146,7 +146,7 @@ namespace football.history.api.Tests.Repositories.Match
                 .Returns(new MockDbCommand());
             var builder = new MatchCommandBuilder();
 
-            var dbCommand = builder.Build(mockDatabaseConnection.Object, null, null, null, "League", null);
+            var dbCommand = builder.Build(mockDatabaseConnection.Object, null, null, null, MatchType.League, null);
 
             dbCommand.CommandText.Should().Contain("FROM [dbo].[Matches] AS m");
             dbCommand.CommandText.Should().Contain("WHERE r.Type = @Type");

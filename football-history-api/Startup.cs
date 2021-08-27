@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using football.history.api.Builders;
+using football.history.api.Builders.Statistics;
 using football.history.api.Domain;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
@@ -32,7 +33,7 @@ namespace football.history.api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ILeagueTableBuilder, LeagueTableBuilder>();
-            services.AddTransient<ILeagueTableBuilder, LeagueTableBuilder>();
+            services.AddTransient<IStatisticsBuilder, StatisticsBuilder>();
             services.AddTransient<IRowComparerFactory, RowComparerFactory>();
             services.AddTransient<IStatusCalculator, StatusCalculator>();
             services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
