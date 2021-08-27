@@ -1,7 +1,28 @@
 import React, { FunctionComponent } from "react";
-import { Table } from "semantic-ui-react";
+import { Loader, Table } from "semantic-ui-react";
+import { ErrorMessage } from "../components/ErrorMessage";
+import { useFetchStatistics } from "../shared/useFetchStatistics";
 
-const CombinedStatistics: FunctionComponent = () => {
+const CombinedStatistics: FunctionComponent<{ seasonId: number }> = ({ seasonId }) => {
+  const statistics = useFetchStatistics(seasonId);
+
+  if (statistics.status === "LOADING") {
+    return <Loader />;
+  }
+
+  if (statistics.status === "LOAD_FAILED") {
+    return (
+      <ErrorMessage
+        header="Failed to load statistics"
+        content="Something went wrong attempting to load the season statistics"
+      />
+    );
+  }
+
+  if (statistics.status === "UNLOADED") {
+    return null;
+  }
+
   return (
     <Table color="red">
       <Table.Header>
@@ -14,89 +35,15 @@ const CombinedStatistics: FunctionComponent = () => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        <Table.Row>
-          <Table.Cell rowSpan="3">Points</Table.Cell>
-          <Table.Cell>Most Points</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Fewest Points</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Best Points Per Game</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-
-        <Table.Row>
-          <Table.Cell rowSpan="4">Goals</Table.Cell>
-          <Table.Cell>Most Goals</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Fewest Goals</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Best Goal Difference</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Best Goal Average</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-
-        <Table.Row>
-          <Table.Cell rowSpan="6">Results</Table.Cell>
-          <Table.Cell>Most Wins</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Most Draws</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Most Losses</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Most Consecutive Wins</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Most Consecutive Draws</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>Most Consecutive Losses</Table.Cell>
-          <Table.Cell>3</Table.Cell>
-          <Table.Cell>Norwich City</Table.Cell>
-          <Table.Cell>Championship</Table.Cell>
-        </Table.Row>
+        {statistics.data.map((s, i) => (
+          <Table.Row key={i}>
+            <Table.Cell>{s.category}</Table.Cell>
+            <Table.Cell>{s.name}</Table.Cell>
+            <Table.Cell>{Number(s.value.toFixed(2))}</Table.Cell>
+            <Table.Cell>{s.teamName}</Table.Cell>
+            <Table.Cell>{s.competitionName}</Table.Cell>
+          </Table.Row>
+        ))}
       </Table.Body>
     </Table>
   );

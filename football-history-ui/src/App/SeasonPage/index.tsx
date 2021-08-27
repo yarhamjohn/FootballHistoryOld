@@ -77,7 +77,7 @@ const SeasonPage: FunctionComponent = () => {
       </p>
       {/* assumes the same number of points for a win for each competition */}
       <h4>Combined Statistics</h4>
-      <CombinedStatistics />
+      <CombinedStatistics seasonId={selectedSeason.id} />
       <Divider />
       <h1>Competitions</h1>
       <CompetitionsInSeason />
