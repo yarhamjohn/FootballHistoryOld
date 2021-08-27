@@ -2,7 +2,7 @@ import { Match } from "../../../shared/useFetchLeagueMatches";
 
 const useDrillDownForm = (matches: Match[], teamId: number) =>
   matches
-    .sort((a, b) => b.matchDate.valueOf() - a.matchDate.valueOf())
+    .sort((a, b) => new Date(a.matchDate).valueOf() - new Date(b.matchDate).valueOf()) // Although they look like Date types, they are in fact strings and need recreating as Dates (https://stackoverflow.com/questions/2627650/why-javascript-gettime-is-not-a-function)
     .map((m) =>
       m.homeTeam.id === teamId && m.homeTeam.goals > m.awayTeam.goals
         ? "W"
