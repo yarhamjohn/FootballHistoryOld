@@ -48,18 +48,217 @@ namespace football.history.api.Builders.Statistics
             statistics.Add(GetMostPointsStatistic(metrics, pointsForWin.Single()));
             statistics.Add(GetFewestPointsStatistic(metrics, pointsForWin.Single()));
             statistics.Add(GetBestPointsPerGameStatistic(metrics, pointsForWin.Single()));
-            
+
             statistics.Add(GetMostWinsStatistic(metrics));
             statistics.Add(GetMostDrawsStatistic(metrics));
             statistics.Add(GetMostLossesStatistic(metrics));
-            
+
             statistics.Add(GetMostGoalsStatistic(metrics));
             statistics.Add(GetFewestGoalsStatistic(metrics));
             statistics.Add(GetBestGoalDifferenceStatistic(metrics));
             statistics.Add(GetBestGoalAverageStatistic(metrics));
 
+            //TODO: This definitely isn't right at the mo...
+            var consecutiveMetrics = GetConsecutiveMetrics(matches);
+            
+            statistics.Add(GetMostConsecutiveWins(consecutiveMetrics));
+            statistics.Add(GetMostConsecutiveDraws(consecutiveMetrics));
+            statistics.Add(GetMostConsecutiveLosses(consecutiveMetrics));
+            statistics.Add(GetMostGamesWithoutDefeat(consecutiveMetrics));
+            statistics.Add(GetMostGamesWithoutWin(consecutiveMetrics));
+
             return statistics;
         }
+
+        private StatisticDto GetMostConsecutiveWins(List<ConsecutiveResult> metrics)
+        {
+            var mostConsecutiveWins = metrics.MaxBy(x => x.ConsecutiveWins);
+            return new StatisticDto(
+                "Results",
+                "Most Consecutive Wins",
+                mostConsecutiveWins.First().ConsecutiveWins,
+                GetTeamNames(mostConsecutiveWins),
+                GetCompetitionNames(mostConsecutiveWins));
+        }
+
+        private StatisticDto GetMostConsecutiveDraws(List<ConsecutiveResult> metrics)
+        {
+            var mostConsecutiveDraws = metrics.MaxBy(x => x.ConsecutiveDraws);
+            return new StatisticDto(
+                "Results",
+                "Most Consecutive Draws",
+                mostConsecutiveDraws.First().ConsecutiveDraws,
+                GetTeamNames(mostConsecutiveDraws),
+                GetCompetitionNames(mostConsecutiveDraws));
+        }
+
+        private StatisticDto GetMostConsecutiveLosses(List<ConsecutiveResult> metrics)
+        {
+            var mostConsecutiveLosses = metrics.MaxBy(x => x.ConsecutiveLosses);
+            return new StatisticDto(
+                "Results",
+                "Most Consecutive Losses",
+                mostConsecutiveLosses.First().ConsecutiveLosses,
+                GetTeamNames(mostConsecutiveLosses),
+                GetCompetitionNames(mostConsecutiveLosses));
+        }
+
+        private StatisticDto GetMostGamesWithoutDefeat(List<ConsecutiveResult> metrics)
+        {
+            var winningStreak = metrics.MaxBy(x => x.WinningStreak);
+            return new StatisticDto(
+                "Results",
+                "Most Games Without Defeat",
+                winningStreak.First().WinningStreak,
+                GetTeamNames(winningStreak),
+                GetCompetitionNames(winningStreak));
+        }
+        
+        private StatisticDto GetMostGamesWithoutWin(List<ConsecutiveResult> metrics)
+        {
+            var losingStreak = metrics.MaxBy(x => x.LosingStreak);
+            return new StatisticDto(
+                "Results",
+                "Most Games Without Win",
+                losingStreak.First().LosingStreak,
+                GetTeamNames(losingStreak),
+                GetCompetitionNames(losingStreak));
+        }
+
+        private List<ConsecutiveResult> GetConsecutiveMetrics(List<MatchModel> matches)
+        {
+            var homeGroup = matches
+                .GroupBy(match => (teamId: match.HomeTeamId, teamName: match.HomeTeamName,
+                    competitionName: match.CompetitionName)).Select(group => new
+                {
+                    Info = group.Key,
+                    ResultSequence = group.Select(x => new
+                    {
+                        Date = x.MatchDate,
+                        Result = x.HomeGoals > x.AwayGoals ? "W" : x.HomeGoals < x.AwayGoals ? "L" : "D"
+                    })
+                });
+
+            var awayGroup = matches
+                .GroupBy(match => (teamId: match.AwayTeamId, teamName: match.AwayTeamName,
+                    competitionName: match.CompetitionName)).Select(group => new
+                {
+                    Info = group.Key,
+                    ResultSequence = group.Select(x => new
+                    {
+                        Date = x.MatchDate,
+                        Result = x.AwayGoals > x.HomeGoals ? "W" : x.AwayGoals < x.HomeGoals ? "L" : "D"
+                    })
+                });
+
+            var combined = homeGroup
+                .Join(awayGroup,
+                    home => home.Info.teamId,
+                    away => away.Info.teamId,
+                    (home, away) => new
+                    {
+                        Info = home.Info,
+                        ResultSequence = home.ResultSequence.Concat(away.ResultSequence).OrderBy(x => x.Date)
+                    })
+                .ToList();
+
+            var calcResult = new List<ConsecutiveResult>();
+            foreach (var item in combined)
+            {
+                var numWins = 0;
+                var numDraws = 0;
+                var numLosses = 0;
+                var nonLosingStreak = 0;
+                var nonWinningStreak = 0;
+
+                var currentRun = "";
+                var count = 0;
+                var streakCount = 0;
+                foreach (var game in item.ResultSequence)
+                {
+                    if (game.Result == currentRun)
+                    {
+                        count++;
+                        streakCount++;
+                    }
+                    // Doesn't work as W D L is one streak (W - D, D - L)
+                    else if (game.Result is "W" or "D" && currentRun is "W" or "D" ||
+                             game.Result is "L" or "D" && currentRun is "L" or "D")
+                    {
+                        streakCount++;
+
+                        if (currentRun == "W")
+                        {
+                            numWins = count > numWins ? count : numWins;
+                        }
+
+                        if (currentRun == "L")
+                        {
+                            numLosses = count > numLosses ? count : numLosses;
+                        }
+
+                        if (currentRun == "D")
+                        {
+                            numDraws = count > numDraws ? count : numDraws;
+                        }
+
+                        count = 0;
+                        currentRun = game.Result;
+                    }
+                    else
+                    {
+                        if (currentRun == "W")
+                        {
+                            numWins = count > numWins ? count : numWins;
+
+                            if (game.Result == "L")
+                            {
+                                nonLosingStreak = streakCount > nonLosingStreak ? streakCount : nonLosingStreak;
+                                streakCount = 0;
+                            }
+                        }
+
+                        if (currentRun == "L")
+                        {
+                            numLosses = count > numLosses ? count : numLosses;
+
+                            if (game.Result == "W")
+                            {
+                                nonWinningStreak = streakCount > nonWinningStreak ? streakCount : nonWinningStreak;
+                                streakCount = 0;
+                            }
+                        }
+
+                        if (currentRun == "D")
+                        {
+                            numDraws = count > numDraws ? count : numDraws;
+                        }
+
+                        count = 0;
+
+                        if (currentRun == "")
+                        {
+                            count++;
+                            streakCount++;
+                        }
+
+                        currentRun = game.Result;
+                    }
+                }
+
+                calcResult.Add(new ConsecutiveResult(
+                
+                    Info: item.Info, ConsecutiveWins: numWins, ConsecutiveDraws: numDraws,
+                    ConsecutiveLosses: numLosses, LosingStreak: nonWinningStreak, WinningStreak: nonLosingStreak
+                ));
+            }
+
+            return calcResult;
+        }
+
+        private record ConsecutiveResult((long teamId, string teamName, string competitionName) Info,
+            int ConsecutiveWins, int ConsecutiveDraws, int ConsecutiveLosses, int WinningStreak,
+            int LosingStreak);
 
         private StatisticDto GetMostPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
         {
@@ -85,11 +284,13 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetBestPointsPerGameStatistic(List<ResultMetrics> metrics, int pointsForWin)
         {
-            var fewestPoints = metrics.MaxBy(x => (double)(x.NumDraws + x.NumWins * pointsForWin) / (x.NumWins + x.NumDraws + x.NumLosses));
+            var fewestPoints = metrics.MaxBy(x =>
+                (double)(x.NumDraws + x.NumWins * pointsForWin) / (x.NumWins + x.NumDraws + x.NumLosses));
             return new StatisticDto(
                 "Points",
                 "Best Points Per Game",
-                (double) (fewestPoints.First().NumDraws + fewestPoints.First().NumWins * pointsForWin) / (fewestPoints.First().NumWins + fewestPoints.First().NumDraws + fewestPoints.First().NumLosses),
+                (double)(fewestPoints.First().NumDraws + fewestPoints.First().NumWins * pointsForWin) /
+                (fewestPoints.First().NumWins + fewestPoints.First().NumDraws + fewestPoints.First().NumLosses),
                 GetTeamNames(fewestPoints),
                 GetCompetitionNames(fewestPoints));
         }
@@ -129,7 +330,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetBestGoalAverageStatistic(List<ResultMetrics> metrics)
         {
-            var bestGoalAverage = metrics.MaxBy(x => (double) x.NumGoalsScored / x.NumGoalsConceded);
+            var bestGoalAverage = metrics.MaxBy(x => (double)x.NumGoalsScored / x.NumGoalsConceded);
             return new StatisticDto(
                 "Goals",
                 "Best Goal Average",
@@ -177,6 +378,16 @@ namespace football.history.api.Builders.Statistics
         }
 
         private static string GetCompetitionNames(IEnumerable<ResultMetrics> mostWins)
+        {
+            return string.Join(",", mostWins.Select(x => x.Info.competitionName));
+        }
+        
+        private static string GetTeamNames(IEnumerable<ConsecutiveResult> metrics)
+        {
+            return string.Join(",", metrics.Select(x => x.Info.teamName));
+        }
+
+        private static string GetCompetitionNames(IEnumerable<ConsecutiveResult> mostWins)
         {
             return string.Join(",", mostWins.Select(x => x.Info.competitionName));
         }
