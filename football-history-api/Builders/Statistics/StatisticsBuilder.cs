@@ -165,6 +165,7 @@ namespace football.history.api.Builders.Statistics
             var calcResult = new List<ConsecutiveResult>();
             foreach (var item in combined)
             {
+                var teamName = item.Info.teamName;
                 var numWins = 0;
                 var numDraws = 0;
                 var numLosses = 0;
@@ -174,6 +175,7 @@ namespace football.history.api.Builders.Statistics
                 var currentRun = "";
                 var count = 0;
                 var streakCount = 0;
+                var streakType = ""; // Can be W or L
                 foreach (var game in item.ResultSequence)
                 {
                     if (game.Result == currentRun)
@@ -181,9 +183,7 @@ namespace football.history.api.Builders.Statistics
                         count++;
                         streakCount++;
                     }
-                    // Doesn't work as W D L is one streak (W - D, D - L)
-                    else if (game.Result is "W" or "D" && currentRun is "W" or "D" ||
-                             game.Result is "L" or "D" && currentRun is "L" or "D")
+                    else if (game.Result == "D")
                     {
                         streakCount++;
 
@@ -197,12 +197,7 @@ namespace football.history.api.Builders.Statistics
                             numLosses = count > numLosses ? count : numLosses;
                         }
 
-                        if (currentRun == "D")
-                        {
-                            numDraws = count > numDraws ? count : numDraws;
-                        }
-
-                        count = 0;
+                        count = 1;
                         currentRun = game.Result;
                     }
                     else
@@ -210,38 +205,42 @@ namespace football.history.api.Builders.Statistics
                         if (currentRun == "W")
                         {
                             numWins = count > numWins ? count : numWins;
-
-                            if (game.Result == "L")
-                            {
-                                nonLosingStreak = streakCount > nonLosingStreak ? streakCount : nonLosingStreak;
-                                streakCount = 0;
-                            }
+                            nonLosingStreak = streakCount > nonLosingStreak ? streakCount : nonLosingStreak;
+                            streakType = game.Result;
+                            streakCount = 1;
                         }
 
                         if (currentRun == "L")
                         {
                             numLosses = count > numLosses ? count : numLosses;
-
-                            if (game.Result == "W")
-                            {
-                                nonWinningStreak = streakCount > nonWinningStreak ? streakCount : nonWinningStreak;
-                                streakCount = 0;
-                            }
+                            nonWinningStreak = streakCount > nonWinningStreak ? streakCount : nonWinningStreak;
+                            streakType = game.Result;
+                            streakCount = 1;
                         }
 
                         if (currentRun == "D")
                         {
                             numDraws = count > numDraws ? count : numDraws;
-                        }
 
-                        count = 0;
+                            if (streakType == game.Result || streakType == "")
+                            {
+                                streakCount++;
+                                streakType = game.Result;
+                            }
+                            else
+                            {
+                                streakType = game.Result;
+                                streakCount = 1 + count; // ensure a sequence of L D W results in a non-losing streak of 2 
+                            }
+                        }
 
                         if (currentRun == "")
                         {
-                            count++;
                             streakCount++;
+                            streakType = game.Result;
                         }
 
+                        count = 1;
                         currentRun = game.Result;
                     }
                 }
