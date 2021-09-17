@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, createRef } from "react";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
-import { Divider, Table } from "semantic-ui-react";
+import { Divider, Grid, Rail, Segment, Sticky, Table } from "semantic-ui-react";
 import { CompetitionsInSeason } from "./CompetitionsInSeason";
 import { useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -60,27 +60,32 @@ const SeasonPage: FunctionComponent = () => {
         <h1 style={{ margin: "0" }}>
           {selectedSeason.startYear} - {selectedSeason.endYear}
         </h1>
-        )
         <SeasonFilter />
       </div>
       <Divider />
-      <h1>Information</h1>
-      <p>
-        There were {competitionsInSeason.length} active competition
-        {competitionsInSeason.length === 1 ? "" : "s"} during the {selectedSeason.startYear} -{" "}
-        {selectedSeason.endYear} season:
-        <span style={{ fontWeight: "bold" }}>{getCompetitionNames()}</span>, involving a total of{" "}
-        {competitionsInSeason
-          .map((c) => c.rules.totalPlaces)
-          .reduce((sum, current) => sum + current, 0)}{" "}
-        different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a win.
-      </p>
-      {/* assumes the same number of points for a win for each competition */}
-      <h4>Combined Statistics</h4>
-      <CombinedStatistics seasonId={selectedSeason.id} />
-      <Divider />
-      <h1>Competitions</h1>
-      <CompetitionsInSeason />
+
+      <div style={{ marginBottom: "2rem" }}>
+        <h1>Information</h1>
+        <p>
+          There were {competitionsInSeason.length} active competition
+          {competitionsInSeason.length === 1 ? "" : "s"} during the {selectedSeason.startYear} -{" "}
+          {selectedSeason.endYear} season:
+          <span style={{ fontWeight: "bold" }}>{getCompetitionNames()}</span>, involving a total of{" "}
+          {competitionsInSeason
+            .map((c) => c.rules.totalPlaces)
+            .reduce((sum, current) => sum + current, 0)}{" "}
+          different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a win.
+        </p>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          {/* assumes the same number of points for a win for each competition */}
+          <CombinedStatistics seasonId={selectedSeason.id} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", flexGrow: 4 }}>
+          <CompetitionsInSeason />
+        </div>
+      </div>
     </>
   );
 };

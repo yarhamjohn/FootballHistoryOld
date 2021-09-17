@@ -27,7 +27,7 @@ const CompetitionFilter: FunctionComponent = () => {
       return [];
     }
 
-    return selectCompetitionsBySeasonId(competitionState, seasonState.selectedSeason.id).map(
+    return selectCompetitionsBySeasonId(competitionState, seasonState.selectedSeason?.id).map(
       (c) => {
         return {
           key: c.id,

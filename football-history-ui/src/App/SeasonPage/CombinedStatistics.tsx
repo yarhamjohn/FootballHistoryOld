@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from "react";
-import { Loader, Table } from "semantic-ui-react";
+import { FunctionComponent } from "react";
+import { Card, Loader, Table } from "semantic-ui-react";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { useFetchStatistics } from "../shared/useFetchStatistics";
 
@@ -23,33 +23,24 @@ const CombinedStatistics: FunctionComponent<{ seasonId: number }> = ({ seasonId 
     return null;
   }
 
-  console.log(statistics.data);
-
   return (
     <>
       {statistics.data.map((x) => (
-        <Table color="red" key={x.category}>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Category</Table.HeaderCell>
-              <Table.HeaderCell>Statistic</Table.HeaderCell>
-              <Table.HeaderCell>Value</Table.HeaderCell>
-              <Table.HeaderCell>Team</Table.HeaderCell>
-              <Table.HeaderCell>Competition</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {x.statistics.map((y, i) => (
-              <Table.Row key={i}>
-                {i == 0 && <Table.Cell rowSpan={x.statistics.length}>{x.category}</Table.Cell>}
-                <Table.Cell>{y.name}</Table.Cell>
-                <Table.Cell>{Number(y.value.toFixed(2))}</Table.Cell>
-                <Table.Cell>{y.teamName}</Table.Cell>
-                <Table.Cell>{y.competitionName}</Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        <Card color="teal" key={x.category}>
+          <Card.Content>
+            <Card.Header>{x.category}</Card.Header>
+          </Card.Content>
+          {x.statistics.map((y, i) => (
+            <>
+              <Card.Content key={i}>
+                <Card.Meta>{y.name}</Card.Meta>
+                <Card.Description>
+                  {y.teamName} ({y.competitionName}): <strong>{Number(y.value.toFixed(2))}</strong>
+                </Card.Description>
+              </Card.Content>
+            </>
+          ))}
+        </Card>
       ))}
     </>
   );
