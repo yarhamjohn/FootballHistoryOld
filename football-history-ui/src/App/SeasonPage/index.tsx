@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState, createRef } from "react";
+import { FunctionComponent, useState } from "react";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
-import { Divider, Grid, Rail, Segment, Sticky, Table } from "semantic-ui-react";
+import { Divider, Icon, Label } from "semantic-ui-react";
 import { CompetitionsInSeason } from "./CompetitionsInSeason";
 import { useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -11,6 +11,7 @@ import { CombinedStatistics } from "./CombinedStatistics";
 const SeasonPage: FunctionComponent = () => {
   const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
   const competitionsState = useAppSelector((state) => state.competition);
+
   const [competitionsInSeason, setCompetitionsInSeason] = useState<Competition[]>(
     selectCompetitionsBySeasonId(competitionsState, selectedSeason?.id)
   );
@@ -62,6 +63,7 @@ const SeasonPage: FunctionComponent = () => {
         </h1>
         <SeasonFilter />
       </div>
+
       <Divider />
 
       <div style={{ marginBottom: "2rem" }}>
@@ -78,11 +80,21 @@ const SeasonPage: FunctionComponent = () => {
         </p>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: "1 1 0" }}>
           {/* assumes the same number of points for a win for each competition */}
           <CombinedStatistics seasonId={selectedSeason.id} />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", flexGrow: 4 }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Label.Group color="yellow">
+              <Label as={"p"} size={"huge"} style={{ cursor: "default" }}>
+                <Icon name="trophy" />
+                Manchester City
+                <Label.Detail>Premier League</Label.Detail>
+              </Label>
+            </Label.Group>
+          </div>
+          <Divider />
           <CompetitionsInSeason />
         </div>
       </div>
