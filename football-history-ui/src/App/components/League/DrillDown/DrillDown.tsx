@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Card, Loader } from "semantic-ui-react";
-import { CompetitionRules } from "../../../shared/useFetchCompetitions";
 import { ErrorMessage } from "../../ErrorMessage";
 import { LeagueTableDrillDownForm } from "./DrillDownForm";
 import { LeagueTableDrillDownPositions } from "./DrillDownPositions";
 import { useFetchDrillDown } from "../../../shared/useFetchDrillDown";
+import { CompetitionRules } from "../../../competitionsSlice";
 
 const LeagueTableDrillDown: FunctionComponent<{
   teamId: number;

@@ -14,7 +14,7 @@ namespace football.history.api.Repositories.Match
             long? competitionId = null,
             long? seasonId = null,
             long? teamId = null,
-            string? type = null,
+            MatchType? type = null,
             DateTime? matchDate = null);
     }
 
@@ -39,7 +39,7 @@ namespace football.history.api.Repositories.Match
             long? competitionId,
             long? seasonId,
             long? teamId,
-            string? type,
+            MatchType? type,
             DateTime? matchDate)
         {
             var whereClause = BuildWhereClause(competitionId, seasonId, teamId, type, matchDate);
@@ -55,7 +55,7 @@ namespace football.history.api.Repositories.Match
             long? competitionId, 
             long? seasonId, 
             long? teamId, 
-            string? type, 
+            MatchType? type, 
             DateTime? matchDate)
         {
             var clauses = new List<string>();
@@ -93,7 +93,7 @@ namespace football.history.api.Repositories.Match
             long? competitionId, 
             long? seasonId, 
             long? teamId, 
-            string? type,
+            MatchType? type,
             DateTime? matchDate)
         {
             if (competitionId is not null)
@@ -139,7 +139,7 @@ namespace football.history.api.Repositories.Match
                     new SqlParameter
                     {
                         ParameterName = "@Type",
-                        Value         = type
+                        Value         = Enum.GetName((MatchType) type)
                     });
             }
 

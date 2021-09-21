@@ -2,22 +2,19 @@ import React, { FunctionComponent } from "react";
 import { Table } from "semantic-ui-react";
 import { League } from "../../../shared/useFetchLeague";
 import { LeagueTableRow } from "./Row";
-import { Team } from "../../../shared/teamsSlice";
 
 const LeagueTable: FunctionComponent<{
   league: League;
-  selectedTeam: Team | undefined;
-  seasonStartYear: number;
-}> = ({ league, selectedTeam, seasonStartYear }) => {
+  highlightSelectedTeam: boolean;
+}> = ({ league, highlightSelectedTeam }) => {
   const rows = league.table.map((r) => (
     <LeagueTableRow
       key={r.position}
       row={r}
-      selectedTeam={selectedTeam}
-      seasonStartYear={seasonStartYear}
       numRows={league.table.length}
       rules={league.competition.rules}
       competitionId={league.competition.id}
+      highlightSelectedTeam={highlightSelectedTeam}
     />
   ));
 

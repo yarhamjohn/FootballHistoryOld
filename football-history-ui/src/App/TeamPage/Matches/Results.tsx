@@ -3,7 +3,7 @@ import { Match } from "../../shared/useFetchLeagueMatches";
 import { Card, Divider, Message } from "semantic-ui-react";
 import { MatchResult } from "./Result";
 import { useTeamMatchResults } from "./useTeamMatchResults";
-import { Team } from "../../shared/teamsSlice";
+import { Team } from "../../teamsSlice";
 
 const MatchResults: FunctionComponent<{
   matches: Match[];

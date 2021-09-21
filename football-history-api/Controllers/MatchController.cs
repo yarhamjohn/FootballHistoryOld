@@ -24,7 +24,7 @@ namespace football.history.api.Controllers
             long? competitionId,
             long? seasonId,
             long? teamId,
-            string? type,
+            MatchType? type,
             DateTime? matchDate)
         {
             try

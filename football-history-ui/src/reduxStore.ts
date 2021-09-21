@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import seasonReducer from "./App/shared/seasonsSlice";
-import competitionReducer from "./App/shared/competitionsSlice";
-import teamReducer from "./App/shared/teamsSlice";
+import seasonReducer from "./App/seasonsSlice";
+import competitionReducer from "./App/competitionsSlice";
+import teamReducer from "./App/teamsSlice";
 
 const reduxStore = configureStore({
   reducer: {

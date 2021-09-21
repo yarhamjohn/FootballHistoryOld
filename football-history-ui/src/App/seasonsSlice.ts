@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { api } from "./useApi";
+import { api } from "./shared/useApi";
 
 export type Season = {
   id: number;

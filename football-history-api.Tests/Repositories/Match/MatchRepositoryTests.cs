@@ -88,7 +88,7 @@ namespace football.history.api.Tests.Repositories.Match
             var mockQueryBuilder = new Mock<IMatchCommandBuilder>();
             mockQueryBuilder
                 .Setup(x =>
-                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, "League", null))
+                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, MatchType.League, null))
                 .Returns(new MockDbCommand());
             var repository = new MatchRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 
@@ -105,7 +105,7 @@ namespace football.history.api.Tests.Repositories.Match
             var mockQueryBuilder = new Mock<IMatchCommandBuilder>();
             mockQueryBuilder
                 .Setup(x =>
-                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, "League", null))
+                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, MatchType.League, null))
                 .Returns(new MockDbCommand(new List<IDataRecord> {new SqlDataRecord()}));
             var repository = new MatchRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 
@@ -154,7 +154,7 @@ namespace football.history.api.Tests.Repositories.Match
             var mockQueryBuilder = new Mock<IMatchCommandBuilder>();
             mockQueryBuilder
                 .Setup(x =>
-                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, "PlayOff", null))
+                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, MatchType.PlayOff, null))
                 .Returns(new MockDbCommand());
             var repository = new MatchRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 
@@ -171,7 +171,7 @@ namespace football.history.api.Tests.Repositories.Match
             var mockQueryBuilder = new Mock<IMatchCommandBuilder>();
             mockQueryBuilder
                 .Setup(x =>
-                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, "PlayOff", null))
+                    x.Build(It.IsAny<IDatabaseConnection>(), 0, null, null, MatchType.PlayOff, null))
                 .Returns(new MockDbCommand(new List<IDataRecord> {new SqlDataRecord()}));
             var repository = new MatchRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 

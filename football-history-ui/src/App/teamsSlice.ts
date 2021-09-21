@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { api } from "./useApi";
+import { api } from "./shared/useApi";
 
 export type Team = {
   id: number;
@@ -54,7 +54,7 @@ export const teamsSlice = createSlice({
 });
 
 const selectTeams = (state: TeamState) => state.teams;
-const selectTeamId = (state: TeamState, id: number) => id;
+const selectTeamId = (_: TeamState, id: number) => id;
 export const selectTeamById = createSelector(
   [selectTeams, selectTeamId],
   (teams, id) => teams.filter((x) => x.id === id)[0]

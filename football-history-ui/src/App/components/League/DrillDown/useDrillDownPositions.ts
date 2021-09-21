@@ -1,5 +1,5 @@
 import { LeaguePosition } from "../../../shared/useFetchLeaguePositions";
-import { CompetitionRules } from "../../../shared/useFetchCompetitions";
+import { CompetitionRules } from "../../../competitionsSlice";
 
 const useDrillDownPositions = (
   positions: LeaguePosition[],

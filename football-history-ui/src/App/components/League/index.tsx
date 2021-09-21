@@ -2,11 +2,11 @@ import React, { FunctionComponent } from "react";
 import { Loader } from "semantic-ui-react";
 import { PointDeductionSummary } from "./PointDeductionSummary";
 import { useFetchLeague } from "../../shared/useFetchLeague";
-import { Competition } from "../../shared/useFetchCompetitions";
 import { ErrorMessage } from "../ErrorMessage";
 import { LeagueTable } from "./Table/Table";
-import { Season } from "../../shared/seasonsSlice";
-import { Team } from "../../shared/teamsSlice";
+import { Season } from "../../seasonsSlice";
+import { Team } from "../../teamsSlice";
+import { Competition } from "../../competitionsSlice";
 
 type FetchLeagueProps =
   | {
@@ -30,7 +30,11 @@ const League: FunctionComponent<{ props: FetchLeagueProps }> = ({ props }) => {
   }
 
   if (league.status === "LOADING") {
-    return <Loader />;
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Loader active inline size={"huge"} />
+      </div>
+    );
   }
 
   if (league.status === "LOAD_FAILED") {
@@ -39,11 +43,7 @@ const League: FunctionComponent<{ props: FetchLeagueProps }> = ({ props }) => {
 
   return (
     <div>
-      <LeagueTable
-        league={league.data}
-        selectedTeam={"team" in props ? props.team : undefined}
-        seasonStartYear={props.season.startYear}
-      />
+      <LeagueTable league={league.data} highlightSelectedTeam={"team" in props} />
       <PointDeductionSummary leagueTable={league.data.table} />
     </div>
   );

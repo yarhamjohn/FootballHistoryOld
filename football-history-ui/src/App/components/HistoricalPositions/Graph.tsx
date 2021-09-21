@@ -33,7 +33,6 @@ const HistoricalPositionsGraph: FunctionComponent<{
             return <Tooltip points={slice.points} positions={positions} />;
           }}
           axisBottom={{
-            orient: "bottom",
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
