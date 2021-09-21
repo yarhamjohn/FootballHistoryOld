@@ -1784,17 +1784,6 @@
     d3-time "^1.0.11"
     d3-time-format "^3.0.0"
 
-"@nivo/circle-packing@^0.73.0":
-  version "0.73.0"
-  resolved "https://registry.yarnpkg.com/@nivo/circle-packing/-/circle-packing-0.73.0.tgz#b81373d1e4bbb9f344d887ebd45f30a2de7b482a"
-  integrity sha512-SBpGpvdtEAU+bHTK5p0NR/WVExXylAw3BbOjaKIO0p3GQsQLNnHB3FxmVcS9PxCmka8nKID+d2NjE+ZL6fdOKA==
-  dependencies:
-    "@nivo/colors" "0.73.0"
-    "@nivo/tooltip" "0.73.0"
-    "@react-spring/web" "9.2.4"
-    d3-hierarchy "^1.1.8"
-    lodash "^4.17.21"
-
 "@nivo/colors@0.73.0":
   version "0.73.0"
   resolved "https://registry.yarnpkg.com/@nivo/colors/-/colors-0.73.0.tgz#fb22ec0d000b1b471cfa4a7156a787190be45bbe"
@@ -1861,7 +1850,7 @@
     d3-time-format "^3.0.0"
     lodash "^4.17.21"
 
-"@nivo/tooltip@0.73.0", "@nivo/tooltip@^0.73.0":
+"@nivo/tooltip@0.73.0":
   version "0.73.0"
   resolved "https://registry.yarnpkg.com/@nivo/tooltip/-/tooltip-0.73.0.tgz#c76d69ad90c1fb90b65b221ea74ad07b9e69ec59"
   integrity sha512-6tRRV5mzn1siArAlChXqBC/ISD0AV0tvGRbuyZokVXcM2xbvtfi6OAPaZ10UYbVejBo1rRI3gnhhyNkP0UG2ug==

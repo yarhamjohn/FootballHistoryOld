@@ -3,8 +3,8 @@ import { Point } from "@nivo/line";
 import { HistoricalPosition } from "../../shared/useFetchHistoricalPositions";
 
 const useHistoricalPositionsTooltipContent = (point: Point, positions: HistoricalPosition[]) => {
-  const seasonStartYear = point.data.xFormatted as number;
-  const absolutePosition = point.data.yFormatted as number;
+  const seasonStartYear = Number(point.data.xFormatted);
+  const absolutePosition = Number(point.data.yFormatted);
 
   const competitions = positions
     .flatMap((p) => p.competitions)
@@ -25,7 +25,12 @@ const useHistoricalPositionsTooltipContent = (point: Point, positions: Historica
   const leaguePosition =
     posInArray === 0 ? absolutePosition : absolutePosition - boundaries[posInArray - 1];
 
+  console.log(positions);
+  console.log(seasonStartYear);
+  console.log(positions.filter((p) => p.seasonStartYear === seasonStartYear));
+  console.log(positions.filter((p) => p.seasonStartYear === seasonStartYear)[0]);
   const historicalPosition = positions.filter((p) => p.seasonStartYear === seasonStartYear)[0];
+  console.log(historicalPosition);
   const leagueStatus = historicalPosition.team?.status ?? null;
 
   const leagueName = competitions[posInArray].name;

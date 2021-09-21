@@ -79,22 +79,12 @@ const SeasonPage: FunctionComponent = () => {
           different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a win.
         </p>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", flex: "1 1 0" }}>
           {/* assumes the same number of points for a win for each competition */}
           <CombinedStatistics seasonId={selectedSeason.id} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <Label.Group color="yellow">
-              <Label as={"p"} size={"huge"} style={{ cursor: "default" }}>
-                <Icon name="trophy" />
-                Manchester City
-                <Label.Detail>Premier League</Label.Detail>
-              </Label>
-            </Label.Group>
-          </div>
-          <Divider />
           <CompetitionsInSeason />
         </div>
       </div>
