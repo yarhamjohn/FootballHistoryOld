@@ -23,7 +23,7 @@ namespace football.history.api.Controllers
             _leagueTableBuilder = leagueTableBuilder;
         }
 
-        [HttpGet("competition/{Id:long}")]
+        [HttpGet("competition/{id:long}")]
         public ApiResponse<LeagueTableDto?> GetLeagueTable(long id)
         {
             try

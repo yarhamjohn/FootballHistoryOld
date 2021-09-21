@@ -17,7 +17,7 @@ namespace football.history.api.Builders
     public class LeagueTableBuilder : ILeagueTableBuilder
     {
         private readonly IRowComparerFactory _rowComparerFactory;
-        private readonly IStatusCalculator _statusCalculator;
+        private readonly IPositionRepository _positionRepository;
         private readonly IMatchRepository _matchRepository;
         private readonly IPointDeductionRepository _pointDeductionRepository;
         private readonly IRowBuilder _rowBuilder;
@@ -26,14 +26,14 @@ namespace football.history.api.Builders
             IMatchRepository matchRepository,
             IPointDeductionRepository pointDeductionRepository,
             IRowBuilder rowBuilder,
-            IRowComparerFactory rowComparerFactory,
-            IStatusCalculator statusCalculator)
+            IPositionRepository positionRepository,
+            IRowComparerFactory rowComparerFactory)
         {
             _matchRepository = matchRepository;
             _pointDeductionRepository = pointDeductionRepository;
             _rowBuilder = rowBuilder;
+            _positionRepository = positionRepository;
             _rowComparerFactory = rowComparerFactory;
-            _statusCalculator   = statusCalculator;
         }
         
         public ILeagueTable BuildFullLeagueTable(CompetitionModel competition)
@@ -44,8 +44,13 @@ namespace football.history.api.Builders
 
             var rows = GetRows(competition, teamsInLeague, leagueMatches, pointDeductions);
             
-            SetPositions(competition, rows);
-            SetStatuses(competition, rows);
+            var positions = _positionRepository.GetCompetitionPositions(competition.Id);
+
+            foreach (var row in rows)
+            {
+                row.Position = positions.Single(x => x.TeamId == row.TeamId).Position;
+                row.Status = positions.Single(x => x.TeamId == row.TeamId).Status;
+            }
             
             return new LeagueTable(rows);
         }
@@ -92,14 +97,6 @@ namespace football.history.api.Builders
             for (var i = 0; i < rows.Count; i++)
             {
                 rows[i].Position = rows.Count - i;
-            }
-        }
-
-        private void SetStatuses(CompetitionModel competition, IEnumerable<LeagueTableRowDto> rows)
-        {
-            foreach (var row in rows)
-            {
-                row.Status = _statusCalculator.GetStatus(row.Team, row.Position, competition);
             }
         }
     }

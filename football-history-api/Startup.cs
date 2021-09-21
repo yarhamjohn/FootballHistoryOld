@@ -35,7 +35,6 @@ namespace football.history.api
             services.AddTransient<ILeagueTableBuilder, LeagueTableBuilder>();
             services.AddTransient<IStatisticsBuilder, StatisticsBuilder>();
             services.AddTransient<IRowComparerFactory, RowComparerFactory>();
-            services.AddTransient<IStatusCalculator, StatusCalculator>();
             services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
             services.AddTransient<IPlayOffWinnerCalculator, PlayOffWinnerCalculator>();
             services.AddTransient<IRowBuilder, RowBuilder>();
