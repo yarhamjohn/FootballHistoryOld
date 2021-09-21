@@ -1,9 +1,9 @@
-namespace football.history.api.Repositories.Team
+namespace football.history.api.Dtos
 {
-    public record PositionModel (
+    public record PositionDto(
         long Id, 
         long CompetitionId, 
-        string CompetitionName,
+        string CompetitionName, 
         long TeamId, 
         string TeamName,
         int Position, 

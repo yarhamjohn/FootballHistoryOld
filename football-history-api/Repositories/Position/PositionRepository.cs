@@ -57,8 +57,10 @@ namespace football.history.api.Repositories.Team
             => new(
                 Id: reader.GetInt64(0),
                 CompetitionId: reader.GetInt64(1),
-                TeamId: reader.GetInt64(2),
-                Position: reader.GetByte(3),
-                Status: reader.IsDBNull(4) ? null : reader.GetString(4));
+                CompetitionName: reader.GetString(2),
+                TeamId: reader.GetInt64(3),
+                TeamName: reader.GetString(4),
+                Position: reader.GetByte(5),
+                Status: reader.IsDBNull(6) ? null : reader.GetString(6));
     }
 }

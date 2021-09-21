@@ -14,8 +14,10 @@ namespace football.history.api.Repositories.Team
         public DbCommand BuildForCompetition(IDatabaseConnection connection, long competitionId)
         {
             const string sql = @"
-SELECT p.Id, p.CompetitionId, p.TeamId, p.Position, p.Status
+SELECT p.Id, p.CompetitionId, c.Name, p.TeamId, t.Name, p.Position, p.Status
 FROM [dbo].[Positions] AS p
+LEFT JOIN [dbo].[Teams] AS t ON t.Id = p.TeamId
+LEFT JOIN [dbo].[Competitions] AS c ON c.Id = p.CompetitionId
 WHERE p.CompetitionId = @Id
 ";
 
@@ -33,8 +35,10 @@ WHERE p.CompetitionId = @Id
         public DbCommand BuildForTeam(IDatabaseConnection connection, long teamId)
         {
             const string sql = @"
-SELECT p.Id, p.CompetitionId, p.TeamId, p.Position, p.Status
+SELECT p.Id, p.CompetitionId, c.Name, p.TeamId, t.Name, p.Position, p.Status
 FROM [dbo].[Positions] AS p
+LEFT JOIN [dbo].[Teams] AS t ON t.Id = p.TeamId
+LEFT JOIN [dbo].[Competitions] AS c ON c.Id = p.CompetitionId
 WHERE p.TeamId = @Id
 ";
 

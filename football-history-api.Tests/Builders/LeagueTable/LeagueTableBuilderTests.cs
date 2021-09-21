@@ -36,23 +36,30 @@ namespace football.history.api.Tests.Builders.LeagueTable
             var mockRowBuilder = new Mock<IRowBuilder>();
             mockRowBuilder
                 .Setup(x => x.Build(competition, new TeamModel(1, "Norwich City", "NOR", null), matches, pointDeductions))
-                .Returns(new LeagueTableRowDto() { Points = 3});
+                .Returns(new LeagueTableRowDto() { TeamId = 1, Points = 3});
             mockRowBuilder
                 .Setup(x => x.Build(competition, new TeamModel(2, "Newcastle United", "NEW", null), matches, pointDeductions))
-                .Returns(new LeagueTableRowDto() { Points = 2});
+                .Returns(new LeagueTableRowDto() { TeamId = 2, Points = 2});
             mockRowBuilder
                 .Setup(x => x.Build(competition, new TeamModel(3, "Sunderland", "SUN", null), matches, pointDeductions))
-                .Returns(new LeagueTableRowDto() { Points = 1});
+                .Returns(new LeagueTableRowDto() { TeamId = 3, Points = 1});
             mockRowBuilder
                 .Setup(x => x.Build(competition, new TeamModel(4, "Arsenal", "ARS", null), matches, pointDeductions))
-                .Returns(new LeagueTableRowDto() { Points = 0});
-            
+                .Returns(new LeagueTableRowDto() { TeamId = 4, Points = 0});
+
             var mockPositionRepository = new Mock<IPositionRepository>();
+            mockPositionRepository
+                .Setup(x => x.GetCompetitionPositions(competition.Id))
+                .Returns(
+                    new List<PositionModel>
+                    {
+                        new(1, competition.Id, competition.Name, 1, "Norwich City", 1, "assigned-status"),
+                        new(2, competition.Id, competition.Name, 2, "Newcastle United", 2, "assigned-status"),
+                        new(3, competition.Id, competition.Name, 3, "Sunderland", 3, "assigned-status"),
+                        new(4, competition.Id, competition.Name, 4, "Arsenal", 4, "assigned-status"),
+                    });
 
             var mockRowComparerFactory = new Mock<IRowComparerFactory>();
-            mockRowComparerFactory
-                .Setup(x => x.GetLeagueTableComparer(competition))
-                .Returns(new FakeComparer());
             
             var builder = new LeagueTableBuilder(
                 mockMatchRepository.Object,
@@ -64,7 +71,7 @@ namespace football.history.api.Tests.Builders.LeagueTable
             var leagueTable = builder.BuildFullLeagueTable(competition);
 
             mockMatchRepository.VerifyAll();
-            mockRowComparerFactory.VerifyAll();
+            mockPositionRepository.VerifyAll();
 
             mockRowBuilder.Verify(x => x.Build(competition, new TeamModel(1, "Norwich City", "NOR", null), matches, pointDeductions), Times.Once);
             mockRowBuilder.Verify(x => x.Build(competition, new TeamModel(2, "Newcastle United", "NEW", null), matches, pointDeductions), Times.Once);
