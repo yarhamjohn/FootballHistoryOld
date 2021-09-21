@@ -19,17 +19,20 @@ namespace football.history.api.Builders
 
         public string? GetStatus(string teamName, int leaguePosition, CompetitionModel competition)
         {
-            if (competition.RelegationPlayOffPlaces > 0 && competition.RelegationPlaces == 0)
-            {
-                throw new InvalidOperationException(
-                    "Invalid competition format found. Cannot have a relegation play off place without relegation places.");
-            }
-            
-            if (competition.ReElectionPlaces > 0 && competition.RelegationPlaces > 0)
-            {
-                throw new InvalidOperationException(
-                    "Invalid competition format found. Cannot have relegation places and re-election places.");
-            }
+            // TODO: not true. In 1892-93, Division 1 had 3 relegation play off places, and Division 2 had 3 play off places (no auto promotion) playing in 'test matches'
+            // if (competition.RelegationPlayOffPlaces > 0 && competition.RelegationPlaces == 0)
+            // {
+            //     throw new InvalidOperationException(
+            //         "Invalid competition format found. Cannot have a relegation play off place without relegation places.");
+            // }
+
+            // TODO: fix data here. In 1919-20 Grimsby were not relected (most likely) but wikipedia says Relegated.
+            // This means two teams weren't reelected so the data model needs changing.
+            // if (competition.ReElectionPlaces > 0 && competition.RelegationPlaces > 0)
+            // {
+            //     throw new InvalidOperationException(
+            //         "Invalid competition format found. Cannot have relegation places and re-election places.");
+            // }
             
             if (leaguePosition == 1)
             {
