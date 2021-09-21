@@ -7,10 +7,12 @@ import { ErrorMessage } from "../components/ErrorMessage";
 import { Competition, selectCompetitionsBySeasonId } from "../competitionsSlice";
 import { useEffect } from "react";
 import { CombinedStatistics } from "./CombinedStatistics";
+import { useFetchPositions } from "../shared/useFetchPositions";
 
 const SeasonPage: FunctionComponent = () => {
   const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
   const competitionsState = useAppSelector((state) => state.competition);
+  const positions = useFetchPositions(selectedSeason?.id);
 
   const [competitionsInSeason, setCompetitionsInSeason] = useState<Competition[]>(
     selectCompetitionsBySeasonId(competitionsState, selectedSeason?.id)
@@ -85,6 +87,19 @@ const SeasonPage: FunctionComponent = () => {
           <CombinedStatistics seasonId={selectedSeason.id} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Label.Group color="yellow">
+              {positions.status === "LOAD_SUCCESSFUL" &&
+                positions.data.map((p) => (
+                  <Label key={p.teamId} as={"p"} size={"big"} style={{ cursor: "default" }}>
+                    <Icon name="trophy" />
+                    {p.teamName}
+                    <Label.Detail>{p.competitionName}</Label.Detail>
+                  </Label>
+                ))}
+            </Label.Group>
+          </div>
+          <Divider />
           <CompetitionsInSeason />
         </div>
       </div>
