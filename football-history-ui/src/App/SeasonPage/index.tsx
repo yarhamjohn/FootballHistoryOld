@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
-import { Divider, Icon, Label } from "semantic-ui-react";
+import { Divider, Icon, Label, Message } from "semantic-ui-react";
 import { CompetitionsInSeason } from "./CompetitionsInSeason";
 import { useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -66,42 +66,53 @@ const SeasonPage: FunctionComponent = () => {
         <SeasonFilter />
       </div>
 
-      <Divider />
-
-      <div style={{ marginBottom: "2rem" }}>
-        <h1>Information</h1>
-        <p>
-          There were {competitionsInSeason.length} active competition
-          {competitionsInSeason.length === 1 ? "" : "s"} during the {selectedSeason.startYear} -{" "}
-          {selectedSeason.endYear} season:
-          <span style={{ fontWeight: "bold" }}>{getCompetitionNames()}</span>, involving a total of{" "}
-          {competitionsInSeason
-            .map((c) => c.rules.totalPlaces)
-            .reduce((sum, current) => sum + current, 0)}{" "}
-          different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a win.
-        </p>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-        <div style={{ display: "flex", flexDirection: "column", flex: "1 1 0" }}>
-          <CombinedStatistics seasonId={selectedSeason.id} />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <Label.Group color="yellow">
-              {positions.status === "LOAD_SUCCESSFUL" &&
-                positions.data.map((p) => (
-                  <Label key={p.teamId} as={"p"} size={"big"} style={{ cursor: "default" }}>
-                    <Icon name="trophy" />
-                    {p.teamName}
-                    <Label.Detail>{p.competitionName}</Label.Detail>
-                  </Label>
-                ))}
-            </Label.Group>
-          </div>
+      {competitionsInSeason.length === 0 ? (
+        <Message
+          header="There were no active competitions during this season."
+          content={"This was due to World War II."}
+        />
+      ) : (
+        <>
           <Divider />
-          <CompetitionsInSeason />
-        </div>
-      </div>
+
+          <div style={{ marginBottom: "2rem" }}>
+            <h1>Information</h1>
+            <p>
+              There were {competitionsInSeason.length} active competition
+              {competitionsInSeason.length === 1 ? "" : "s"} during the {selectedSeason.startYear} -{" "}
+              {selectedSeason.endYear} season:
+              <span style={{ fontWeight: "bold" }}>{getCompetitionNames()}</span>, involving a total
+              of{" "}
+              {competitionsInSeason
+                .map((c) => c.rules.totalPlaces)
+                .reduce((sum, current) => sum + current, 0)}{" "}
+              different teams. There were {competitionsInSeason[0].rules.pointsForWin} points for a
+              win.
+            </p>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", flex: "1 1 0" }}>
+              <CombinedStatistics seasonId={selectedSeason.id} />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Label.Group color="yellow">
+                  {positions.status === "LOAD_SUCCESSFUL" &&
+                    positions.data.map((p) => (
+                      <Label key={p.teamId} as={"p"} size={"big"} style={{ cursor: "default" }}>
+                        <Icon name="trophy" />
+                        {p.teamName}
+                        <Label.Detail>{p.competitionName}</Label.Detail>
+                      </Label>
+                    ))}
+                </Label.Group>
+              </div>
+              <Divider />
+              <CompetitionsInSeason />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
