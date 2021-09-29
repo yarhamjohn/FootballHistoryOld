@@ -25,12 +25,7 @@ const useHistoricalPositionsTooltipContent = (point: Point, positions: Historica
   const leaguePosition =
     posInArray === 0 ? absolutePosition : absolutePosition - boundaries[posInArray - 1];
 
-  console.log(positions);
-  console.log(seasonStartYear);
-  console.log(positions.filter((p) => p.seasonStartYear === seasonStartYear));
-  console.log(positions.filter((p) => p.seasonStartYear === seasonStartYear)[0]);
   const historicalPosition = positions.filter((p) => p.seasonStartYear === seasonStartYear)[0];
-  console.log(historicalPosition);
   const leagueStatus = historicalPosition.team?.status ?? null;
 
   const leagueName = competitions[posInArray].name;

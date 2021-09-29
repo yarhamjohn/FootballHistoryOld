@@ -83,7 +83,6 @@ const SeasonPage: FunctionComponent = () => {
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", flex: "1 1 0" }}>
-          {/* assumes the same number of points for a win for each competition */}
           <CombinedStatistics seasonId={selectedSeason.id} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: "4 1 0" }}>

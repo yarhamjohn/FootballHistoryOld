@@ -16,12 +16,12 @@ const CompetitionsInSeason: FunctionComponent = () => {
 
   const dispatch = useAppDispatch();
   const competitionState = useAppSelector((state) => state.competition);
-  const selectedSeasonId = useAppSelector((state) => state.season.selectedSeason?.id);
+  const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
 
   useEffect(() => {
-    const competitions = selectCompetitionsBySeasonId(competitionState, selectedSeasonId);
+    const competitions = selectCompetitionsBySeasonId(competitionState, selectedSeason?.id);
     setCompetitions(competitions);
-  }, [competitionState, selectedSeasonId]);
+  }, [competitionState, selectedSeason]);
 
   useEffect(() => {
     if (competitions.length === 0) {
@@ -35,6 +35,15 @@ const CompetitionsInSeason: FunctionComponent = () => {
     dispatch(setSelectedCompetition({ ...competitions[tabIndex] }));
   }, [tabIndex, competitions]);
 
+  if (selectedSeason === undefined) {
+    return (
+      <ErrorMessage
+        header={"Oops something went wrong - no season was selected!"}
+        content={"Please ensure a season is selected."}
+      />
+    );
+  }
+
   if (competitions.length === 0) {
     return (
       <ErrorMessage
@@ -47,7 +56,7 @@ const CompetitionsInSeason: FunctionComponent = () => {
   const panes = competitions.map((x) => {
     return {
       menuItem: x.name,
-      render: () => <CompetitionInSeasonPane />,
+      render: () => <CompetitionInSeasonPane competition={x} season={selectedSeason} />,
     };
   });
 
