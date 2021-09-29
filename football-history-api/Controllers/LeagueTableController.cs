@@ -4,6 +4,7 @@ using football.history.api.Builders;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
 using football.history.api.Repositories.Competition;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
@@ -24,31 +25,28 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("competition/{id:long}")]
-        public ApiResponse<LeagueTableDto?> GetLeagueTable(long id)
+        public IActionResult GetLeagueTable(long id)
         {
             try
             {
                 var competition = _competitionRepository.GetCompetition(id);
                 var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
 
-                return new(BuildLeagueTableDto(competition, leagueTable));
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(BuildLeagueTableDto(competition, leagueTable));
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
 
         [HttpGet("season/{seasonId:long}/team/{teamId:long}")]
-        public ApiResponse<LeagueTableDto?> GetLeagueTable(long seasonId, long teamId)
+        public IActionResult GetLeagueTable(long seasonId, long teamId)
         {
             try
             {
@@ -60,19 +58,16 @@ namespace football.history.api.Controllers
                 
                 var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
 
-                return new(BuildLeagueTableDto(competition, leagueTable));
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(BuildLeagueTableDto(competition, leagueTable));
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
 

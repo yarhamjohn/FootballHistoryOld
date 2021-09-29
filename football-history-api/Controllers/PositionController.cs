@@ -23,7 +23,7 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("season/{id:long}")]
-        public ApiResponse<List<PositionDto>?> GetSeasonChampions(long id)
+        public IActionResult GetSeasonChampions(long id)
         {
             try
             {
@@ -33,43 +33,37 @@ namespace football.history.api.Controllers
                     .Select(competition => _repository.GetCompetitionPositions(competition.Id)
                         .Single(x => x.Position == 1)).Select(BuildPositionDto).ToList();
 
-                return new(positions);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(positions);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
 
         [HttpGet("team/{id:long}")]
-        public ApiResponse<List<PositionDto>?> GetTeamChampions(long id)
+        public IActionResult GetTeamChampions(long id)
         {
             try
             {
                 var positions = _repository.GetTeamPositions(id)
                         .Where(x => x.Position == 1).Select(BuildPositionDto).ToList();
 
-                return new(positions);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(positions);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
         

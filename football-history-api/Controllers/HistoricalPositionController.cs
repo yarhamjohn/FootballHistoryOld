@@ -19,26 +19,23 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public ApiResponse<List<HistoricalPositionDto>?> GetHistoricalPositions(long teamId, long[] seasonIds)
+        public IActionResult GetHistoricalPositions(long teamId, long[] seasonIds)
         {
             try
             {
                 var historicalPositions = seasonIds
                     .Select(seasonId => _builder.Build(teamId, seasonId).ToDto())
                     .ToList();
-                return new(historicalPositions);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(historicalPositions);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
     }

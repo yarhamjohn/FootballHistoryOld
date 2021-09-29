@@ -23,26 +23,23 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public ApiResponse<List<LeaguePositionDto>?> GetLeaguePositions(long teamId, long competitionId)
+        public IActionResult GetLeaguePositions(long teamId, long competitionId)
         {
             try
             {
                 var competition = _competitionRepository.GetCompetition(competitionId);
                 var leaguePositions = _leaguePositionBuilder.GetPositions(teamId, competition);
 
-                return new(leaguePositions);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(leaguePositions);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
     }

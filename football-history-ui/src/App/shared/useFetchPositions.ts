@@ -16,10 +16,7 @@ const useFetchPositions = (seasonId: number | undefined) => {
 
   const url = `${api}/api/v2/positions/season/${seasonId}`;
 
-  const result = useFetch(url);
-  return result.status === "LOAD_SUCCESSFUL"
-    ? { ...result, data: result.data as Position[] }
-    : result;
+  return useFetch<Position[]>(url);
 };
 
 export { useFetchPositions };

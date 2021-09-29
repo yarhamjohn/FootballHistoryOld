@@ -20,7 +20,7 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public ApiResponse<List<MatchDto>?> GetMatches(
+        public IActionResult GetMatches(
             long? competitionId,
             long? seasonId,
             long? teamId,
@@ -33,41 +33,35 @@ namespace football.history.api.Controllers
                     .GetMatches(competitionId, seasonId, teamId, type, matchDate)
                     .Select(BuildMatchDto)
                     .ToList();
-                return new(matches);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(matches);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
 
         [HttpGet("{id:long}")]
-        public ApiResponse<MatchDto?> GetMatch(long id)
+        public IActionResult GetMatch(long id)
         {
             try
             {
                 var match = _repository.GetMatch(id);
-                return new(BuildMatchDto(match));
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(BuildMatchDto(match));
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
 

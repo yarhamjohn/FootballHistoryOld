@@ -7,8 +7,7 @@ const useFetchPlayOffMatches = (competitionId: number) => {
 
   const url = `${api}/api/v2/matches?competitionId=${competitionId}&type=PlayOff`;
 
-  const result = useFetch(url);
-  return result.status === "LOAD_SUCCESSFUL" ? { ...result, data: result.data as Match[] } : result;
+  return useFetch<Match[]>(url);
 };
 
 export { useFetchPlayOffMatches };

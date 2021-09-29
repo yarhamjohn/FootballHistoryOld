@@ -25,24 +25,21 @@ namespace football.history.api.Controllers
         [HttpGet]
         [MapToApiVersion("2")]
         [Route("api/v{version:apiVersion}/statistics/season/{id:long}")]
-        public ApiResponse<List<StatisticsDto>?> GetSeasonStatistics(long id)
+        public IActionResult GetSeasonStatistics(long id)
         {
             try
             {
                 var statistics = _statisticsBuilder.BuildSeasonStatistics(id);
-                return new(statistics);
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return Ok(statistics);
             }
             catch (Exception ex)
             {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
+                return ex switch
+                {
+                    DataNotFoundException => NotFound(ex.Message),
+                    DataInvalidException => Problem(ex.Message),
+                    _ => Problem()
+                };
             }
         }
     }

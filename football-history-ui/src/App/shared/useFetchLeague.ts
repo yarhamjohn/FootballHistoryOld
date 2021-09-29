@@ -1,5 +1,5 @@
 import { useApi } from "./useApi";
-import { useFetch } from "./useFetch";
+import { callApi, useFetch } from "./useFetch";
 import { Competition } from "../competitionsSlice";
 
 export type Row = {
@@ -43,8 +43,7 @@ const useFetchLeague = (props: FetchLeagueProps) => {
       ? `${api}/api/v2/league-table/competition/${props.competitionId}`
       : `${api}/api/v2/league-table/season/${props.seasonId}/team/${props.teamId}`;
 
-  const result = useFetch(url);
-  return result.status === "LOAD_SUCCESSFUL" ? { ...result, data: result.data as League } : result;
+  return useFetch<League>(url);
 };
 
 export { useFetchLeague };

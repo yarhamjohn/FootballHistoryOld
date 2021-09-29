@@ -1,15 +1,28 @@
 import { useEffect, useState } from "react";
 
-export type FetchResult =
+export type FetchResult<T> =
   | {
       status: "UNLOADED";
     }
   | { status: "LOADING" }
-  | { status: "LOAD_SUCCESSFUL"; data: any }
+  | { status: "LOAD_SUCCESSFUL"; data: T }
   | { status: "LOAD_FAILED"; error: string };
 
-const useFetch = (url: string) => {
-  const [result, setResult] = useState<FetchResult>({ status: "UNLOADED" });
+async function callApi<T>(url: string, signal: AbortSignal): Promise<T> {
+  return fetch(url, { signal })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json() as Promise<T>;
+    })
+    .then((result) => {
+      return result;
+    });
+}
+
+function useFetch<T>(url: string): FetchResult<T> {
+  const [result, setResult] = useState<FetchResult<T>>({ status: "UNLOADED" });
 
   useEffect(() => {
     if (url === "") {
@@ -20,16 +33,9 @@ const useFetch = (url: string) => {
 
     setResult({ status: "LOADING" });
 
-    fetch(url, { signal: abortController.signal })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.error === null) {
-          setResult({ status: "LOAD_SUCCESSFUL", data: response.result });
-        } else {
-          throw new Error(response.error.message);
-        }
-      })
-      .catch((error) => {
+    callApi<T>(url, abortController.signal)
+      .then((data: T) => setResult({ status: "LOAD_SUCCESSFUL", data }))
+      .catch((error: Error) => {
         if (!abortController.signal.aborted) {
           setResult({ status: "LOAD_FAILED", error: error.message });
         }
@@ -41,6 +47,6 @@ const useFetch = (url: string) => {
   }, [url]);
 
   return result;
-};
+}
 
-export { useFetch };
+export { useFetch, callApi };

@@ -61,8 +61,7 @@ const useFetchLeagueMatches = (props: FetchLeagueMatchesProps) => {
       ? `${api}/api/v2/matches?teamId=${props.teamId}&competitionId=${props.competitionId}&type=League`
       : `${api}/api/v2/matches?competitionId=${props.competitionId}&type=League`;
 
-  const result = useFetch(url);
-  return result.status === "LOAD_SUCCESSFUL" ? { ...result, data: result.data as Match[] } : result;
+  return useFetch<Match[]>(url);
 };
 
 export { useFetchLeagueMatches };

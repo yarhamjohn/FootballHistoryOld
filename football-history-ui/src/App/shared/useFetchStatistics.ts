@@ -18,10 +18,7 @@ const useFetchStatistics = (seasonId: number) => {
 
   const url = `${api}/api/v2/statistics/season/${seasonId}`;
 
-  const result = useFetch(url);
-  return result.status === "LOAD_SUCCESSFUL"
-    ? { ...result, data: result.data as Statistics[] }
-    : result;
+  return useFetch<Statistics[]>(url);
 };
 
 export { useFetchStatistics };

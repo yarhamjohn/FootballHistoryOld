@@ -3,6 +3,7 @@ import { useApi } from "./useApi";
 import { HistoricalPositionRange } from "../components/HistoricalPositions";
 import { Season } from "../seasonsSlice";
 import { Competition } from "../competitionsSlice";
+import { callApi } from "./useFetch";
 
 export type HistoricalPosition = {
   seasonId: number;
@@ -126,25 +127,18 @@ const useFetchHistoricalPositions = (
       positions: getPositionsInRange(allFetchedPositions),
     });
 
-    fetch(url, {
-      signal: abortController.signal,
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.error === null) {
-          const allPositions = [...allFetchedPositions, ...response.result];
-          setAllFetchedPositions(allPositions);
-          dispatch({
-            type: "LOAD_HISTORICAL_POSITIONS_SUCCEEDED",
-            positions: getPositionsInRange(allPositions),
-          });
-        } else {
-          throw new Error(response.error.message);
-        }
+    callApi<HistoricalPosition[]>(url, abortController.signal)
+      .then((data: HistoricalPosition[]) => {
+        const allPositions = [...allFetchedPositions, ...data];
+        setAllFetchedPositions(allPositions);
+        dispatch({
+          type: "LOAD_HISTORICAL_POSITIONS_SUCCEEDED",
+          positions: getPositionsInRange(allPositions),
+        });
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         if (!abortController.signal.aborted) {
-          dispatch({ type: "LOAD_HISTORICAL_POSITIONS_FAILED", error });
+          dispatch({ type: "LOAD_HISTORICAL_POSITIONS_FAILED", error: error.message });
         }
       });
 
