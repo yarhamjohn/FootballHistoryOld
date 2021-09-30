@@ -23,17 +23,18 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("season/{id:long}")]
-        public IActionResult GetSeasonChampions(long id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<PositionDto>> GetSeasonChampions(long id)
         {
             try
             {
                 var competitions = _competitionRepository.GetCompetitionsInSeason(id);
 
-                var positions = competitions
+                return competitions
                     .Select(competition => _repository.GetCompetitionPositions(competition.Id)
                         .Single(x => x.Position == 1)).Select(BuildPositionDto).ToList();
-
-                return Ok(positions);
             }
             catch (Exception ex)
             {
@@ -47,14 +48,15 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("team/{id:long}")]
-        public IActionResult GetTeamChampions(long id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<PositionDto>> GetTeamChampions(long id)
         {
             try
             {
-                var positions = _repository.GetTeamPositions(id)
+                return _repository.GetTeamPositions(id)
                         .Where(x => x.Position == 1).Select(BuildPositionDto).ToList();
-
-                return Ok(positions);
             }
             catch (Exception ex)
             {

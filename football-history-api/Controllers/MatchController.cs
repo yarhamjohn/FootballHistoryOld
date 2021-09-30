@@ -20,7 +20,10 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetMatches(
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<MatchDto>> GetMatches(
             long? competitionId,
             long? seasonId,
             long? teamId,
@@ -29,11 +32,10 @@ namespace football.history.api.Controllers
         {
             try
             {
-                var matches = _repository
+                return _repository
                     .GetMatches(competitionId, seasonId, teamId, type, matchDate)
                     .Select(BuildMatchDto)
                     .ToList();
-                return Ok(matches);
             }
             catch (Exception ex)
             {
@@ -47,12 +49,15 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("{id:long}")]
-        public IActionResult GetMatch(long id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<MatchDto> GetMatch(long id)
         {
             try
             {
                 var match = _repository.GetMatch(id);
-                return Ok(BuildMatchDto(match));
+                return BuildMatchDto(match);
             }
             catch (Exception ex)
             {

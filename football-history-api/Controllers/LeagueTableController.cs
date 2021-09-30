@@ -4,7 +4,6 @@ using football.history.api.Builders;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
 using football.history.api.Repositories.Competition;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
@@ -25,14 +24,17 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("competition/{id:long}")]
-        public IActionResult GetLeagueTable(long id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<LeagueTableDto> GetLeagueTable(long id)
         {
             try
             {
                 var competition = _competitionRepository.GetCompetition(id);
                 var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
 
-                return Ok(BuildLeagueTableDto(competition, leagueTable));
+                return BuildLeagueTableDto(competition, leagueTable);
             }
             catch (Exception ex)
             {
@@ -46,7 +48,10 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet("season/{seasonId:long}/team/{teamId:long}")]
-        public IActionResult GetLeagueTable(long seasonId, long teamId)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<LeagueTableDto> GetLeagueTable(long seasonId, long teamId)
         {
             try
             {
@@ -58,7 +63,7 @@ namespace football.history.api.Controllers
                 
                 var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
 
-                return Ok(BuildLeagueTableDto(competition, leagueTable));
+                return BuildLeagueTableDto(competition, leagueTable);
             }
             catch (Exception ex)
             {

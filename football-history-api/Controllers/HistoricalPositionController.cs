@@ -19,14 +19,16 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetHistoricalPositions(long teamId, long[] seasonIds)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<HistoricalPositionDto>> GetHistoricalPositions(long teamId, long[] seasonIds)
         {
             try
             {
-                var historicalPositions = seasonIds
+                return seasonIds
                     .Select(seasonId => _builder.Build(teamId, seasonId).ToDto())
                     .ToList();
-                return Ok(historicalPositions);
             }
             catch (Exception ex)
             {

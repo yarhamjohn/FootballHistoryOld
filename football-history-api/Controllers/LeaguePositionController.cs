@@ -23,14 +23,15 @@ namespace football.history.api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetLeaguePositions(long teamId, long competitionId)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<LeaguePositionDto>> GetLeaguePositions(long teamId, long competitionId)
         {
             try
             {
                 var competition = _competitionRepository.GetCompetition(competitionId);
-                var leaguePositions = _leaguePositionBuilder.GetPositions(teamId, competition);
-
-                return Ok(leaguePositions);
+                return _leaguePositionBuilder.GetPositions(teamId, competition);
             }
             catch (Exception ex)
             {

@@ -25,12 +25,14 @@ namespace football.history.api.Controllers
         [HttpGet]
         [MapToApiVersion("2")]
         [Route("api/v{version:apiVersion}/statistics/season/{id:long}")]
-        public IActionResult GetSeasonStatistics(long id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<List<StatisticsDto>> GetSeasonStatistics(long id)
         {
             try
             {
-                var statistics = _statisticsBuilder.BuildSeasonStatistics(id);
-                return Ok(statistics);
+                return _statisticsBuilder.BuildSeasonStatistics(id);
             }
             catch (Exception ex)
             {
