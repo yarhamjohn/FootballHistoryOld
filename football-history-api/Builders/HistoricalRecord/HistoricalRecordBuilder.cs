@@ -41,11 +41,11 @@ namespace football.history.api.Builders
 
         private HistoricalSeason BuildHistoricalSeasons(long teamId, long seasonId)
         {
+            //TODO: reduce these db calls. There are 4 in this method call. Can they be moved upwards and done in bulk?
             var (_, startYear, _) = _seasonRepository.GetSeason(seasonId);
 
             var tierPlaces = _competitionRepository.GetCompetitionsInSeason(seasonId)
                 .Select(x => (x.Tier, x.TotalPlaces))
-                .Distinct() // Required to deduplicate Division 3 North and Division 3 South
                 .ToArray();
 
             var boundaries = BuildBoundaries(tierPlaces);
@@ -57,9 +57,8 @@ namespace football.history.api.Builders
 
                 return new HistoricalSeason(seasonId, startYear, boundaries, historicalPosition);
             }
-            catch (DataNotFoundException ex)
+            catch (DataNotFoundException)
             {
-                Console.WriteLine(ex.Message);
                 return new HistoricalSeason(seasonId, startYear, boundaries, null);
             }
         }
@@ -73,9 +72,9 @@ namespace football.history.api.Builders
             var overallPosition = GetOverallPosition(tierPlaces, competition.Tier, position.Position);
 
             return new HistoricalPosition(
-                competition.Id, 
-                competition.Name, 
-                position.Position, 
+                competition.Id,
+                competition.Name,
+                position.Position,
                 overallPosition,
                 position.Status);
         }
@@ -87,14 +86,29 @@ namespace football.history.api.Builders
                 .Select(y => y.TotalPlaces)
                 .Sum();
 
-        private static int[] BuildBoundaries(IEnumerable<(int Tier, int TotalPlaces)> tierPlaces)
+        private static int[] BuildBoundaries((int Tier, int TotalPlaces)[] tierPlaces)
         {
             var boundary = 0;
-            
-            return tierPlaces
+
+            var containsNorthSouth = tierPlaces.Count(x => x.Tier == 3) > 1;
+            if (!containsNorthSouth)
+            {
+                return tierPlaces
+                    .OrderBy(x => x.Tier)
+                    .Select(y => boundary += y.TotalPlaces)
+                    .ToArray();
+            }
+
+            var boundaries = tierPlaces
+                .Where(x => x.Tier < 3)
                 .OrderBy(x => x.Tier)
                 .Select(y => boundary += y.TotalPlaces)
-                .ToArray();
+                .ToList();
+
+            var northSouthBoundaries = tierPlaces.Where(x => x.Tier == 3).Select(y => boundary + y.TotalPlaces);
+            boundaries.AddRange(northSouthBoundaries);
+
+            return boundaries.ToArray();
         }
     }
 }

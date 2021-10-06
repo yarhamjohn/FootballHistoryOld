@@ -50,7 +50,6 @@ namespace football.history.api.Repositories.Team
             _connection.Open();
             var cmd = _queryBuilder.Build(_connection, competitionId, teamId);
             var positions = GetPositionModels(cmd);
-            Console.WriteLine(cmd.CommandText);
             _connection.Close();
 
             return positions.Count switch

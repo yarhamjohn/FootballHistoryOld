@@ -116,6 +116,8 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
         type: "UPDATE_HISTORICAL_RECORD",
         record: { teamId, historicalSeasons: getSeasonsInRange(seasonsAlreadyFetched) },
       });
+
+      return;
     }
 
     const newUrl = getUrl(yearsNotYetFetched);

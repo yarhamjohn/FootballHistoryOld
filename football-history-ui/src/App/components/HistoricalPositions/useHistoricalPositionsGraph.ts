@@ -44,9 +44,13 @@ const useHistoricalPositionsGraph = (seasons: HistoricalSeason[], range: SeasonD
       id: "tier3-tier4",
       data: getBoundarySeries(2, seasons),
     },
+    {
+      id: "tier4-tier5",
+      data: getBoundarySeries(3, seasons),
+    },
   ];
 
-  const colors = ["black", "#75B266", "#BFA67F", "#B26694"];
+  const colors = ["black", "#75B266", "#BFA67F", "#B26694", "#6694b2"];
 
   // TODO: This should be calculated dynamically
   const yValues = [1, 16, 31, 46, 61, 76, 92];
