@@ -1,17 +1,17 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { Tooltip } from "./Tooltip";
 import { Loader } from "semantic-ui-react";
 import { useHistoricalPositionsGraph } from "./useHistoricalPositionsGraph";
-import { HistoricalPositionRange } from "./index";
-import { HistoricalPosition } from "../../shared/useFetchHistoricalPositions";
+import { SeasonDateRange } from "./index";
+import { HistoricalSeason } from "../../shared/useFetchHistoricalRecord";
 
 const HistoricalPositionsGraph: FunctionComponent<{
   isLoading: boolean;
-  positions: HistoricalPosition[];
-  range: HistoricalPositionRange;
-}> = ({ isLoading, positions, range }) => {
-  const { series, colors, yValues } = useHistoricalPositionsGraph(positions, range);
+  seasons: HistoricalSeason[];
+  range: SeasonDateRange;
+}> = ({ isLoading, seasons: seasons, range }) => {
+  const { series, colors, yValues } = useHistoricalPositionsGraph(seasons, range);
 
   return (
     <div style={{ height: "600px", position: "relative" }}>
@@ -30,7 +30,7 @@ const HistoricalPositionsGraph: FunctionComponent<{
           gridYValues={yValues}
           enableSlices="x"
           sliceTooltip={({ slice }) => {
-            return <Tooltip points={slice.points} positions={positions} />;
+            return <Tooltip points={slice.points} id={slice.id} seasons={seasons} />;
           }}
           axisBottom={{
             tickSize: 5,

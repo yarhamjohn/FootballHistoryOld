@@ -1,20 +1,19 @@
-import * as React from "react";
 import { FunctionComponent, useEffect, useState } from "react";
 import { Handles, Rail, Slider, Ticks, Tracks } from "react-compound-slider";
 import { Handle, Tick, Track } from "./Components";
-import { HistoricalPositionRange } from "../../HistoricalPositions";
+import { SeasonDateRange } from "../../HistoricalPositions";
 
 const YearSlider: FunctionComponent<{
   sliderRange: number[];
-  selectedRange: HistoricalPositionRange;
-  setSelectedRange: (range: HistoricalPositionRange) => void;
+  selectedRange: SeasonDateRange;
+  setSelectedRange: (range: SeasonDateRange) => void;
 }> = ({ sliderRange, selectedRange, setSelectedRange }) => {
-  const [newSelectedRange, setNewSelectedRange] = useState<HistoricalPositionRange>(selectedRange);
+  const [newSelectedRange, setNewSelectedRange] = useState<SeasonDateRange>(selectedRange);
 
-  useEffect(() => setSelectedRange(newSelectedRange), [
-    newSelectedRange.startYear,
-    newSelectedRange.endYear,
-  ]);
+  useEffect(
+    () => setSelectedRange(newSelectedRange),
+    [newSelectedRange.startYear, newSelectedRange.endYear]
+  );
 
   const onChange = (values: readonly number[]) => {
     setNewSelectedRange({ startYear: Math.min(...values), endYear: Math.max(...values) });
