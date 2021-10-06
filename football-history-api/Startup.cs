@@ -38,7 +38,7 @@ namespace football.history.api
             services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
             services.AddTransient<IPlayOffWinnerCalculator, PlayOffWinnerCalculator>();
             services.AddTransient<IRowBuilder, RowBuilder>();
-            services.AddTransient<IHistoricalPositionBuilder, HistoricalPositionBuilder>();
+            services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
             services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
             
             services.AddTransient<ITeamCommandBuilder, TeamCommandBuilder>();
@@ -128,8 +128,8 @@ namespace football.history.api
             app.UseSwaggerUI(
                 options =>
                 {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                     options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
 
             app.UseHttpsRedirection();

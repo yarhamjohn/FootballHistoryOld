@@ -10,7 +10,7 @@ namespace football.history.api.Repositories.Competition
         IEnumerable<CompetitionModel> GetAllCompetitions();
         CompetitionModel GetCompetition(long competitionId);
         CompetitionModel GetCompetitionForSeasonAndTier(long seasonId, int tier);
-        CompetitionModel? GetCompetitionForSeasonAndTeam(long seasonId, long teamId);
+        CompetitionModel GetCompetitionForSeasonAndTeam(long seasonId, long teamId);
         IEnumerable<CompetitionModel> GetCompetitionsInSeason(long seasonId);
     }
 
@@ -65,7 +65,7 @@ namespace football.history.api.Repositories.Competition
             };
         }
 
-        public CompetitionModel? GetCompetitionForSeasonAndTeam(long seasonId, long teamId)
+        public CompetitionModel GetCompetitionForSeasonAndTeam(long seasonId, long teamId)
         {
             _connection.Open();
             var firstCmd = _queryBuilder.BuildForCompetitionId(_connection, seasonId, teamId);
@@ -73,7 +73,8 @@ namespace football.history.api.Repositories.Competition
             if (competitionId is null)
             {
                 _connection.Close();
-                return null;
+                throw new DataNotFoundException(
+                    $"No competitionId was found for the specified seasonId ({seasonId}) and teamId ({teamId}).");
             }
 
             var secondCmd = _queryBuilder.Build(_connection, (long) competitionId);
@@ -83,7 +84,7 @@ namespace football.history.api.Repositories.Competition
             return competitions.Count switch
             {
                 1 => competitions.Single(),
-                0 => null,
+                0 => throw new DataNotFoundException($"No competitions matched the specified id ({competitionId})."),
                 _ => throw new DataInvalidException($"{competitions.Count} competitions matched the specified id ({competitionId}).")
             };
         }

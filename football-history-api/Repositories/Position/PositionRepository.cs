@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
+using football.history.api.Exceptions;
 
 namespace football.history.api.Repositories.Team
 {
@@ -7,6 +10,7 @@ namespace football.history.api.Repositories.Team
     {
         List<PositionModel> GetCompetitionPositions(long competitionId);
         List<PositionModel> GetTeamPositions(long teamId);
+        PositionModel GetPosition(long competitionId, long teamId);
     }
 
     public class PositionRepository : IPositionRepository
@@ -23,7 +27,7 @@ namespace football.history.api.Repositories.Team
         public List<PositionModel> GetCompetitionPositions(long competitionId)
         {
             _connection.Open();
-            var cmd = _queryBuilder.BuildForCompetition(_connection, competitionId);
+            var cmd = _queryBuilder.Build(_connection, competitionId, null);
             var positions = GetPositionModels(cmd);
             _connection.Close();
 
@@ -33,11 +37,30 @@ namespace football.history.api.Repositories.Team
         public List<PositionModel> GetTeamPositions(long teamId)
         {
             _connection.Open();
-            var cmd = _queryBuilder.BuildForTeam(_connection, teamId);
+            var cmd = _queryBuilder.Build(_connection, null, teamId);
             var positions = GetPositionModels(cmd);
             _connection.Close();
 
             return positions;
+        }
+
+
+        public PositionModel GetPosition(long competitionId, long teamId)
+        {
+            _connection.Open();
+            var cmd = _queryBuilder.Build(_connection, competitionId, teamId);
+            var positions = GetPositionModels(cmd);
+            Console.WriteLine(cmd.CommandText);
+            _connection.Close();
+
+            return positions.Count switch
+            {
+                1 => positions.Single(),
+                0 => throw new DataNotFoundException(
+                    $"No position was found for the specified competitionId ({competitionId}) and teamId ({teamId})."),
+                _ => throw new DataInvalidException(
+                    $"{positions.Count} were found for the specified competitionId ({competitionId}) and teamId ({teamId}).")
+            };
         }
 
         private static List<PositionModel> GetPositionModels(DbCommand cmd)
