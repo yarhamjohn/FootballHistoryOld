@@ -47,6 +47,7 @@ namespace football.history.api
             services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
             services.AddTransient<IPointDeductionCommandBuilder, PointDeductionCommandBuilder>();
             services.AddTransient<IPositionCommandBuilder, PositionCommandBuilder>();
+            services.AddTransient<IHistoricalSeasonCommandBuilder, HistoricalSeasonCommandBuilder>();
 
             services.AddTransient<IDatabaseConnection, DatabaseConnection>();
             services.AddTransient<ITeamRepository, TeamRepository>();
@@ -55,6 +56,7 @@ namespace football.history.api
             services.AddTransient<IMatchRepository, MatchRepository>();
             services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
             services.AddTransient<IPositionRepository, PositionRepository>();
+            services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
 
             var connString = Configuration.GetConnectionString("FootballHistory");
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString));

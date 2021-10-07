@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
+using football.history.api.Repositories.Match;
 using football.history.api.Repositories.Season;
 using football.history.api.Repositories.Team;
 
@@ -16,99 +18,126 @@ namespace football.history.api.Builders
 
     public class HistoricalRecordBuilder : IHistoricalRecordBuilder
     {
-        private readonly ISeasonRepository _seasonRepository;
-        private readonly ICompetitionRepository _competitionRepository;
-        private readonly IPositionRepository _positionRepository;
+        private readonly IHistoricalSeasonRepository _historicalSeasonRepository;
 
-        public HistoricalRecordBuilder(
-            ISeasonRepository seasonRepository,
-            ICompetitionRepository competitionRepository,
-            IPositionRepository positionRepository)
+        public HistoricalRecordBuilder(IHistoricalSeasonRepository historicalSeasonRepository)
         {
-            _seasonRepository = seasonRepository;
-            _competitionRepository = competitionRepository;
-            _positionRepository = positionRepository;
+            _historicalSeasonRepository = historicalSeasonRepository;
         }
 
         public HistoricalRecord Build(long teamId, long[] seasonIds)
         {
-            var historicalSeasons = seasonIds
-                .Select(s => BuildHistoricalSeasons(teamId, s))
+            var historicalSeasonModels = _historicalSeasonRepository.GetHistoricalSeasons(teamId, seasonIds);
+
+            var groupedSeasons = historicalSeasonModels
+                .GroupBy(x => (x.SeasonId, x.StartYear));
+
+            var historicalSeasons = groupedSeasons
+                .Select(BuildHistoricalSeason)
                 .ToArray();
 
             return new HistoricalRecord(teamId, historicalSeasons);
         }
 
-        private HistoricalSeason BuildHistoricalSeasons(long teamId, long seasonId)
+        private HistoricalSeason BuildHistoricalSeason(
+            IGrouping<(long SeasonId, int StartYear), HistoricalSeasonModel> seasonGroup)
         {
-            //TODO: reduce these db calls. There are 4 in this method call. Can they be moved upwards and done in bulk?
-            var (_, startYear, _) = _seasonRepository.GetSeason(seasonId);
+            var historicalSeason = new HistoricalSeason
+            {
+                SeasonId = seasonGroup.Key.SeasonId,
+                SeasonStartYear = seasonGroup.Key.StartYear,
+            };
 
-            var tierPlaces = _competitionRepository.GetCompetitionsInSeason(seasonId)
-                .Select(x => (x.Tier, x.TotalPlaces))
+            var positionModels = seasonGroup.Select(x => x.PositionModel).ToArray();
+
+            if (positionModels.Length == 1 && positionModels.Single() is null)
+            {
+                return historicalSeason with
+                {
+                    Boundaries = Array.Empty<int>(),
+                    HistoricalPosition = null
+                };
+            }
+
+            if (positionModels.Length > 1 && positionModels.Any(x => x is null))
+            {
+                throw new DataInvalidException(
+                    "Some competitions were null in the given season " +
+                    $"(id: {seasonGroup.Key.SeasonId}, startYear: {seasonGroup.Key.StartYear}).");
+            }
+
+            return historicalSeason with
+            {
+                Boundaries = BuildBoundaries(positionModels!),
+                HistoricalPosition = BuildHistoricalPosition(positionModels!)
+            };
+        }
+
+        private static HistoricalPosition? BuildHistoricalPosition(
+            IReadOnlyCollection<HistoricalPositionModel> positionModels)
+        {
+            var modelsWithPositions = positionModels
+                .Where(x => x.Position is not null)
                 .ToArray();
 
-            var boundaries = BuildBoundaries(tierPlaces);
-
-            try
+            if (!modelsWithPositions.Any())
             {
-                var competition = _competitionRepository.GetCompetitionForSeasonAndTeam(seasonId, teamId);
-                var historicalPosition = BuildHistoricalPosition(teamId, competition, tierPlaces);
-
-                return new HistoricalSeason(seasonId, startYear, boundaries, historicalPosition);
+                return null;
             }
-            catch (DataNotFoundException)
+
+            if (modelsWithPositions.Length > 1)
             {
-                return new HistoricalSeason(seasonId, startYear, boundaries, null);
+                throw new DataInvalidException(
+                    "The team was assigned positions in more than one competition in a season.");
             }
-        }
 
-        private HistoricalPosition BuildHistoricalPosition(
-            long teamId,
-            CompetitionModel competition,
-            IEnumerable<(int Tier, int TotalPlaces)> tierPlaces)
-        {
-            var position = _positionRepository.GetPosition(competition.Id, teamId);
-            var overallPosition = GetOverallPosition(tierPlaces, competition.Tier, position.Position);
+            var activeCompetition = modelsWithPositions.Single();
 
             return new HistoricalPosition(
-                competition.Id,
-                competition.Name,
-                position.Position,
-                overallPosition,
-                position.Status);
+                activeCompetition.CompetitionId,
+                activeCompetition.CompetitionName,
+                (int)activeCompetition.Position!,
+                GetOverallPosition(positionModels, activeCompetition.Tier, (int)activeCompetition.Position!),
+                activeCompetition.Status);
         }
 
-        private static int GetOverallPosition(
-            IEnumerable<(int Tier, int TotalPlaces)> tierPlaces, int tier, int position)
-            => position + tierPlaces
-                .Where(x => x.Tier < tier)
-                .Select(y => y.TotalPlaces)
-                .Sum();
-
-        private static int[] BuildBoundaries((int Tier, int TotalPlaces)[] tierPlaces)
+        private static int[] BuildBoundaries(IReadOnlyCollection<HistoricalPositionModel> seasonModel)
         {
             var boundary = 0;
 
-            var containsNorthSouth = tierPlaces.Count(x => x.Tier == 3) > 1;
-            if (!containsNorthSouth)
+            if (!ContainsNorthSouth(seasonModel))
             {
-                return tierPlaces
+                return seasonModel
                     .OrderBy(x => x.Tier)
                     .Select(y => boundary += y.TotalPlaces)
                     .ToArray();
             }
 
-            var boundaries = tierPlaces
+            var boundaries = seasonModel
                 .Where(x => x.Tier < 3)
                 .OrderBy(x => x.Tier)
                 .Select(y => boundary += y.TotalPlaces)
                 .ToList();
 
-            var northSouthBoundaries = tierPlaces.Where(x => x.Tier == 3).Select(y => boundary + y.TotalPlaces);
+            var northSouthBoundaries = seasonModel
+                .Where(x => x.Tier == 3)
+                .Select(y => boundary + y.TotalPlaces);
+            
             boundaries.AddRange(northSouthBoundaries);
 
             return boundaries.ToArray();
         }
+
+        private static bool ContainsNorthSouth(IReadOnlyCollection<HistoricalPositionModel> seasonModel)
+            => seasonModel.Count(x => x.CompetitionName 
+                is "Third Division North"
+                or "Third Division South") == 2;
+
+        private static int GetOverallPosition(
+            IEnumerable<HistoricalPositionModel> positionModels, int tier, int position)
+            => position + positionModels
+                .Where(x => x.Tier < tier)
+                .Select(y => y.TotalPlaces)
+                .Sum();
     }
 }
