@@ -1,15 +1,23 @@
+using System;
+using JetBrains.Annotations;
+
 namespace football.history.api.Dtos
 {
+    [UsedImplicitly]
     public record HistoricalRecord(long TeamId, HistoricalSeason[] HistoricalSeasons);
 
-    public record HistoricalSeason
+    [UsedImplicitly]
+    public record HistoricalSeason(long SeasonId, int SeasonStartYear)
     {
-        public long SeasonId { get; set; }
-        public int SeasonStartYear { get; set; }
-        public int[] Boundaries { get; set; }
-        public HistoricalPosition? HistoricalPosition { get; set; }
+        public int[] Boundaries { [UsedImplicitly] get; init; } = Array.Empty<int>();
+        public HistoricalPosition? HistoricalPosition { [UsedImplicitly] get; init; }
     }
 
+    [UsedImplicitly]
     public record HistoricalPosition(
-        long CompetitionId, string CompetitionName, int Position, int OverallPosition, string? Status);
+        long CompetitionId,
+        string CompetitionName,
+        int Position,
+        int OverallPosition,
+        string? Status);
 }

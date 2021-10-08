@@ -28,6 +28,12 @@ const HistoricalPositionsGraph: FunctionComponent<{
             reverse: true,
           }}
           gridYValues={yValues}
+          xScale={{
+            type: "linear",
+            min: Math.min(...seasons.map((x) => x.seasonStartYear)),
+            max: Math.max(...seasons.map((x) => x.seasonStartYear)),
+          }}
+          gridXValues={seasons.map((x) => x.seasonStartYear)}
           enableSlices="x"
           sliceTooltip={({ slice }) => {
             return <Tooltip points={slice.points} id={slice.id} seasons={seasons} />;

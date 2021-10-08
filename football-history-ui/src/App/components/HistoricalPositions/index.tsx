@@ -17,7 +17,7 @@ const HistoricalPositions: FunctionComponent<{ teamId: number }> = ({ teamId }) 
   const getLastSeasonStartYear = () => Math.max(...seasonState.seasons.map((s) => s.startYear));
 
   const [selectedRange, setSelectedRange] = useState<SeasonDateRange>({
-    startYear: getLastSeasonStartYear() - 25, // To speed initial load, only the last 25 seasons are fetched to begin with);
+    startYear: getFirstSeasonStartYear(),
     endYear: getLastSeasonStartYear(),
   });
 

@@ -94,7 +94,7 @@ export const Tick: React.SFC<ITickProps> = ({ tick, count }) => (
         left: `${tick.percent}%`,
       }}
     >
-      {tick.value}
+      {tick.value % 2 == 0 ? tick.value : null}
     </div>
   </div>
 );
