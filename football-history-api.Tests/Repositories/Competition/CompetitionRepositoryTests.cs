@@ -296,7 +296,7 @@ namespace football.history.api.Tests.Repositories.Competition
         }
 
         [Test]
-        public void GetCompetition_for_seasonId_and_teamId_returns_null_given_no_competitionId()
+        public void GetCompetition_for_seasonId_and_teamId_throws_given_no_competitionId()
         {
             var mockDatabaseConnection = new Mock<IDatabaseConnection>();
             var mockQueryBuilder = new Mock<ICompetitionCommandBuilder>();
@@ -306,14 +306,13 @@ namespace football.history.api.Tests.Repositories.Competition
                 .Returns(new MockDbCommand());
             var repository = new CompetitionRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 
-            var result = repository.GetCompetitionForSeasonAndTeam(0, 1L);
+            Assert.Throws<DataNotFoundException>(() => repository.GetCompetitionForSeasonAndTeam(0, 1L));
 
             mockQueryBuilder.VerifyAll();
-            result.Should().BeNull();
         }
 
         [Test]
-        public void GetCompetition_for_seasonId_and_teamId_returns_null_given_no_matching_competition()
+        public void GetCompetition_for_seasonId_and_teamId_throws_given_no_matching_competition()
         {
             var mockDatabaseConnection = new Mock<IDatabaseConnection>();
             var mockQueryBuilder = new Mock<ICompetitionCommandBuilder>();
@@ -327,10 +326,9 @@ namespace football.history.api.Tests.Repositories.Competition
                 .Returns(new MockDbCommand());
             var repository = new CompetitionRepository(mockDatabaseConnection.Object, mockQueryBuilder.Object);
 
-            var result = repository.GetCompetitionForSeasonAndTeam(0, 1L);
+            Assert.Throws<DataNotFoundException>(() => repository.GetCompetitionForSeasonAndTeam(0, 1L));
 
             mockQueryBuilder.VerifyAll();
-            result.Should().BeNull();
         }
 
         [Test]

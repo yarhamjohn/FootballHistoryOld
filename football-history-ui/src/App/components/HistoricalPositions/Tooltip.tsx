@@ -1,12 +1,19 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Point } from "@nivo/line";
 import { TooltipContent } from "./TooltipContent";
-import { HistoricalPosition } from "../../shared/useFetchHistoricalPositions";
+import { HistoricalSeason } from "../../shared/useFetchHistoricalRecord";
 
 const Tooltip: FunctionComponent<{
   points: Point[];
-  positions: HistoricalPosition[];
-}> = ({ points, positions }) => {
+  id: any;
+  seasons: HistoricalSeason[];
+}> = ({ points, id, seasons }) => {
+  const getSeason = (point: Point) => {
+    const startDate = Number(point.data.xFormatted);
+
+    return seasons.filter((s) => s.seasonStartYear === startDate)[0];
+  };
+
   return (
     <div
       style={{
@@ -17,7 +24,7 @@ const Tooltip: FunctionComponent<{
     >
       {points.map((point) =>
         point.data.y === null ? null : (
-          <TooltipContent key={point.id} point={point} positions={positions} />
+          <TooltipContent key={point.id} point={point} season={getSeason(point)} />
         )
       )}
     </div>

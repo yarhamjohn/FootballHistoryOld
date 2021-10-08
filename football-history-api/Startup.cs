@@ -38,7 +38,7 @@ namespace football.history.api
             services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
             services.AddTransient<IPlayOffWinnerCalculator, PlayOffWinnerCalculator>();
             services.AddTransient<IRowBuilder, RowBuilder>();
-            services.AddTransient<IHistoricalPositionBuilder, HistoricalPositionBuilder>();
+            services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
             services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
             
             services.AddTransient<ITeamCommandBuilder, TeamCommandBuilder>();
@@ -47,6 +47,7 @@ namespace football.history.api
             services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
             services.AddTransient<IPointDeductionCommandBuilder, PointDeductionCommandBuilder>();
             services.AddTransient<IPositionCommandBuilder, PositionCommandBuilder>();
+            services.AddTransient<IHistoricalSeasonCommandBuilder, HistoricalSeasonCommandBuilder>();
 
             services.AddTransient<IDatabaseConnection, DatabaseConnection>();
             services.AddTransient<ITeamRepository, TeamRepository>();
@@ -55,6 +56,7 @@ namespace football.history.api
             services.AddTransient<IMatchRepository, MatchRepository>();
             services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
             services.AddTransient<IPositionRepository, PositionRepository>();
+            services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
 
             var connString = Configuration.GetConnectionString("FootballHistory");
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString));
@@ -128,8 +130,8 @@ namespace football.history.api
             app.UseSwaggerUI(
                 options =>
                 {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                     options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
 
             app.UseHttpsRedirection();

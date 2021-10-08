@@ -14,22 +14,22 @@ namespace football.history.api.Tests.Controllers
     [TestFixture]
     public class HistoricalPositionControllerTests
     {
-        [Test]
-        public void GetHistoricalPositions_should_return_problem_given_unhandled_exception()
-        {
-            var mockBuilder = new Mock<IHistoricalPositionBuilder>();
-            mockBuilder
-                .Setup(x => x.Build(It.IsAny<long>(), It.IsAny<long>()))
-                .Throws(new Exception("Something went wrong"));
-
-            var controller = new HistoricalPositionController(mockBuilder.Object);
-            var result = controller.GetHistoricalPositions(1, new[] { 1L });
-
-            Assert.That(result, Is.TypeOf<ActionResult<List<HistoricalPositionDto>>>());
-            Assert.That(result.Result, Is.TypeOf<ObjectResult>());
-            Assert.That(((ObjectResult)result.Result).StatusCode, Is.EqualTo(500));
-
-        }
+        // [Test]
+        // public void GetHistoricalPositions_should_return_problem_given_unhandled_exception()
+        // {
+        //     var mockBuilder = new Mock<IHistoricalPositionBuilder>();
+        //     mockBuilder
+        //         .Setup(x => x.Build(It.IsAny<long>(), It.IsAny<long>()))
+        //         .Throws(new Exception("Something went wrong"));
+        //
+        //     var controller = new HistoricalPositionController(mockBuilder.Object);
+        //     var result = controller.GetHistoricalPositions(1, new[] { 1L });
+        //
+        //     Assert.That(result, Is.TypeOf<ActionResult<List<HistoricalPositionDto>>>());
+        //     Assert.That(result.Result, Is.TypeOf<ObjectResult>());
+        //     Assert.That(((ObjectResult)result.Result).StatusCode, Is.EqualTo(500));
+        //
+        // }
         //
         // [Test]
         // public void GetHistoricalPositions_should_return_message_for_unhandled_error()

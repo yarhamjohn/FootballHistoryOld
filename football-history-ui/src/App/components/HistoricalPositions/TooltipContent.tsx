@@ -1,25 +1,17 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Point } from "@nivo/line";
-import { useHistoricalPositionsTooltipContent } from "./useHistoricalPositionsTooltipContent";
-import { HistoricalPosition } from "../../shared/useFetchHistoricalPositions";
+import { HistoricalSeason } from "../../shared/useFetchHistoricalRecord";
+import { getLeagueStatusColor } from "../../shared/functions";
 
-const TooltipContent: FunctionComponent<{ point: Point; positions: HistoricalPosition[] }> = ({
+const TooltipContent: FunctionComponent<{ point: Point; season: HistoricalSeason }> = ({
   point,
-  positions,
+  season,
 }) => {
-  const {
-    leaguePosition,
-    leagueStatus,
-    leagueName,
-    color,
-    absolutePosition,
-    seasonStartYear,
-  } = useHistoricalPositionsTooltipContent(point, positions);
-
-  if (absolutePosition % 1 !== 0) {
-    // The point is from one of the league boundary series
+  if (!point.id.startsWith("positions") || season.historicalPosition === null) {
     return null;
   }
+
+  const color = getLeagueStatusColor(season.historicalPosition?.status);
 
   return (
     <div
@@ -32,13 +24,15 @@ const TooltipContent: FunctionComponent<{ point: Point; positions: HistoricalPos
         boxShadow: `0px 0px 10px ${color} inset`,
       }}
     >
-      {color === null ? null : <h3 style={{ color: color.toString() }}>{leagueStatus}</h3>}
-      <strong>{leagueName}</strong>
+      {color === null ? null : (
+        <h3 style={{ color: color.toString() }}>{season.historicalPosition.status}</h3>
+      )}
+      <strong>{season.historicalPosition.competitionName}</strong>
       <span>
-        <strong>Position</strong>: {leaguePosition}
+        <strong>Position</strong>: {season.historicalPosition.position}
       </span>
       <span>
-        <strong>Season</strong>: {seasonStartYear}-{seasonStartYear + 1}
+        <strong>Season</strong>: {season.seasonStartYear}-{season.seasonStartYear + 1}
       </span>
     </div>
   );

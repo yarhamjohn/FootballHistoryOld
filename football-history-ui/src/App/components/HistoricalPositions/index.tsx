@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useState } from "react";
-import { useFetchHistoricalPositions } from "../../shared/useFetchHistoricalPositions";
+import { FunctionComponent, useState } from "react";
+import { useFetchHistoricalRecord } from "../../shared/useFetchHistoricalRecord";
 import { YearSlider } from "../Filters/YearSlider";
 import { ErrorMessage } from "../ErrorMessage";
 import { HistoricalPositionsGraph } from "./Graph";
 import { useAppSelector } from "../../../reduxHooks";
 
-export type HistoricalPositionRange = {
+export type SeasonDateRange = {
   startYear: number;
   endYear: number;
 };
@@ -16,12 +16,12 @@ const HistoricalPositions: FunctionComponent<{ teamId: number }> = ({ teamId }) 
   const getFirstSeasonStartYear = () => Math.min(...seasonState.seasons.map((s) => s.startYear));
   const getLastSeasonStartYear = () => Math.max(...seasonState.seasons.map((s) => s.startYear));
 
-  const [selectedRange, setSelectedRange] = useState<HistoricalPositionRange>({
-    startYear: getLastSeasonStartYear() - 25, // To speed initial load, only the last 25 seasons are fetched to begin with);
+  const [selectedRange, setSelectedRange] = useState<SeasonDateRange>({
+    startYear: getFirstSeasonStartYear(),
     endYear: getLastSeasonStartYear(),
   });
 
-  const { state } = useFetchHistoricalPositions(teamId, seasonState.seasons, selectedRange);
+  const { state } = useFetchHistoricalRecord(teamId, seasonState.seasons, selectedRange);
 
   return (
     <div style={{ marginBottom: "5rem" }}>
@@ -30,13 +30,13 @@ const HistoricalPositions: FunctionComponent<{ teamId: number }> = ({ teamId }) 
         selectedRange={selectedRange}
         setSelectedRange={setSelectedRange}
       />
-      {state.type === "HISTORICAL_POSITIONS_UNLOADED" ? null : state.type ===
-        "HISTORICAL_POSITIONS_LOAD_FAILED" ? (
+      {state.type === "HISTORICAL_RECORD_UNLOADED" ? null : state.type ===
+        "HISTORICAL_RECORD_LOAD_FAILED" ? (
         <ErrorMessage header={"Sorry, something went wrong."} content={state.error} />
       ) : (
         <HistoricalPositionsGraph
-          isLoading={state.type === "HISTORICAL_POSITIONS_LOADING"}
-          positions={state.positions}
+          isLoading={state.type === "HISTORICAL_RECORD_LOADING"}
+          seasons={state.record.historicalSeasons}
           range={selectedRange}
         />
       )}
