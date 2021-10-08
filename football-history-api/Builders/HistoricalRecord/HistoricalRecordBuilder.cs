@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Dtos;
@@ -10,6 +9,14 @@ namespace football.history.api.Builders
 {
     public interface IHistoricalRecordBuilder
     {
+        /// <summary>
+        /// Constructs a <see cref="HistoricalRecord" /> based on the provided parameters.
+        /// </summary>
+        ///
+        /// <exception cref="DataInvalidException">
+        /// Thrown if the specified team had positions in multiple competitions in a single season
+        /// or when a season contained multiple competitions of which at least one was null.
+        /// </exception>
         HistoricalRecord Build(long teamId, long[] seasonIds);
     }
 
@@ -36,29 +43,25 @@ namespace football.history.api.Builders
             return new HistoricalRecord(teamId, historicalSeasons);
         }
 
-        private HistoricalSeason BuildHistoricalSeason(
+        private static HistoricalSeason BuildHistoricalSeason(
             IGrouping<(long SeasonId, int StartYear), HistoricalSeasonModel> seasonGroup)
         {
             var historicalSeason = new HistoricalSeason(seasonGroup.Key.SeasonId, seasonGroup.Key.StartYear);
 
             var positionModels = seasonGroup.Select(x => x.PositionModel).ToArray();
 
-            if (positionModels.Length == 1 && positionModels.Single() is null)
+            return positionModels.Length switch
             {
-                return historicalSeason;
-            }
-
-            if (positionModels.Length > 1 && positionModels.Any(x => x is null))
-            {
-                throw new DataInvalidException(
-                    "Some competitions were null in the given season " +
-                    $"(id: {seasonGroup.Key.SeasonId}, startYear: {seasonGroup.Key.StartYear}).");
-            }
-
-            return historicalSeason with
-            {
-                Boundaries = BuildBoundaries(positionModels!),
-                HistoricalPosition = BuildHistoricalPosition(positionModels!)
+                1 when positionModels.Single() is null => historicalSeason,
+                > 1 when positionModels.Any(x => x is null)
+                    => throw new DataInvalidException(
+                        "Some competitions were null in the given season " +
+                        $"(id: {seasonGroup.Key.SeasonId}, startYear: {seasonGroup.Key.StartYear})."),
+                _ => historicalSeason with
+                {
+                    Boundaries = BuildBoundaries(positionModels!),
+                    HistoricalPosition = BuildHistoricalPosition(positionModels!)
+                }
             };
         }
 
@@ -111,14 +114,14 @@ namespace football.history.api.Builders
             var northSouthBoundaries = seasonModel
                 .Where(x => x.Tier == 3)
                 .Select(y => boundary + y.TotalPlaces);
-            
+
             boundaries.AddRange(northSouthBoundaries);
 
             return boundaries.ToArray();
         }
 
         private static bool ContainsNorthSouth(IReadOnlyCollection<HistoricalPositionModel> seasonModel)
-            => seasonModel.Count(x => x.CompetitionName 
+            => seasonModel.Count(x => x.CompetitionName
                 is "Third Division North"
                 or "Third Division South") == 2;
 

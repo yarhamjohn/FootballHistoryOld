@@ -47,7 +47,7 @@ namespace football.history.api.Repositories.Match
                 SeasonId: reader.GetInt64(0),
                 StartYear: reader.GetInt16(1),
                 PositionModel: reader.IsDBNull(2)
-                    ? null // If the competition is null then all the HistoricalPositionModel parameters must also be null
+                    ? null
                     : new HistoricalPositionModel(
                         CompetitionId: reader.GetInt64(2),
                         CompetitionName: reader.GetString(3),

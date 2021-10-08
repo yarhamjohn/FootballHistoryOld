@@ -8,13 +8,15 @@ const TeamFilter: FunctionComponent = () => {
   const teamState = useAppSelector((state) => state.team);
 
   function createDropdown(): DropdownItemProps[] {
-    return teamState.teams.map((c) => {
-      return {
-        key: c.id,
-        text: c.name,
-        value: c.id,
-      };
-    });
+    return teamState.teams
+      .map((c) => {
+        return {
+          key: c.id,
+          text: c.name,
+          value: c.id,
+        };
+      })
+      .sort((a, b) => (a.text > b.text ? 1 : a.text < b.text ? -1 : 0));
   }
 
   function chooseTeam(id: number | undefined) {

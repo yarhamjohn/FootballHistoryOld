@@ -30,8 +30,8 @@ const HistoricalPositionsGraph: FunctionComponent<{
           gridYValues={yValues}
           xScale={{
             type: "linear",
-            min: Math.min(...seasons.map((x) => x.seasonStartYear)),
-            max: Math.max(...seasons.map((x) => x.seasonStartYear)),
+            min: Math.min(...seasons.map((x) => x.seasonStartYear)) - 1,
+            max: Math.max(...seasons.map((x) => x.seasonStartYear)) + 1,
           }}
           gridXValues={seasons.map((x) => x.seasonStartYear)}
           enableSlices="x"

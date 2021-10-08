@@ -29,6 +29,7 @@ namespace football.history.api.Controllers
             {
                 return BadRequest("No seasonIds were specified.");
             }
+
             try
             {
                 var record = _builder.Build(teamId, seasonIds);
@@ -45,8 +46,7 @@ namespace football.history.api.Controllers
             {
                 return ex switch
                 {
-                    DataNotFoundException => NotFound(ex.Message),
-                    DataInvalidException => Problem(ex.Message),
+                    DataInvalidException => Problem(ex.Message, null, null, "Invalid data was found."),
                     _ => Problem()
                 };
             }
