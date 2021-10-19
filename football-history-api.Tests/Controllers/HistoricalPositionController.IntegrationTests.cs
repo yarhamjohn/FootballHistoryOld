@@ -7,7 +7,6 @@ using football.history.api.Builders;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -146,31 +145,6 @@ namespace football.history.api.Tests.Controllers
             return factory.CreateClient();
         }
         
-        private static HttpClient GetTestClient()
-        {
-            var factory = new WebApplicationFactory<Startup>();
-            return factory.CreateClient();
-        }
-    }
-
-    public static class ServiceCollectionExtensions
-    {
-        public static void SwapTransient<TService>(
-            this IServiceCollection serviceCollection,
-            TService mockImplementation)
-        {
-            var serviceDescriptors = serviceCollection
-                .Where(descriptor =>
-                    descriptor.ServiceType == typeof(TService)
-                    && descriptor.Lifetime == ServiceLifetime.Transient)
-                .ToArray();
-
-            foreach (var serviceDescriptor in serviceDescriptors)
-            {
-                serviceCollection.Remove(serviceDescriptor);
-            }
-
-            serviceCollection.AddTransient(typeof(TService),_ => mockImplementation!);
-        }
+        private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
     }
 }

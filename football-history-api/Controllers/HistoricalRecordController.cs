@@ -40,8 +40,7 @@ namespace football.history.api.Controllers
             {
                 return ex switch
                 {
-                    DataInvalidException => Problem(
-                        ex.Message, null, null, "Invalid data was found."),
+                    DataInvalidException => Problem(ex.Message, null, null, "Invalid data was found."),
                     _ => Problem(ex.Message)
                 };
             }
