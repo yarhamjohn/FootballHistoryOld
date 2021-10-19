@@ -9,7 +9,7 @@ using football.history.api.Repositories.Match;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.HistoricalRecord
+namespace football.history.api.Tests.UnitTests.Builders.HistoricalRecord
 {
     [TestFixture]
     public class HistoricalRecordBuilderTests

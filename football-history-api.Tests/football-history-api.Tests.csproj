@@ -27,4 +27,9 @@
       <ProjectReference Include="..\football-history-api\football-history-api.csproj" />
     </ItemGroup>
     
+    <ItemGroup>
+      <Folder Include="IntegrationTests" />
+      <Folder Include="UnitTests" />
+    </ItemGroup>
+    
 </Project>

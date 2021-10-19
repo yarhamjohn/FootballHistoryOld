@@ -11,7 +11,7 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Controllers
+namespace football.history.api.Tests.IntegrationTests.Controllers
 {
     [TestFixture]
     public class HistoricalPositionControllerTests

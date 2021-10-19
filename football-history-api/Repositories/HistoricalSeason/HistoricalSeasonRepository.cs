@@ -1,0 +1,117 @@
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
+using Microsoft.Data.SqlClient;
+
+namespace football.history.api.Repositories.Match
+{
+    public interface IHistoricalSeasonRepository
+    {
+        public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds);
+    }
+
+    public class HistoricalSeasonRepository : IHistoricalSeasonRepository
+    {
+        private readonly IDatabaseConnection _connection;
+
+        public HistoricalSeasonRepository(IDatabaseConnection connection)
+        {
+            _connection = connection;
+        }
+
+        public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds)
+        {
+            _connection.Open();
+
+            var cmd = BuildCommand(_connection, teamId, seasonIds);
+            var models = GetHistoricalSeasonModels(cmd);
+
+            _connection.Close();
+
+            return models;
+        }
+
+        private static List<HistoricalSeasonModel> GetHistoricalSeasonModels(DbCommand cmd)
+        {
+            var historicalSeasons = new List<HistoricalSeasonModel>();
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                historicalSeasons.Add(GetHistoricalSeasonModel(reader));
+            }
+
+            return historicalSeasons;
+        }
+
+        private static HistoricalSeasonModel GetHistoricalSeasonModel(DbDataReader reader)
+            => new(
+                SeasonId: reader.GetInt64(0),
+                StartYear: reader.GetInt16(1),
+                PositionModel: reader.IsDBNull(2)
+                    ? null
+                    : new HistoricalPositionModel(
+                        CompetitionId: reader.GetInt64(2),
+                        CompetitionName: reader.GetString(3),
+                        Tier: reader.GetByte(4),
+                        TotalPlaces: reader.GetByte(5),
+                        Position: reader.IsDBNull(6) ? null : reader.GetByte(6),
+                        Status: reader.IsDBNull(7) ? null : reader.GetString(7)));
+
+        private static void AddParameters(DbCommand cmd, long teamId, long[] seasonIds)
+        {
+            cmd.Parameters.Add(
+                new SqlParameter
+                {
+                    ParameterName = "@TeamId",
+                    Value         = teamId
+                });
+
+            for (var i = 0; i < seasonIds.Length; i++)
+            {
+                cmd.Parameters.Add(
+                    new SqlParameter
+                    {
+                        ParameterName = $"SeasonId{i}",
+                        Value         = seasonIds[i]
+                    });
+            }
+        }
+
+        private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
+        {
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = GetSql(seasonIds);
+
+            AddParameters(cmd, teamId, seasonIds);
+
+            return cmd;
+        }
+
+        private static string GetSql(long[] seasonIds)
+            => $@"
+                SELECT 
+                       s.Id AS SeasonId, 
+                       StartYear, 
+                       c.Id AS CompetitionId, 
+                       c.Name, 
+                       c.Tier, 
+                       cr.TotalPlaces, 
+                       p.Position, 
+                       p.Status 
+                FROM dbo.Seasons AS s
+                LEFT JOIN dbo.Competitions AS c 
+                    ON c.SeasonId = s.Id
+                LEFT JOIN dbo.CompetitionRules AS cr 
+                    on cr.Id = c.RulesId
+                LEFT JOIN dbo.Positions AS p 
+                    on p.CompetitionId = c.Id AND p.TeamId = @TeamId
+                {BuildWhereClause(seasonIds)}
+                ";
+
+        private static string BuildWhereClause(long[] seasonIds)
+            => seasonIds.Any()
+                ? $"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})"
+                : "WHERE 1 = 0";
+    }
+}
