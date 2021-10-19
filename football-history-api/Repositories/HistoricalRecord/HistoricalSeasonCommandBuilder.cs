@@ -23,9 +23,9 @@ namespace football.history.api.Repositories.Match
         }
 
         private string BuildWhereClause(long[] seasonIds)
-        {
-            return $"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})";
-        }
+            => seasonIds.Any() 
+                ? $"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})"
+                : "WHERE 1 = 0";
 
         private static void AddParameters(
             DbCommand cmd,

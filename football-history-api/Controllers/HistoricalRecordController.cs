@@ -20,16 +20,10 @@ namespace football.history.api.Controllers
 
         [HttpGet("teamId/{teamId:long}")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public ActionResult<HistoricalRecord> GetHistoricalRecord(long teamId, long[] seasonIds)
         {
-            if (!seasonIds.Any())
-            {
-                return BadRequest("No seasonIds were specified.");
-            }
-
             try
             {
                 var record = _builder.Build(teamId, seasonIds);

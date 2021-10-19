@@ -27,17 +27,19 @@ namespace football.history.api.Tests.Controllers
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
-        [Test]
-        public async Task GetHistoricalRecord_returns_bad_request_given_no_season_ids()
+        [TestCase("api/v2/historical-record/teamId/1")]
+        [TestCase("api/v2/historical-record/teamId/1?seasonIds=")]
+        public async Task GetHistoricalRecord_returns_not_found_given_no_season_ids(string url)
         {
             var client = GetTestClient();
 
-            var response = await client.GetAsync("api/v2/historical-record/teamId/1");
+            var response = await client.GetAsync(url);
 
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
             var responseString = await response.Content.ReadAsStringAsync();
-            Assert.That(responseString, Is.EqualTo("No seasonIds were specified."));
+            Assert.That(responseString, Does.Contain("No historical seasons were found for the specified team"));
+            Assert.That(responseString, Does.Contain("('1') and seasonIds ('')"));
         }
 
         [Test]
