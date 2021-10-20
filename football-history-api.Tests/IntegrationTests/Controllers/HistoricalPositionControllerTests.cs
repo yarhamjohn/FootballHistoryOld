@@ -28,17 +28,18 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
 
         [TestCase("api/v2/historical-record/teamId/1")]
         [TestCase("api/v2/historical-record/teamId/1?seasonIds=")]
-        public async Task GetHistoricalRecord_returns_not_found_given_no_season_ids(string url)
+        public async Task GetHistoricalRecord_calls_builder_given_no_seasonIds(string url)
         {
-            var client = GetTestClient();
+            var mockHistoricalRecordBuilder = new Mock<IHistoricalRecordBuilder>();
+            mockHistoricalRecordBuilder
+                .Setup(x => x.Build(1, Array.Empty<long>()))
+                .Returns(new HistoricalRecord(1, Array.Empty<HistoricalSeason>()));
+            
+            var client = GetTestClient(mockHistoricalRecordBuilder);
 
-            var response = await client.GetAsync(url);
-
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-
-            var responseString = await response.Content.ReadAsStringAsync();
-            Assert.That(responseString, Does.Contain("No historical seasons were found for the specified team"));
-            Assert.That(responseString, Does.Contain("('1') and seasonIds ('')"));
+            await client.GetAsync(url);
+            
+            mockHistoricalRecordBuilder.VerifyAll();
         }
 
         [Test]
