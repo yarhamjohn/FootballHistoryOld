@@ -81,14 +81,14 @@ namespace football.history.api.Repositories.Match
         private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
         {
             var cmd = connection.CreateCommand();
-            cmd.CommandText = GetSql(seasonIds);
+            cmd.CommandText = GetSql(seasonIds, teamId);
 
             AddParameters(cmd, teamId, seasonIds);
 
             return cmd;
         }
 
-        private static string GetSql(long[] seasonIds)
+        private static string GetSql(long[] seasonIds, long teamId)
             => $@"
                 SELECT 
                        s.Id AS SeasonId, 
@@ -106,12 +106,13 @@ namespace football.history.api.Repositories.Match
                     on cr.Id = c.RulesId
                 LEFT JOIN dbo.Positions AS p 
                     on p.CompetitionId = c.Id AND p.TeamId = @TeamId
-                {BuildWhereClause(seasonIds)}
+                {BuildWhereClause(seasonIds, teamId)}
                 ";
 
-        private static string BuildWhereClause(long[] seasonIds)
+        private static string BuildWhereClause(long[] seasonIds, long teamId)
             => seasonIds.Any()
-                ? $"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})"
+                ? $@"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})
+                        AND EXISTS (SELECT Id FROM dbo.Teams AS t WHERE t.Id = {teamId})"
                 : "WHERE 1 = 0";
     }
 }
