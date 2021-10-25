@@ -87,10 +87,10 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
   const getUrl = (yearsToFetch: number[]) => {
     const seasonIds = allSeasons
       .filter((x) => yearsToFetch.includes(x.startYear))
-      .map((y) => `&seasonIds=${y.id}`)
+      .map((y, i) => `${i === 0 ? "?" : "&"}seasonIds=${y.id}`)
       .join("");
 
-    return `${api}/api/v2/historical-record?teamId=${teamId}${seasonIds}`;
+    return `${api}/api/v2/historical-record/teamId/${teamId}${seasonIds}`;
   };
 
   useEffect(() => {
