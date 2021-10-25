@@ -1,15 +1,15 @@
 version: "3.9"
 
 networks:
-  blogapp-network:
+  test-network:
 
 services:
-  blogapp-sqlserver:
+  test-sqlserver:
     image: "mcr.microsoft.com/mssql/server"
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "2@LaiNw)PDvs^t>L!Ybt]6H^%h3U>M"
+      SA_PASSWORD: $TEST_DATABASE_PASSWORD
       ACCEPT_EULA: "Y"
     networks:
-      - blogapp-network
+      - test-network

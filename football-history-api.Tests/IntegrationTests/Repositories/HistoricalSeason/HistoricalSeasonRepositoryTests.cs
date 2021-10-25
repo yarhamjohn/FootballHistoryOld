@@ -1,12 +1,8 @@
 using System;
-using System.Data.Common;
-using System.IO;
 using System.Linq;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Match;
-using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
+using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using NUnit.Framework;
 
 namespace football.history.api.Tests.IntegrationTests.Repositories.HistoricalSeason
@@ -106,94 +102,6 @@ namespace football.history.api.Tests.IntegrationTests.Repositories.HistoricalSea
                 new HistoricalPositionModel(2, "First Division", 1, 10, 1, "Champions"),
                 new HistoricalPositionModel(3, "Second Division", 2, 10, null, null)
             }));
-        }
-    }
-
-    public class TestDatabaseConnection : IDatabaseConnection
-    {
-        private readonly SqlConnection _conn;
-        private readonly string _databaseName;
-
-        public TestDatabaseConnection(string databaseName)
-        {
-            _databaseName = databaseName;
-            _conn = new SqlConnection("Server=localhost;User=sa;Password=2@LaiNw)PDvs^t>L!Ybt]6H^%h3U>M");
-        }
-        
-        public void Open()
-        {
-            try
-            {
-                _conn.Open();
-                _conn.ChangeDatabase(_databaseName);
-            }
-            catch (InvalidOperationException)
-            {
-                Close();
-                Open();
-            }
-        }
-
-        public void Close()
-        {
-            _conn.Close();
-        }
-
-        public DbCommand CreateCommand()
-        {
-            return _conn.CreateCommand();
-        }
-
-        public void CreateDatabase()
-        {
-            _conn.Open();
-
-            CreateTestDatabase();
-            PopulateTestDatabase();
-            
-            Close();
-        }
-
-        private void PopulateTestDatabase()
-        {
-            _conn.ChangeDatabase(_databaseName);
-
-            var script = File.ReadAllText(@"C:\repos\football-history\football-history-api.Tests\Data.sql");
-            var server = new Server(new ServerConnection(_conn));
-            server.ConnectionContext.ExecuteNonQuery(script);
-        }
-
-        private void CreateTestDatabase()
-        {
-            DropTestDatabaseIfExists();
-
-            var cmd = CreateCommand();
-            cmd.CommandText = $@"
-                    IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{_databaseName}')
-                    BEGIN
-                        CREATE DATABASE {_databaseName};
-                    END;";
-            cmd.ExecuteNonQuery();
-        }
-
-        public void DropDatabase()
-        {
-            _conn.Open();
-
-            DropTestDatabaseIfExists();
-
-            _conn.Close();
-        }
-
-        private void DropTestDatabaseIfExists()
-        {
-            var cmd = _conn.CreateCommand();
-            cmd.CommandText = $@"
-                    IF EXISTS (SELECT * FROM sys.databases WHERE name = '{_databaseName}')
-                    BEGIN
-                        DROP DATABASE {_databaseName};
-                    END;";
-            cmd.ExecuteNonQuery();
         }
     }
 }
