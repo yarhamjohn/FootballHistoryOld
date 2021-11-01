@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Builders.Team;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories.Match;
 using MoreLinq;

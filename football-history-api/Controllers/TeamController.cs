@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Builders.Team;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Team;
+using football.history.api.Builders;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
@@ -12,61 +9,43 @@ namespace football.history.api.Controllers
     [Route("api/v{version:apiVersion}/teams")]
     public class TeamController : Controller
     {
-        private readonly ITeamRepository _repository;
+        private readonly ITeamBuilder _builder;
 
-        public TeamController(ITeamRepository repository)
+        public TeamController(ITeamBuilder builder)
         {
-            _repository = repository;
+            _builder = builder;
         }
 
         [HttpGet]
-        public ApiResponse<List<TeamDto>?> GetAllTeams()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<Team[]> GetAllTeams()
         {
-            try
-            {
-                var teams = _repository.GetAllTeams()
-                    .Select(BuildTeamDto)
-                    .ToList();
+            var teams = _builder.BuildAllTeams();
 
-                return new(teams);
-            }
-            catch (FootballHistoryException ex)
+            if (!teams.Any())
             {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
+                return NotFound("No teams were found.");
             }
-            catch (Exception ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
-            }
+
+            return teams;
         }
 
-        [HttpGet("{id:long}")]
-        public ApiResponse<TeamDto?> GetTeam(long id)
+        [HttpGet("id/{id:long}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<Team> GetTeam(long id)
         {
-            try
-            {
-                var team = _repository.GetTeam(id);
-                return new(BuildTeamDto(team));
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
-            }
-            catch (Exception ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
-            }
-        }
+            var team = _builder.BuildTeam(id);
 
-        private static TeamDto BuildTeamDto(TeamModel team) =>
-            new(team.Id, team.Name, team.Abbreviation, team.Notes);
+            if (team is null)
+            {
+                return NotFound($"No team was found with id {id}.");
+            }
+            
+            return team;
+        }
     }
 }

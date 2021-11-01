@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
+using football.history.api.Bindings;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Match;
 using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.IntegrationTests.Repositories.HistoricalSeason
+namespace football.history.api.Tests.IntegrationTests.Repositories
 {
     [TestFixture]
     public class HistoricalSeasonRepositoryTests

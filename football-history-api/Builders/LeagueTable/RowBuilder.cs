@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Bindings;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
-using football.history.api.Repositories.Team;
 
 namespace football.history.api.Builders
 {

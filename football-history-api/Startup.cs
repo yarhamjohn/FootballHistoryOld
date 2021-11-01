@@ -39,10 +39,11 @@ namespace football.history.api
             services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
             services.AddTransient<IPlayOffWinnerCalculator, PlayOffWinnerCalculator>();
             services.AddTransient<IRowBuilder, RowBuilder>();
-            services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
             services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
+
+            services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
+            services.AddTransient<ITeamBuilder, TeamBuilder>();
             
-            services.AddTransient<ITeamCommandBuilder, TeamCommandBuilder>();
             services.AddTransient<ISeasonCommandBuilder, SeasonCommandBuilder>();
             services.AddTransient<IMatchCommandBuilder, MatchCommandBuilder>();
             services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();

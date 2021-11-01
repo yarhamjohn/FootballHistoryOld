@@ -1,13 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using football.history.api.Builders;
 using football.history.api.Builders.Statistics;
-using football.history.api.Builders.Team;
+using football.history.api.Builders;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
-using football.history.api.Repositories.Season;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
