@@ -1,6 +1,6 @@
 using System;
 
-namespace football.history.api.Dtos
+namespace football.history.api.Domain
 {
     public record HistoricalRecord(long TeamId, HistoricalSeason[] HistoricalSeasons);
 

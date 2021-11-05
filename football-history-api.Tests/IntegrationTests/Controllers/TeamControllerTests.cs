@@ -1,135 +1,161 @@
 using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using football.history.api.Builders.Team;
-using football.history.api.Controllers;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Team;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using football.history.api.Builders;
+using football.history.api.Domain;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Controllers
+namespace football.history.api.Tests.IntegrationTests.Controllers
 {
     [TestFixture]
     public class TeamControllerTests
     {
         [Test]
-        public void GetAllTeams_should_return_message_for_unhandled_error()
+        public async Task GetAllTeams_returns_not_found_given_no_matching_teams()
         {
-            var mockRepository = new Mock<ITeamRepository>();
-            mockRepository
-                .Setup(x => x.GetAllTeams())
-                .Throws(new Exception("Unhandled error occurred."));
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildAllTeams())
+                .Returns(Array.Empty<Team>());
 
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetAllTeams();
+            var client = GetTestClient(mockTeamBuilder);
 
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-            error!.Code.Should().Be("UNKNOWN_ERROR");
+            var response = await client.GetAsync("api/v2/teams");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Is.EqualTo("No teams were found."));
         }
-
+        
         [Test]
-        public void GetAllTeams_should_return_message_for_handled_error()
+        public async Task GetAllTeams_returns_internal_server_error_given_exception()
         {
-            var mockRepository = new Mock<ITeamRepository>();
-            mockRepository
-                .Setup(x => x.GetAllTeams())
-                .Throws(new DataInvalidException("Repository data was invalid."));
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildAllTeams())
+                .Throws(new Exception("error message"));
 
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetAllTeams();
+            var client = GetTestClient(mockTeamBuilder);
 
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Repository data was invalid.");
-            error!.Code.Should().Be("DATA_INVALID");
+            var response = await client.GetAsync("api/v2/teams");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Does.Contain("error message"));
         }
-
+        
         [Test]
-        public void GetAllTeams_should_return_result()
+        public async Task GetAllTeams_returns_teams()
         {
-            var mockRepository = new Mock<ITeamRepository>();
-            var teamModels = new List<TeamModel>
+            var expectedTeams = new []
             {
-                new(1, "Norwich City", "NOR", Notes: null),
-                new(2, "Newcastle United", "NEW", Notes: null)
+                new Team(Id: 1, Name: "Norwich City", "NOR", null)
             };
 
-            mockRepository
-                .Setup(x => x.GetAllTeams())
-                .Returns(teamModels);
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildAllTeams())
+                .Returns(expectedTeams);
 
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetAllTeams();
+            var client = GetTestClient(mockTeamBuilder);
 
-            var teamDtos = new List<TeamDto>
+            var response = await client.GetAsync("api/v2/teams");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var actualTeams = JsonConvert.DeserializeObject<Team[]>(responseString);
+            
+            Assert.That(actualTeams, Is.EqualTo(expectedTeams));
+        }
+        
+        [Test]
+        public async Task GetTeam_returns_not_found_given_no_matching_team()
+        {
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildTeam(It.IsAny<long>()))
+                .Returns((Team?) null);
+
+            var client = GetTestClient(mockTeamBuilder);
+
+            var response = await client.GetAsync("api/v2/teams/id/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Is.EqualTo("No team was found with id 1."));
+        }
+        
+        [Test]
+        public async Task GetTeam_returns_not_found_given_no_teamId()
+        {
+            var client = GetTestClient();
+
+            var response = await client.GetAsync("api/v2/teams/id");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        public async Task GetTeam_returns_internal_server_error_given_exception()
+        {
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildTeam(It.IsAny<long>()))
+                .Throws(new Exception("error message"));
+
+            var client = GetTestClient(mockTeamBuilder);
+
+            var response = await client.GetAsync("api/v2/teams/id/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Does.Contain("error message"));
+        }
+        
+        [Test]
+        public async Task GetTeam_returns_team()
+        {
+            var expectedTeam = new Team(Id: 1, Name: "Norwich City", "NOR", null);
+
+            var mockTeamBuilder = new Mock<ITeamBuilder>();
+            mockTeamBuilder
+                .Setup(x => x.BuildTeam(1))
+                .Returns(expectedTeam);
+
+            var client = GetTestClient(mockTeamBuilder);
+
+            var response = await client.GetAsync("api/v2/teams/id/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var actualTeam = JsonConvert.DeserializeObject<Team>(responseString);
+            
+            Assert.That(actualTeam, Is.EqualTo(expectedTeam));
+        }
+        
+        private static HttpClient GetTestClient(IMock<ITeamBuilder> mockTeamBuilder)
+        {
+            var factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(b =>
             {
-                new(1, "Norwich City", "NOR", Notes: null),
-                new(2, "Newcastle United", "NEW", Notes: null)
-            };
+                b.ConfigureServices(s =>
+                {
+                    s.SwapTransient(mockTeamBuilder.Object);
+                });
+            });
             
-            mockRepository.VerifyAll();
-            result.Should().BeEquivalentTo(teamDtos);
-            error.Should().BeNull();
+            return factory.CreateClient();
         }
-
-        [Test]
-        public void GetTeam_should_return_message_for_unhandled_error()
-        {
-            var mockRepository = new Mock<ITeamRepository>();
-            mockRepository
-                .Setup(x => x.GetTeam(1))
-                .Throws(new Exception("Unhandled error occurred."));
-
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetTeam(1);
-
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-            error!.Code.Should().Be("UNKNOWN_ERROR");
-        }
-
-        [Test]
-        public void GetTeam_should_return_message_for_handled_error()
-        {
-            var mockRepository = new Mock<ITeamRepository>();
-            mockRepository
-                .Setup(x => x.GetTeam(1))
-                .Throws(new DataInvalidException("Repository data was invalid."));
-
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetTeam(1);
-
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Repository data was invalid.");
-            error!.Code.Should().Be("DATA_INVALID");
-        }
-
-        [Test]
-        public void GetTeam_should_return_result()
-        {
-            var mockRepository = new Mock<ITeamRepository>();
-            var teamModel = new TeamModel(1, "Norwich City", "NOR", Notes: null);
-
-            mockRepository
-                .Setup(x => x.GetTeam(1))
-                .Returns(teamModel);
-
-            var controller = new TeamController(mockRepository.Object);
-            var (result, error) = controller.GetTeam(1);
-            
-            var teamDto = new TeamDto(1, "Norwich City", "NOR", Notes: null);
-            
-            mockRepository.VerifyAll();
-            result.Should().Be(teamDto);
-            error.Should().BeNull();
-        }
-    }}
+        
+        private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
+    }
+}

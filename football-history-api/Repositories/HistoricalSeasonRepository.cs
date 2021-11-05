@@ -1,12 +1,31 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using football.history.api.Bindings;
 using Microsoft.Data.SqlClient;
 
-namespace football.history.api.Repositories.Match
+namespace football.history.api.Repositories
 {
     public interface IHistoricalSeasonRepository
     {
+        /// <summary>
+        /// Retrieves models for each historical season that matches
+        /// the provided <paramref name="teamId"/> and <paramref name="seasonIds"/>.
+        /// </summary>
+        ///
+        /// <param name="teamId">
+        /// The id of the required team.
+        /// </param>
+        /// 
+        /// <param name="seasonIds">
+        /// A collection of ids for the required seasons.
+        /// </param>
+        /// 
+        /// <returns>
+        /// A collection of <see cref="HistoricalSeasonModel">HistoricalSeasonModels</see>.
+        /// Can be empty if the <paramref name="teamId"/> matched no team or
+        /// none of the <paramref name="seasonIds"/> matches a season. 
+        /// </returns>
         public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds);
     }
 
@@ -24,11 +43,11 @@ namespace football.history.api.Repositories.Match
             _connection.Open();
 
             var cmd = BuildCommand(_connection, teamId, seasonIds);
-            var models = GetHistoricalSeasonModels(cmd);
+            var seasons = GetHistoricalSeasonModels(cmd);
 
             _connection.Close();
 
-            return models;
+            return seasons;
         }
 
         private static List<HistoricalSeasonModel> GetHistoricalSeasonModels(DbCommand cmd)
@@ -58,6 +77,16 @@ namespace football.history.api.Repositories.Match
                         Position: reader.IsDBNull(6) ? null : reader.GetByte(6),
                         Status: reader.IsDBNull(7) ? null : reader.GetString(7)));
 
+        private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
+        {
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = GetSql(seasonIds, teamId);
+
+            AddParameters(cmd, teamId, seasonIds);
+
+            return cmd;
+        }
+
         private static void AddParameters(DbCommand cmd, long teamId, long[] seasonIds)
         {
             cmd.Parameters.Add(
@@ -78,21 +107,11 @@ namespace football.history.api.Repositories.Match
             }
         }
 
-        private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
-        {
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = GetSql(seasonIds, teamId);
-
-            AddParameters(cmd, teamId, seasonIds);
-
-            return cmd;
-        }
-
         private static string GetSql(long[] seasonIds, long teamId)
             => $@"
                 SELECT 
                        s.Id AS SeasonId, 
-                       StartYear, 
+                       s.StartYear, 
                        c.Id AS CompetitionId, 
                        c.Name, 
                        c.Tier, 

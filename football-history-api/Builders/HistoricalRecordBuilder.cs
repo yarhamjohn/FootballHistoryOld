@@ -1,21 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Dtos;
+using football.history.api.Domain;
 using football.history.api.Exceptions;
+using football.history.api.Bindings;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Match;
 
 namespace football.history.api.Builders
 {
     public interface IHistoricalRecordBuilder
     {
         /// <summary>
-        /// Constructs a <see cref="HistoricalRecord" /> based on the provided parameters.
+        /// Constructs a <see cref="HistoricalRecord"/> domain object.
         /// </summary>
         ///
         /// <exception cref="DataInvalidException">
-        /// Thrown if the specified team had positions in multiple competitions in a single season
-        /// or when a season contained multiple competitions of which at least one was null.
+        /// Thrown if the given <paramref name="teamId"/> appeared in
+        /// multiple competitions in a single season or if any season
+        /// contained multiple competitions of which any were undefined
+        /// (seasons with single, undefined competitions are expected due
+        /// to World War One and World War Two).
         /// </exception>
         HistoricalRecord Build(long teamId, long[] seasonIds);
     }

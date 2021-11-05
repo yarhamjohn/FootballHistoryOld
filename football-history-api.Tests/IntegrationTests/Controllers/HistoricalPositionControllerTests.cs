@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using football.history.api.Builders;
-using football.history.api.Dtos;
+using football.history.api.Domain;
 using football.history.api.Exceptions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
@@ -129,8 +129,6 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
             Assert.That(actualHistoricalSeason.Boundaries, Is.Empty);
             Assert.That(actualHistoricalSeason.HistoricalPosition,
                 Is.EqualTo(expectedHistoricalSeason.HistoricalPosition));
-            
-            mockHistoricalRecordBuilder.VerifyAll();
         }
 
         private static HttpClient GetTestClient(IMock<IHistoricalRecordBuilder> mockHistoricalRecordBuilder)

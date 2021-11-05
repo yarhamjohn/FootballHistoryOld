@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Bindings;
 using football.history.api.Builders;
-using football.history.api.Dtos;
+using football.history.api.Domain;
 using football.history.api.Exceptions;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Match;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.UnitTests.Builders.HistoricalRecord
+namespace football.history.api.Tests.UnitTests.Builders
 {
     [TestFixture]
     public class HistoricalRecordBuilderTests
