@@ -1,143 +1,161 @@
 using System;
-using System.Collections.Generic;
-using FluentAssertions;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using football.history.api.Builders;
-using football.history.api.Controllers;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Season;
+using football.history.api.Domain;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Controllers
+namespace football.history.api.Tests.IntegrationTests.Controllers
 {
     [TestFixture]
     public class SeasonControllerTests
     {
         [Test]
-        public void GetAllSeasons_should_return_message_for_unhandled_error()
+        public async Task GetAllSeasons_returns_not_found_given_no_matching_seasons()
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockSeasonRepository = new Mock<ISeasonRepository>();
-            mockSeasonRepository
-                .Setup(x => x.GetAllSeasons())
-                .Throws(new Exception("Unhandled error occurred."));
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildAllSeasons())
+                .Returns(Array.Empty<Season>());
 
-            var controller = new SeasonController(mockSeasonRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetAllSeasons();
+            var client = GetTestClient(mockSeasonBuilder);
 
-            mockSeasonRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-            error!.Code.Should().Be("UNKNOWN_ERROR");
+            var response = await client.GetAsync("api/v2/seasons");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Is.EqualTo("No seasons were found."));
         }
-
+        
         [Test]
-        public void GetAllSeasons_should_return_message_for_handled_error()
+        public async Task GetAllSeasons_returns_internal_server_error_given_exception()
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockRepository = new Mock<ISeasonRepository>();
-            mockRepository
-                .Setup(x => x.GetAllSeasons())
-                .Throws(new DataInvalidException("Repository data was invalid."));
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildAllSeasons())
+                .Throws(new Exception("error message"));
 
-            var controller = new SeasonController(mockRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetAllSeasons();
+            var client = GetTestClient(mockSeasonBuilder);
 
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Repository data was invalid.");
-            error!.Code.Should().Be("DATA_INVALID");
+            var response = await client.GetAsync("api/v2/seasons");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Does.Contain("error message"));
         }
-
+        
         [Test]
-        public void GetAllSeasons_should_return_result()
+        public async Task GetAllSeasons_returns_seasons()
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockRepository = new Mock<ISeasonRepository>();
-            var seasonModels = new List<SeasonModel>
+            var expectedSeasons = new []
             {
-                new(1, 2000, 2001),
-                new(2, 2001, 2002)
+                new Season(Id: 1, StartYear: 2000, EndYear: 2001)
             };
 
-            mockRepository
-                .Setup(x => x.GetAllSeasons())
-                .Returns(seasonModels);
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildAllSeasons())
+                .Returns(expectedSeasons);
 
-            var controller = new SeasonController(mockRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetAllSeasons();
+            var client = GetTestClient(mockSeasonBuilder);
 
-            var seasonDtos = new List<SeasonDto>
-            {
-                new(1, 2000, 2001),
-                new(2, 2001, 2002)
-            };
+            var response = await client.GetAsync("api/v2/seasons");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var actualSeasons = JsonConvert.DeserializeObject<Season[]>(responseString);
             
-            mockRepository.VerifyAll();
-            result.Should().BeEquivalentTo(seasonDtos);
-            error.Should().BeNull();
+            Assert.That(actualSeasons, Is.EqualTo(expectedSeasons));
+        }
+        
+        [Test]
+        public async Task GetSeason_returns_not_found_given_no_matching_season()
+        {
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildSeason(It.IsAny<long>()))
+                .Returns((Season?) null);
+
+            var client = GetTestClient(mockSeasonBuilder);
+
+            var response = await client.GetAsync("api/v2/seasons/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Is.EqualTo("No season was found with id 1."));
+        }
+        
+        [Test]
+        public async Task GetSeason_returns_not_found_given_invalid_id()
+        {
+            var client = GetTestClient();
+
+            var response = await client.GetAsync("api/v2/seasons/not-an-id");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
         [Test]
-        public void GetSeason_should_return_message_for_unhandled_error()
+        public async Task GetSeason_returns_internal_server_error_given_exception()
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockRepository = new Mock<ISeasonRepository>();
-            mockRepository
-                .Setup(x => x.GetSeason(1))
-                .Throws(new Exception("Unhandled error occurred."));
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildSeason(It.IsAny<long>()))
+                .Throws(new Exception("error message"));
 
-            var controller = new SeasonController(mockRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetSeason(1);
+            var client = GetTestClient(mockSeasonBuilder);
 
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-            error!.Code.Should().Be("UNKNOWN_ERROR");
+            var response = await client.GetAsync("api/v2/seasons/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            Assert.That(responseString, Does.Contain("error message"));
         }
-
+        
         [Test]
-        public void GetSeason_should_return_message_for_handled_error()
+        public async Task GetSeason_returns_season()
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockRepository = new Mock<ISeasonRepository>();
-            mockRepository
-                .Setup(x => x.GetSeason(1))
-                .Throws(new DataInvalidException("Repository data was invalid."));
+            var expectedSeason = new Season(Id: 1, StartYear: 2000, EndYear: 2001);
 
-            var controller = new SeasonController(mockRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetSeason(1);
+            var mockSeasonBuilder = new Mock<ISeasonBuilder>();
+            mockSeasonBuilder
+                .Setup(x => x.BuildSeason(1))
+                .Returns(expectedSeason);
 
-            mockRepository.VerifyAll();
-            result.Should().BeNull();
-            error.Should().NotBeNull();
-            error!.Message.Should().Be("Repository data was invalid.");
-            error!.Code.Should().Be("DATA_INVALID");
+            var client = GetTestClient(mockSeasonBuilder);
+
+            var response = await client.GetAsync("api/v2/seasons/1");
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var actualSeason = JsonConvert.DeserializeObject<Season>(responseString);
+            
+            Assert.That(actualSeason, Is.EqualTo(expectedSeason));
         }
-
-        [Test]
-        public void GetSeason_should_return_result()
+        
+        private static HttpClient GetTestClient(IMock<ISeasonBuilder> mockSeasonBuilder)
         {
-            var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-            var mockRepository = new Mock<ISeasonRepository>();
-            var seasonModel = new SeasonModel(1, 2000, 2001);
-
-            mockRepository
-                .Setup(x => x.GetSeason(1))
-                .Returns(seasonModel);
-
-            var controller = new SeasonController(mockRepository.Object, mockCompetitionRepository.Object);
-            var (result, error) = controller.GetSeason(1);
-
-            var seasonDto = new SeasonDto(1, 2000, 2001);
-
-            mockRepository.VerifyAll();
-            result.Should().Be(seasonDto);
-            error.Should().BeNull();
+            var factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(b =>
+            {
+                b.ConfigureServices(s =>
+                {
+                    s.SwapTransient(mockSeasonBuilder.Object);
+                });
+            });
+            
+            return factory.CreateClient();
         }
+        
+        private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
     }
 }

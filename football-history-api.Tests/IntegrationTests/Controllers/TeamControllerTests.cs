@@ -85,7 +85,7 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
 
             var client = GetTestClient(mockTeamBuilder);
 
-            var response = await client.GetAsync("api/v2/teams/id/1");
+            var response = await client.GetAsync("api/v2/teams/1");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
@@ -94,11 +94,11 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
         }
         
         [Test]
-        public async Task GetTeam_returns_not_found_given_no_teamId()
+        public async Task GetTeam_returns_not_found_given_invalid_id()
         {
             var client = GetTestClient();
 
-            var response = await client.GetAsync("api/v2/teams/id");
+            var response = await client.GetAsync("api/v2/teams/not-an-id");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -113,7 +113,7 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
 
             var client = GetTestClient(mockTeamBuilder);
 
-            var response = await client.GetAsync("api/v2/teams/id/1");
+            var response = await client.GetAsync("api/v2/teams/1");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
 
@@ -133,7 +133,7 @@ namespace football.history.api.Tests.IntegrationTests.Controllers
 
             var client = GetTestClient(mockTeamBuilder);
 
-            var response = await client.GetAsync("api/v2/teams/id/1");
+            var response = await client.GetAsync("api/v2/teams/1");
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 

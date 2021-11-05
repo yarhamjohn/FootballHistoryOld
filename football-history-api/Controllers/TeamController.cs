@@ -32,7 +32,7 @@ namespace football.history.api.Controllers
             return teams;
         }
 
-        [HttpGet("id/{id:long}")]
+        [HttpGet("{id:long}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]

@@ -1,95 +1,52 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Builders;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Season;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
 {
-    [ApiVersion("1", Deprecated = true)]
     [ApiVersion("2")]
+    [Route("api/v{version:apiVersion}/seasons")]
     public class SeasonController : Controller
     {
-        private readonly ISeasonRepository _seasonRepository;
-        private readonly ICompetitionRepository _competitionRepository;
+        private readonly ISeasonBuilder _builder;
 
-        public SeasonController(ISeasonRepository seasonRepository, ICompetitionRepository competitionRepository)
+        public SeasonController(ISeasonBuilder builder)
         {
-            _seasonRepository = seasonRepository;
-            _competitionRepository = competitionRepository;
+            _builder = builder;
         }
 
         [HttpGet]
-        [MapToApiVersion("2")]
-        [Route("api/v{version:apiVersion}/seasons")]
-        public ApiResponse<List<SeasonDto>?> GetAllSeasons()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<Season[]> GetAllSeasons()
         {
-            try
+            var seasons = _builder.BuildAllSeasons();
+
+            if (!seasons.Any())
             {
-                var seasons = _seasonRepository.GetAllSeasons().Select(BuildSeasonDto).ToList();
-                return new(seasons);
+                return NotFound("No seasons were found.");
             }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
-            }
-            catch (Exception ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
-            }
+
+            return seasons;
         }
 
         [HttpGet]
-        [MapToApiVersion("2")]
-        [Route("api/v{version:apiVersion}/seasons/{id:long}")]
-        public ApiResponse<SeasonDto?> GetSeason(long id)
+        [Route("{id:long}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<Season?> GetSeason(long id)
         {
-            try
-            {
-                var season = _seasonRepository.GetSeason(id);
-                return new(BuildSeasonDto(season));
-            }
-            catch (FootballHistoryException ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new(ex.Message, ex.Code));
-            }
-            catch (Exception ex)
-            {
-                return new(
-                    Result: null,
-                    Error: new($"Something went wrong. {ex.Message}"));
-            }
-        }
-        
-        // Obsolete API method to get all seasons. I would remove it but it demonstrates how api versioning might work.
-        [Obsolete]
-        [HttpGet]
-        [MapToApiVersion("1")]
-        [Route("api/v{version:apiVersion}/Season/GetSeasons")]
-        public List<Season> GetSeasons() =>
-            _seasonRepository.GetAllSeasons().ToList().Select(s =>
-                new Season
-                (
-                    s.StartYear, s.EndYear,
-                    _competitionRepository.GetCompetitionsInSeason(s.Id)
-                        .Select(c => new Division(c.Name, c.Tier)).ToList()
-                )
-            ).ToList();
-        
-        private static SeasonDto BuildSeasonDto(SeasonModel season) =>
-            new(season.Id, season.StartYear, season.EndYear);
-        
-        public record Season(int StartYear, int EndYear, List<Division> Divisions);
+            var season = _builder.BuildSeason(id);
 
-        public record Division(string Name, int Tier);
+            if (season is null)
+            {
+                return NotFound($"No season was found with id {id}.");
+            }
+            
+            return season;
+        }
     }
 }

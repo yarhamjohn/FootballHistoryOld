@@ -48,6 +48,7 @@ namespace football.history.api.Tests.UnitTests.Builders
 
             var actualTeam = teams.Single();
             var expectedTeamModel = models.Single();
+            
             Assert.That(actualTeam.Id, Is.EqualTo(expectedTeamModel.Id));
             Assert.That(actualTeam.Name, Is.EqualTo(expectedTeamModel.Name));
             Assert.That(actualTeam.Abbreviation, Is.EqualTo(expectedTeamModel.Abbreviation));
@@ -70,9 +71,9 @@ namespace football.history.api.Tests.UnitTests.Builders
         }
         
         [Test]
-        public void BuildTeam_does_not_handle_respository_exception()
+        public void BuildTeam_does_not_handle_repository_exception()
         {
-            var exception = new DataInvalidException("An error occurred");
+            var exception = new InvalidOperationException("An error occurred");
 
             var mockTeamRepository = new Mock<ITeamRepository>();
             mockTeamRepository
@@ -81,7 +82,7 @@ namespace football.history.api.Tests.UnitTests.Builders
 
             var builder = new TeamBuilder(mockTeamRepository.Object);
 
-            var ex = Assert.Throws<DataInvalidException>(() => builder.BuildTeam(1));
+            var ex = Assert.Throws<InvalidOperationException>(() => builder.BuildTeam(1));
 
             Assert.That(ex, Is.EqualTo(exception));
         }
@@ -89,23 +90,23 @@ namespace football.history.api.Tests.UnitTests.Builders
         [Test]
         public void BuildTeam_returns_domain_object_given_model()
         {
-            var model = new TeamModel(Id: 1, Name: "Norwich City", Abbreviation: "NOR", Notes: null);
+            var expectedTeamModel = new TeamModel(Id: 1, Name: "Norwich City", Abbreviation: "NOR", Notes: null);
             
             var mockTeamRepository = new Mock<ITeamRepository>();
             mockTeamRepository
                 .Setup(x => x.GetTeam(1))
-                .Returns(model);
+                .Returns(expectedTeamModel);
 
             var builder = new TeamBuilder(mockTeamRepository.Object);
 
-            var team = builder.BuildTeam(1);
+            var actualTeam = builder.BuildTeam(1);
 
-            Assert.That(team, Is.Not.Null);
+            Assert.That(actualTeam, Is.Not.Null);
 
-            Assert.That(team!.Id, Is.EqualTo(model.Id));
-            Assert.That(team.Name, Is.EqualTo(model.Name));
-            Assert.That(team.Abbreviation, Is.EqualTo(model.Abbreviation));
-            Assert.That(team.Notes, Is.EqualTo(model.Notes));
+            Assert.That(actualTeam!.Id, Is.EqualTo(expectedTeamModel.Id));
+            Assert.That(actualTeam.Name, Is.EqualTo(expectedTeamModel.Name));
+            Assert.That(actualTeam.Abbreviation, Is.EqualTo(expectedTeamModel.Abbreviation));
+            Assert.That(actualTeam.Notes, Is.EqualTo(expectedTeamModel.Notes));
         }
     }
 }

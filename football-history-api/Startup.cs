@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using football.history.api.Builders;
 using football.history.api.Builders.Statistics;
@@ -43,21 +42,23 @@ namespace football.history.api
 
             services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
             services.AddTransient<ITeamBuilder, TeamBuilder>();
+            services.AddTransient<ISeasonBuilder, SeasonBuilder>();
             
-            services.AddTransient<ISeasonCommandBuilder, SeasonCommandBuilder>();
             services.AddTransient<IMatchCommandBuilder, MatchCommandBuilder>();
             services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
             services.AddTransient<IPointDeductionCommandBuilder, PointDeductionCommandBuilder>();
             services.AddTransient<IPositionCommandBuilder, PositionCommandBuilder>();
 
             services.AddTransient<IDatabaseConnection, DatabaseConnection>();
+            
+            services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<ISeasonRepository, SeasonRepository>();
+
             services.AddTransient<ICompetitionRepository, CompetitionRepository>();
             services.AddTransient<IMatchRepository, MatchRepository>();
             services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
             services.AddTransient<IPositionRepository, PositionRepository>();
-            services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
 
             var connString = Configuration.GetConnectionString("FootballHistory");
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString));
@@ -72,14 +73,6 @@ namespace football.history.api
             services.AddSwaggerGen(
                 options =>
                 {
-                    options.SwaggerDoc(
-                        "v1",
-                        new OpenApiInfo
-                        {
-                            Title = "Football History API v1",
-                            Version = "v1"
-                        });
-
                     options.SwaggerDoc(
                         "v2",
                         new OpenApiInfo
@@ -113,7 +106,6 @@ namespace football.history.api
                 });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -132,7 +124,6 @@ namespace football.history.api
                 options =>
                 {
                     options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
 
             app.UseHttpsRedirection();
