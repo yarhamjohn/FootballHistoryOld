@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using FluentAssertions;
 using football.history.api.Builders;
 using football.history.api.Exceptions;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.LeagueTable
+namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
 {
     [TestFixture]
     public class PlayOffWinnerCheckerTests
@@ -390,23 +391,23 @@ namespace football.history.api.Tests.Builders.LeagueTable
                 0,
                 0);
 
-        private static List<MatchModel> GetOneLeggedFinalMatches()
-            => new()
+        private static MatchModel[] GetOneLeggedFinalMatches()
+            => new[]
             {
                 GetMatch("SemiFinal"),
                 GetMatch("Final")
             };
 
-        private static List<MatchModel> GetTwoLeggedFinalMatches()
-            => new()
+        private static MatchModel[] GetTwoLeggedFinalMatches()
+            => new[]
             {
                 GetMatch("SemiFinal"),
                 GetMatch("Final"),
                 GetMatch("Final")
             };
 
-        private static List<MatchModel> GetReplayFinalMatches()
-            => new()
+        private static MatchModel[] GetReplayFinalMatches()
+            => new[]
             {
                 GetMatch("SemiFinal"),
                 GetMatch("Final"),
@@ -415,8 +416,8 @@ namespace football.history.api.Tests.Builders.LeagueTable
             };
 
 
-        private static List<MatchModel> GetTooManyFinalMatches()
-            => new()
+        private static MatchModel[] GetTooManyFinalMatches()
+            => new[]
             {
                 GetMatch("SemiFinal"),
                 GetMatch("Final"),

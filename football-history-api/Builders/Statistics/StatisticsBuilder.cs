@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using MoreLinq;
 
 namespace football.history.api.Builders.Statistics
@@ -129,7 +130,7 @@ namespace football.history.api.Builders.Statistics
                 GetCompetitionNames(losingStreak));
         }
 
-        private List<ConsecutiveResult> GetConsecutiveMetrics(List<MatchModel> matches)
+        private List<ConsecutiveResult> GetConsecutiveMetrics(MatchModel[] matches)
         {
             var homeGroup = matches
                 .GroupBy(match => (teamId: match.HomeTeamId, teamName: match.HomeTeamName,
@@ -384,7 +385,7 @@ namespace football.history.api.Builders.Statistics
             return string.Join(", ", mostWins.Select(x => x.Info.competitionName));
         }
 
-        private List<ResultMetrics> CalculateResultMetrics(List<MatchModel> matches)
+        private List<ResultMetrics> CalculateResultMetrics(MatchModel[] matches)
         {
             var homeGroup = matches
                 .GroupBy(match => (teamId: match.HomeTeamId, teamName: match.HomeTeamName,

@@ -1,6 +1,6 @@
 using System;
 
-namespace football.history.api.Repositories.Match
+namespace football.history.api.Models
 {
     public record MatchModel (
         long Id,

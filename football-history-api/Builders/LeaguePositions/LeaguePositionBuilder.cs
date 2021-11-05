@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 
 namespace football.history.api.Builders
@@ -45,7 +46,7 @@ namespace football.history.api.Builders
 
         private LeaguePositionDto GetLeaguePositionDto(
             long teamId, CompetitionModel competition,
-            List<MatchModel> leagueMatches,
+            MatchModel[] leagueMatches,
             DateTime targetDate,
             List<PointDeductionModel> pointDeductions)
         {

@@ -1,9 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
+using System;
 using System.Linq;
 using football.history.api.Exceptions;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 
 namespace football.history.api.Builders
 {
@@ -31,7 +31,7 @@ namespace football.history.api.Builders
         {
             var playOffMatches = competition.PlayOffPlaces > 0
                 ? _matchRepository.GetPlayOffMatches(competition.Id)
-                : new List<MatchModel>();
+                : Array.Empty<MatchModel>();
             var result = IsWinner(teamName, playOffMatches);
 
             var isTierTwoIn1989 = competition.StartYear == 1989 && competition.Tier == 2;
@@ -44,11 +44,11 @@ namespace football.history.api.Builders
             return IsWinner(teamName, playOffMatches);
         }
 
-        private List<MatchModel> GetRelegationPlayOffMatches(CompetitionModel competition)
+        private MatchModel[] GetRelegationPlayOffMatches(CompetitionModel competition)
         {
             if (competition.RelegationPlayOffPlaces == 0)
             {
-                return new List<MatchModel>();
+                return Array.Empty<MatchModel>();
             }
 
             var feederTier = competition.Tier + 1;
@@ -59,7 +59,7 @@ namespace football.history.api.Builders
             return _matchRepository.GetPlayOffMatches(feederCompetition.Id);
         }
 
-        private bool IsWinner(string teamName, List<MatchModel> playOffMatches)
+        private bool IsWinner(string teamName, MatchModel[] playOffMatches)
         {
             var playOffFinalMatches = playOffMatches.Where(m => m.RulesStage == "Final").ToList();
             return playOffFinalMatches.Count switch

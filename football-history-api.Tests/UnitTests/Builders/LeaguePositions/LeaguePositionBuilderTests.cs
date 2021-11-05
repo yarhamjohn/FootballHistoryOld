@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using football.history.api.Builders;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.LeaguePositions
+namespace football.history.api.Tests.UnitTests.Builders.LeaguePositions
 {
     [TestFixture]
     public class LeaguePositionBuilderTests
@@ -20,7 +20,7 @@ namespace football.history.api.Tests.Builders.LeaguePositions
             var mockDirector = new Mock<ILeagueTableBuilder>();
             var mockMatchRepository = new Mock<IMatchRepository>();
             var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
-            mockMatchRepository.Setup(x => x.GetLeagueMatches(1)).Returns(new List<MatchModel>());
+            mockMatchRepository.Setup(x => x.GetLeagueMatches(1)).Returns(Array.Empty<MatchModel>());
 
             var builder = new LeaguePositionBuilder(mockDirector.Object, mockMatchRepository.Object,
                 mockPointDeductionRepository.Object);
@@ -116,9 +116,9 @@ namespace football.history.api.Tests.Builders.LeaguePositions
                 FailedReElectionPosition: null);
         }
 
-        private static List<MatchModel> GetMatches()
+        private static MatchModel[] GetMatches()
         {
-            return new()
+            return new MatchModel[]
             {
                 new(1,
                     new DateTime(2000, 1, 10),

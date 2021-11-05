@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Bindings;
+using football.history.api.Models;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
+using football.history.api.Repositories;
 using football.history.api.Repositories.PointDeduction;
 using football.history.api.Repositories.Team;
 
@@ -12,7 +13,7 @@ namespace football.history.api.Builders
     public interface ILeagueTableBuilder
     {
         ILeagueTable BuildFullLeagueTable(CompetitionModel competition);
-        ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, List<MatchModel> leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions);
+        ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions);
     }
     
     public class LeagueTableBuilder : ILeagueTableBuilder
@@ -56,9 +57,9 @@ namespace football.history.api.Builders
             return new LeagueTable(rows);
         }
         
-        public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, List<MatchModel> leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions)
+        public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions)
         {
-            var matchesToDate = leagueMatches.Where(x => x.MatchDate < targetDate).ToList();
+            var matchesToDate = leagueMatches.Where(x => x.MatchDate < targetDate).ToArray();
             var teamsInLeague = GetTeamsInLeague(leagueMatches);
 
             var rows = GetRows(competition, teamsInLeague, matchesToDate, pointDeductions);
@@ -68,7 +69,7 @@ namespace football.history.api.Builders
             return new LeagueTable(rows);
         }
 
-        private static IEnumerable<TeamModel> GetTeamsInLeague(List<MatchModel> leagueMatches)
+        private static IEnumerable<TeamModel> GetTeamsInLeague(MatchModel[] leagueMatches)
         {
             return leagueMatches.SelectMany(
                     m => new[]
@@ -82,7 +83,7 @@ namespace football.history.api.Builders
         private List<LeagueTableRowDto> GetRows(
             CompetitionModel competition,
             IEnumerable<TeamModel> teamsInLeague,
-            List<MatchModel> leagueMatches,
+            MatchModel[] leagueMatches,
             List<PointDeductionModel> pointDeductions)
         {
             return teamsInLeague

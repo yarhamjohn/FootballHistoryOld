@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Builders.Match;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Match;
+using football.history.api.Builders;
+using football.history.api.Domain;
+using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers
@@ -12,96 +11,48 @@ namespace football.history.api.Controllers
     [Route("api/v{version:apiVersion}/matches")]
     public class MatchController : Controller
     {
-        private readonly IMatchRepository _repository;
+        private readonly IMatchBuilder _builder;
 
-        public MatchController(IMatchRepository matchRepository)
+        public MatchController(IMatchBuilder matchBuilder)
         {
-            _repository = matchRepository;
+            _builder = matchBuilder;
         }
 
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public ActionResult<List<MatchDto>> GetMatches(
+        public ActionResult<Match[]> GetMatches(
             long? competitionId,
             long? seasonId,
             long? teamId,
             MatchType? type,
             DateTime? matchDate)
         {
-            try
+            var matches = _builder.BuildMatches(competitionId, seasonId, teamId, type, matchDate);
+
+            if (!matches.Any())
             {
-                return _repository
-                    .GetMatches(competitionId, seasonId, teamId, type, matchDate)
-                    .Select(BuildMatchDto)
-                    .ToList();
+                return NotFound("No matches were found.");
             }
-            catch (Exception ex)
-            {
-                return ex switch
-                {
-                    DataNotFoundException => NotFound(ex.Message),
-                    DataInvalidException => Problem(ex.Message),
-                    _ => Problem()
-                };
-            }
+
+            return matches;
         }
 
         [HttpGet("{id:long}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public ActionResult<MatchDto> GetMatch(long id)
+        public ActionResult<Match> GetMatch(long id)
         {
-            try
-            {
-                var match = _repository.GetMatch(id);
-                return BuildMatchDto(match);
-            }
-            catch (Exception ex)
-            {
-                return ex switch
-                {
-                    DataNotFoundException => NotFound(ex.Message),
-                    DataInvalidException => Problem(ex.Message),
-                    _ => Problem()
-                };
-            }
-        }
+            var match = _builder.BuildMatch(id);
 
-        private static MatchDto BuildMatchDto(MatchModel match) =>
-            new(match.Id,
-                match.MatchDate,
-                Competition: new(
-                    match.CompetitionId,
-                    match.CompetitionName,
-                    match.CompetitionStartYear,
-                    match.CompetitionEndYear,
-                    match.CompetitionLevel),
-                Rules: new(
-                    match.RulesType,
-                    match.RulesStage,
-                    match.RulesExtraTime,
-                    match.RulesPenalties,
-                    match.RulesNumLegs,
-                    match.RulesAwayGoals,
-                    match.RulesReplays),
-                HomeTeam: new(
-                    match.HomeTeamId,
-                    match.HomeTeamName,
-                    match.HomeTeamAbbreviation,
-                    match.HomeGoals,
-                    match.HomeGoalsExtraTime,
-                    match.HomePenaltiesTaken,
-                    match.HomePenaltiesScored),
-                AwayTeam: new(
-                    match.AwayTeamId,
-                    match.AwayTeamName,
-                    match.AwayTeamAbbreviation,
-                    match.AwayGoals,
-                    match.AwayGoalsExtraTime,
-                    match.AwayPenaltiesTaken,
-                    match.AwayPenaltiesScored));
+            if (match is null)
+            {
+                return NotFound($"No match was found with id {id}.");
+            }
+            
+            return match;
+        }
     }
 }

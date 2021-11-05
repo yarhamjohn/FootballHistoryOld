@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using FluentAssertions;
 using football.history.api.Bindings;
 using football.history.api.Builders;
+using football.history.api.Models;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 using NUnit.Framework;
 
@@ -145,7 +145,7 @@ namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
             var builder = new RowBuilder();
             
             var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
-            var result = builder.Build(competition, teamModel, new List<MatchModel> { match }, new List<PointDeductionModel>());
+            var result = builder.Build(competition, teamModel, new [] { match }, new List<PointDeductionModel>());
 
             result.Should().BeEquivalentTo(new LeagueTableRowDto
             {
@@ -174,7 +174,7 @@ namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
             var builder = new RowBuilder();
             
             var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
-            var result = builder.Build(competition, teamModel, new List<MatchModel>(), new List<PointDeductionModel>());
+            var result = builder.Build(competition, teamModel, Array.Empty<MatchModel>(), new List<PointDeductionModel>());
 
             result.Should().BeEquivalentTo(new LeagueTableRowDto
             {
@@ -222,8 +222,8 @@ namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
                 new PointDeductionModel(1, 1, 3, 4, "Arsenal", "Financial Irregularities")
             };
 
-        private static List<MatchModel> GetMatches()
-            => new()
+        private static MatchModel[] GetMatches()
+            => new[]
             {
                 new MatchModel(1,
                     new DateTime(2000, 1, 1),

@@ -5,7 +5,6 @@ using football.history.api.Builders.Statistics;
 using football.history.api.Domain;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 using football.history.api.Repositories.Season;
 using football.history.api.Repositories.Team;
@@ -43,8 +42,8 @@ namespace football.history.api
             services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
             services.AddTransient<ITeamBuilder, TeamBuilder>();
             services.AddTransient<ISeasonBuilder, SeasonBuilder>();
+            services.AddTransient<IMatchBuilder, MatchBuilder>();
             
-            services.AddTransient<IMatchCommandBuilder, MatchCommandBuilder>();
             services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
             services.AddTransient<IPointDeductionCommandBuilder, PointDeductionCommandBuilder>();
             services.AddTransient<IPositionCommandBuilder, PositionCommandBuilder>();

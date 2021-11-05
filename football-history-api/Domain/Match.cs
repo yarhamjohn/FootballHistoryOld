@@ -1,16 +1,16 @@
 using System;
 
-namespace football.history.api.Builders.Match
+namespace football.history.api.Domain
 {
-    public record MatchDto (
+    public record Match (
         long Id,
         DateTime MatchDate,
-        MatchCompetitionDto Competition,
-        MatchRulesDto Rules,
-        MatchTeamDto HomeTeam,
-        MatchTeamDto AwayTeam);
+        MatchCompetition Competition,
+        MatchRules Rules,
+        MatchTeam HomeTeam,
+        MatchTeam AwayTeam);
 
-    public record MatchRulesDto(
+    public record MatchRules(
         string Type,
         string? Stage,
         bool ExtraTime,
@@ -19,7 +19,7 @@ namespace football.history.api.Builders.Match
         bool AwayGoals,
         bool Replays);
 
-    public record MatchTeamDto(
+    public record MatchTeam(
         long Id,
         string Name,
         string Abbreviation,
@@ -28,7 +28,7 @@ namespace football.history.api.Builders.Match
         int PenaltiesTaken,
         int PenaltiesScored);
         
-    public record MatchCompetitionDto(
+    public record MatchCompetition(
         long Id, 
         string Name,
         int StartYear,

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Bindings;
+using football.history.api.Models;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 
 namespace football.history.api.Builders
@@ -12,7 +12,7 @@ namespace football.history.api.Builders
         LeagueTableRowDto Build(
             CompetitionModel competition,
             TeamModel team,
-            List<MatchModel> matches,
+            MatchModel[] matches,
             List<PointDeductionModel> pointDeductions);
     }
 
@@ -21,7 +21,7 @@ namespace football.history.api.Builders
         public LeagueTableRowDto Build(
             CompetitionModel competition,
             TeamModel team,
-            List<MatchModel> matches,
+            MatchModel[] matches,
             List<PointDeductionModel> pointDeductions)
         {
             var teamMatches = matches.Where(m => MatchInvolvesTeam(m, team)).ToList();

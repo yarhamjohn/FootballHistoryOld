@@ -4,8 +4,9 @@ using System.Linq;
 using FluentAssertions;
 using football.history.api.Bindings;
 using football.history.api.Builders;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Match;
 using football.history.api.Repositories.PointDeduction;
 using football.history.api.Repositories.Team;
 using football.history.api.Tests.Builders.LeagueTable.Sorter;
@@ -99,7 +100,7 @@ namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
                 .Returns(pointDeductions);
             
             var mockRowBuilder = new Mock<IRowBuilder>();
-            var matchesBeforeTarget = matches.Where(x => x.MatchDate < new DateTime(2000, 1, 2)).ToList();
+            var matchesBeforeTarget = matches.Where(x => x.MatchDate < new DateTime(2000, 1, 2)).ToArray();
             mockRowBuilder
                 .Setup(x => x.Build(competition, new TeamModel(1, "Norwich City", "NOR", null), matchesBeforeTarget, pointDeductions))
                 .Returns(new LeagueTableRowDto() { Points = 3});
@@ -163,8 +164,8 @@ namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
                 FailedReElectionPosition: null);
         }
 
-        private static List<MatchModel> GetMatches()
-            => new()
+        private static MatchModel[] GetMatches()
+            => new[]
             {
                 new MatchModel(1,
                     new DateTime(2000, 1, 1),

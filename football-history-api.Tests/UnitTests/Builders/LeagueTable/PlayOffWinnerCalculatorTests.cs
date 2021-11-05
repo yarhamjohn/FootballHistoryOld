@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using FluentAssertions;
 using football.history.api.Builders;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Match;
+using football.history.api.Models;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.LeagueTable
+namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
 {
     [TestFixture]
     public class PlayOffWinnerCalculatorTests
