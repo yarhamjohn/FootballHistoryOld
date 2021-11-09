@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 
-namespace football.history.api.Tests.Repositories.TestUtilities
+namespace football.history.api.Tests.IntegrationTests.Repositories.TestUtilities
 {
     public class MockDataReader : DbDataReader
     {

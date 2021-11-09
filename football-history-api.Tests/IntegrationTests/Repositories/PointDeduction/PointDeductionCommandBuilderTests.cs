@@ -1,11 +1,11 @@
 using FluentAssertions;
 using football.history.api.Repositories;
 using football.history.api.Repositories.PointDeduction;
-using football.history.api.Tests.Repositories.TestUtilities;
+using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Repositories.PointDeduction
+namespace football.history.api.Tests.IntegrationTests.Repositories.PointDeduction
 {
     [TestFixture]
     public class PointDeductionCommandBuilderTests
@@ -24,7 +24,7 @@ namespace football.history.api.Tests.Repositories.PointDeduction
 
             dbCommand.CommandText.Should().Contain("FROM [dbo].[Deductions] AS d");
             dbCommand.CommandText.Should().Contain("WHERE d.CompetitionId = @CompetitionId");
-            dbCommand.Parameters.Should().HaveCount(1);
+            dbCommand.Parameters.Count.Should().Be(1);
             dbCommand.Parameters["@CompetitionId"].Value.Should().Be(competitionId);
         }
     }

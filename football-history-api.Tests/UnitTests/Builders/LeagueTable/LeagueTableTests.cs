@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using football.history.api.Builders;
 using football.history.api.Exceptions;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.LeagueTable
+namespace football.history.api.Tests.UnitTests.Builders.LeagueTable
 {
     [TestFixture]
     public class LeagueTableTests

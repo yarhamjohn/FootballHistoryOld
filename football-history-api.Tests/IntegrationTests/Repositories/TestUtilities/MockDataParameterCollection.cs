@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Linq;
 
-namespace football.history.api.Tests.Repositories.TestUtilities
+namespace football.history.api.Tests.IntegrationTests.Repositories.TestUtilities
 {
     public class MockDataParameterCollection : DbParameterCollection
     {

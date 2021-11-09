@@ -1,16 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using FluentAssertions;
 using football.history.api.Exceptions;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Tests.Repositories.TestUtilities;
+using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Microsoft.Data.SqlClient.Server;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Repositories.Competition
+namespace football.history.api.Tests.IntegrationTests.Repositories.Competition
 {
     [TestFixture]
     public class CompetitionRepositoryTests
