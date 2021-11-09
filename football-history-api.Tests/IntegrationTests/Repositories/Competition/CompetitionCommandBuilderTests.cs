@@ -1,11 +1,11 @@
 using FluentAssertions;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Tests.Repositories.TestUtilities;
+using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Repositories.Competition
+namespace football.history.api.Tests.IntegrationTests.Repositories.Competition
 {
     [TestFixture]
     public class CompetitionCommandBuilderTests
@@ -23,7 +23,7 @@ namespace football.history.api.Tests.Repositories.Competition
 
             dbCommand.CommandText.Should().Contain("FROM [dbo].[Competitions] AS c");
             dbCommand.CommandText.Should().NotContain("WHERE");
-            dbCommand.Parameters.Should().BeEmpty();
+            dbCommand.Parameters.Count.Should().Be(0);
         }
         
         [Test]
@@ -39,7 +39,7 @@ namespace football.history.api.Tests.Repositories.Competition
 
             dbCommand.CommandText.Should().Contain("FROM [dbo].[Competitions] AS c");
             dbCommand.CommandText.Should().Contain("WHERE c.Id = @CompetitionId AND s.Id = @SeasonId AND c.Tier = @Tier");
-            dbCommand.Parameters.Should().HaveCount(3);
+            dbCommand.Parameters.Count.Should().Be(3);
             dbCommand.Parameters["@CompetitionId"].Value.Should().Be(1);
             dbCommand.Parameters["@SeasonId"].Value.Should().Be(2);
             dbCommand.Parameters["@Tier"].Value.Should().Be(3);
@@ -61,7 +61,7 @@ namespace football.history.api.Tests.Repositories.Competition
             dbCommand.CommandText.Should().NotContain("s.Id = @SeasonId");
             dbCommand.CommandText.Should().NotContain("c.Tier = @Tier");
             
-            dbCommand.Parameters.Should().HaveCount(1);
+            dbCommand.Parameters.Count.Should().Be(1);
             dbCommand.Parameters["@CompetitionId"].Value.Should().Be(1);
         }
         
@@ -81,7 +81,7 @@ namespace football.history.api.Tests.Repositories.Competition
             dbCommand.CommandText.Should().NotContain("c.Id = @CompetitionId");
             dbCommand.CommandText.Should().NotContain("c.Tier = @Tier");
             
-            dbCommand.Parameters.Should().HaveCount(1);
+            dbCommand.Parameters.Count.Should().Be(1);
             dbCommand.Parameters["@SeasonId"].Value.Should().Be(1);
         }
         
@@ -101,7 +101,7 @@ namespace football.history.api.Tests.Repositories.Competition
             dbCommand.CommandText.Should().NotContain("c.Id = @CompetitionId");
             dbCommand.CommandText.Should().NotContain("s.Id = @SeasonId");
             
-            dbCommand.Parameters.Should().HaveCount(1);
+            dbCommand.Parameters.Count.Should().Be(1);
             dbCommand.Parameters["@Tier"].Value.Should().Be(1);
         }
         
@@ -121,7 +121,7 @@ namespace football.history.api.Tests.Repositories.Competition
             dbCommand.CommandText.Should().Contain("WHERE c.SeasonId = @SeasonId");
             dbCommand.CommandText.Should().Contain("WHERE m.HomeTeamId = @TeamId");
             
-            dbCommand.Parameters.Should().HaveCount(2);
+            dbCommand.Parameters.Count.Should().Be(2);
             dbCommand.Parameters["@SeasonId"].Value.Should().Be(1);
             dbCommand.Parameters["@TeamId"].Value.Should().Be(2);
         }

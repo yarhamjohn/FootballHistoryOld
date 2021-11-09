@@ -3,7 +3,7 @@ using FluentAssertions;
 using football.history.api.Builders;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Builders.LeagueTable.Sorter
+namespace football.history.api.Tests.UnitTests.Builders.LeagueTable.Sorter
 {
     [TestFixture]
     public class PointsGoalsForGoalDiffComparerTests

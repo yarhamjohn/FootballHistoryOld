@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using football.history.api.Builders;
 
-namespace football.history.api.Tests.Builders.LeagueTable.Sorter
+namespace football.history.api.Tests.UnitTests.Builders.LeagueTable.Sorter
 {
     public class FakeComparer : IComparer<LeagueTableRowDto?>
     {

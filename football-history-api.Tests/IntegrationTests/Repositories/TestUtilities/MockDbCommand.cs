@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using Microsoft.Data.SqlClient.Server;
 
-namespace football.history.api.Tests.Repositories.TestUtilities
+namespace football.history.api.Tests.IntegrationTests.Repositories.TestUtilities
 {
     public class MockDbCommand : DbCommand
     {

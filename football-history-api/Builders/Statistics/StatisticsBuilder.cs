@@ -4,7 +4,8 @@ using System.Linq;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using MoreLinq;
+using max = MoreLinq.Extensions.MaxByExtension;
+using min = MoreLinq.Extensions.MinByExtension;
 
 namespace football.history.api.Builders.Statistics
 {
@@ -82,7 +83,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostConsecutiveWins(List<ConsecutiveResult> metrics)
         {
-            var mostConsecutiveWins = metrics.MaxBy(x => x.ConsecutiveWins);
+            var mostConsecutiveWins = max.MaxBy(metrics, x => x.ConsecutiveWins);
             return new StatisticDto(
                 "Most Consecutive Wins",
                 mostConsecutiveWins.First().ConsecutiveWins,
@@ -92,7 +93,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostConsecutiveDraws(List<ConsecutiveResult> metrics)
         {
-            var mostConsecutiveDraws = metrics.MaxBy(x => x.ConsecutiveDraws);
+            var mostConsecutiveDraws = max.MaxBy(metrics, x => x.ConsecutiveDraws);
             return new StatisticDto(
                 "Most Consecutive Draws",
                 mostConsecutiveDraws.First().ConsecutiveDraws,
@@ -102,7 +103,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostConsecutiveLosses(List<ConsecutiveResult> metrics)
         {
-            var mostConsecutiveLosses = metrics.MaxBy(x => x.ConsecutiveLosses);
+            var mostConsecutiveLosses = max.MaxBy(metrics, x => x.ConsecutiveLosses);
             return new StatisticDto(
                 "Most Consecutive Losses",
                 mostConsecutiveLosses.First().ConsecutiveLosses,
@@ -112,7 +113,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostGamesWithoutDefeat(List<ConsecutiveResult> metrics)
         {
-            var winningStreak = metrics.MaxBy(x => x.WinningStreak);
+            var winningStreak = max.MaxBy(metrics, x => x.WinningStreak);
             return new StatisticDto(
                 "Most Games Without Defeat",
                 winningStreak.First().WinningStreak,
@@ -122,7 +123,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostGamesWithoutWin(List<ConsecutiveResult> metrics)
         {
-            var losingStreak = metrics.MaxBy(x => x.LosingStreak);
+            var losingStreak = max.MaxBy(metrics, x => x.LosingStreak);
             return new StatisticDto(
                 "Most Games Without Win",
                 losingStreak.First().LosingStreak,
@@ -265,7 +266,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
         {
-            var mostPoints = metrics.MaxBy(x => x.NumDraws + x.NumWins * pointsForWin);
+            var mostPoints = max.MaxBy(metrics, x => x.NumDraws + x.NumWins * pointsForWin);
             return new StatisticDto(
                 "Most Points",
                 mostPoints.First().NumDraws + mostPoints.First().NumWins * pointsForWin,
@@ -275,7 +276,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetFewestPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
         {
-            var fewestPoints = metrics.MinBy(x => x.NumDraws + x.NumWins * pointsForWin);
+            var fewestPoints = min.MinBy(metrics, x => x.NumDraws + x.NumWins * pointsForWin);
             return new StatisticDto(
                 "Fewest Points",
                 fewestPoints.First().NumDraws + fewestPoints.First().NumWins * pointsForWin,
@@ -285,7 +286,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetBestPointsPerGameStatistic(List<ResultMetrics> metrics, int pointsForWin)
         {
-            var fewestPoints = metrics.MaxBy(x =>
+            var fewestPoints = max.MaxBy(metrics, x =>
                 (double)(x.NumDraws + x.NumWins * pointsForWin) / (x.NumWins + x.NumDraws + x.NumLosses));
             return new StatisticDto(
                 "Best Points Per Game",
@@ -297,7 +298,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostGoalsStatistic(List<ResultMetrics> metrics)
         {
-            var mostGoals = metrics.MaxBy(x => x.NumGoalsScored);
+            var mostGoals = max.MaxBy(metrics, x => x.NumGoalsScored);
             return new StatisticDto(
                 "Most Goals",
                 mostGoals.First().NumGoalsScored,
@@ -307,7 +308,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetFewestGoalsStatistic(List<ResultMetrics> metrics)
         {
-            var fewestGoals = metrics.MinBy(x => x.NumGoalsScored);
+            var fewestGoals = min.MinBy(metrics, x => x.NumGoalsScored);
             return new StatisticDto(
                 "Fewest Goals",
                 fewestGoals.First().NumGoalsScored,
@@ -317,7 +318,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetBestGoalDifferenceStatistic(List<ResultMetrics> metrics)
         {
-            var bestGoalDifference = metrics.MaxBy(x => x.NumGoalsScored - x.NumGoalsConceded);
+            var bestGoalDifference = max.MaxBy(metrics, x => x.NumGoalsScored - x.NumGoalsConceded);
             return new StatisticDto(
                 "Best Goal Difference",
                 bestGoalDifference.First().NumGoalsScored - bestGoalDifference.First().NumGoalsConceded,
@@ -327,7 +328,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetBestGoalAverageStatistic(List<ResultMetrics> metrics)
         {
-            var bestGoalAverage = metrics.MaxBy(x => (double)x.NumGoalsScored / x.NumGoalsConceded);
+            var bestGoalAverage = max.MaxBy(metrics, x => (double)x.NumGoalsScored / x.NumGoalsConceded);
             return new StatisticDto(
                 "Best Goal Average",
                 (double)bestGoalAverage.First().NumGoalsScored / bestGoalAverage.First().NumGoalsConceded,
@@ -337,7 +338,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostWinsStatistic(List<ResultMetrics> metrics)
         {
-            var mostWins = metrics.MaxBy(x => x.NumWins);
+            var mostWins = max.MaxBy(metrics, x => x.NumWins);
             return new StatisticDto(
                 "Most Wins",
                 mostWins.First().NumWins,
@@ -347,7 +348,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostDrawsStatistic(List<ResultMetrics> metrics)
         {
-            var mostDraws = metrics.MaxBy(x => x.NumDraws);
+            var mostDraws = max.MaxBy(metrics, x => x.NumDraws);
             return new StatisticDto(
                 "Most Draws",
                 mostDraws.First().NumDraws,
@@ -357,7 +358,7 @@ namespace football.history.api.Builders.Statistics
 
         private StatisticDto GetMostLossesStatistic(List<ResultMetrics> metrics)
         {
-            var mostLosses = metrics.MaxBy(x => x.NumLosses);
+            var mostLosses = max.MaxBy(metrics, x => x.NumLosses);
             return new StatisticDto(
                 "Most Losses",
                 mostLosses.First().NumLosses,

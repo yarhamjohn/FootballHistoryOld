@@ -3,12 +3,12 @@ using System.Data;
 using FluentAssertions;
 using football.history.api.Repositories;
 using football.history.api.Repositories.PointDeduction;
-using football.history.api.Tests.Repositories.TestUtilities;
+using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Microsoft.Data.SqlClient.Server;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.Repositories.PointDeduction
+namespace football.history.api.Tests.IntegrationTests.Repositories.PointDeduction
 {
     [TestFixture]
     public class PointDeductionRepositoryTests
