@@ -23,7 +23,7 @@ const initialState: SeasonState = {
 
 export const fetchSeasons = createAsyncThunk("seasons/fetchSeasons", async () => {
   const response = await fetch(`${api}/api/v2/seasons`);
-  return (await response.json()).result as Season[];
+  return (await response.json()) as Season[];
 });
 
 export const seasonsSlice = createSlice({

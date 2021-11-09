@@ -24,7 +24,7 @@ const initialState: TeamState = {
 
 export const fetchTeams = createAsyncThunk("teams/fetchTeams", async () => {
   const response = await fetch(`${api}/api/v2/teams`);
-  return (await response.json()).result as Team[];
+  return (await response.json()) as Team[];
 });
 
 export const teamsSlice = createSlice({
