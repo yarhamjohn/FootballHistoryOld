@@ -3,7 +3,7 @@ import { useFetchHistoricalRecord } from "../../shared/useFetchHistoricalRecord"
 import { YearSlider } from "../Filters/YearSlider";
 import { ErrorMessage } from "../ErrorMessage";
 import { HistoricalPositionsGraph } from "./Graph";
-import { useAppSelector } from "../../../reduxHooks";
+import { useGetAllSeasonsQuery } from "../../seasonsSlice";
 
 export type SeasonDateRange = {
   startYear: number;
@@ -11,22 +11,26 @@ export type SeasonDateRange = {
 };
 
 const HistoricalPositions: FunctionComponent<{ teamId: number }> = ({ teamId }) => {
-  const seasonState = useAppSelector((state) => state.season);
+  const seasonState = useGetAllSeasonsQuery();
 
-  const getFirstSeasonStartYear = () => Math.min(...seasonState.seasons.map((s) => s.startYear));
-  const getLastSeasonStartYear = () => Math.max(...seasonState.seasons.map((s) => s.startYear));
+  //TODO: must be a better way
+  const getFirstSeasonStartYear =
+    seasonState.data === undefined ? 0 : Math.min(...seasonState.data.map((s) => s.startYear));
+  const getLastSeasonStartYear =
+    seasonState.data === undefined ? 0 : Math.max(...seasonState.data.map((s) => s.startYear));
 
   const [selectedRange, setSelectedRange] = useState<SeasonDateRange>({
-    startYear: getFirstSeasonStartYear(),
-    endYear: getLastSeasonStartYear(),
+    startYear: getFirstSeasonStartYear,
+    endYear: getLastSeasonStartYear,
   });
 
-  const { state } = useFetchHistoricalRecord(teamId, seasonState.seasons, selectedRange);
+  //TODO: equally this is crazy
+  const { state } = useFetchHistoricalRecord(teamId, seasonState.data!, selectedRange);
 
   return (
     <div style={{ marginBottom: "5rem" }}>
       <YearSlider
-        sliderRange={[getFirstSeasonStartYear(), getLastSeasonStartYear()]}
+        sliderRange={[getFirstSeasonStartYear, getLastSeasonStartYear]}
         selectedRange={selectedRange}
         setSelectedRange={setSelectedRange}
       />

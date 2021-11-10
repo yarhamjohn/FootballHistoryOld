@@ -4,22 +4,26 @@ import { Divider, Icon, Label, Message } from "semantic-ui-react";
 import { CompetitionsInSeason } from "./CompetitionsInSeason";
 import { useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
-import { Competition, selectCompetitionsBySeasonId } from "../competitionsSlice";
+import { Competition, useGetAllCompetitionsQuery } from "../competitionsSlice";
 import { useEffect } from "react";
 import { CombinedStatistics } from "./CombinedStatistics";
 import { useFetchPositions } from "../shared/useFetchPositions";
 
 const SeasonPage: FunctionComponent = () => {
-  const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
-  const competitionsState = useAppSelector((state) => state.competition);
+  const selectedSeason = useAppSelector((state) => state.selected.selectedSeason);
+  const competitionsState = useAppSelector((state) => state.selected.selectedCompetition);
   const positions = useFetchPositions(selectedSeason?.id);
 
-  const [competitionsInSeason, setCompetitionsInSeason] = useState<Competition[]>(
-    selectCompetitionsBySeasonId(competitionsState, selectedSeason?.id)
-  );
+  const { data } = useGetAllCompetitionsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      data: data === undefined ? [] : data.filter((x) => x.season.id === selectedSeason?.id),
+    }),
+  });
+
+  const [competitionsInSeason, setCompetitionsInSeason] = useState<Competition[]>(data);
 
   useEffect(() => {
-    setCompetitionsInSeason(selectCompetitionsBySeasonId(competitionsState, selectedSeason?.id));
+    setCompetitionsInSeason(data);
   }, [competitionsState, selectedSeason]);
 
   if (selectedSeason === undefined) {

@@ -1,14 +1,16 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Dropdown, DropdownItemProps } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import { selectTeamById, setSelectedTeam } from "../../teamsSlice";
+import { setSelectedTeam } from "../../selectionSlice";
+import { Team, useGetAllTeamsQuery } from "../../teamsSlice";
 
 const TeamFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const teamState = useAppSelector((state) => state.team);
+  const teamState = useGetAllTeamsQuery();
+  const selectedState = useAppSelector((state) => state.selected);
 
-  function createDropdown(): DropdownItemProps[] {
-    return teamState.teams
+  function createDropdown(teams: Team[]): DropdownItemProps[] {
+    return teams
       .map((c) => {
         return {
           key: c.id,
@@ -19,15 +21,17 @@ const TeamFilter: FunctionComponent = () => {
       .sort((a, b) => (a.text > b.text ? 1 : a.text < b.text ? -1 : 0));
   }
 
-  function chooseTeam(id: number | undefined) {
-    if (id === undefined) {
+  function chooseTeam(teams: Team[], id: number | undefined) {
+    const team = teams.filter((x) => x.id === id);
+
+    if (team.length === 0) {
       return;
     }
-    const team = selectTeamById(teamState, id);
-    dispatch(setSelectedTeam(team));
+
+    dispatch(setSelectedTeam(team[0]));
   }
 
-  return (
+  const body = teamState.isSuccess ? (
     <div
       style={{
         display: "flex",
@@ -35,27 +39,30 @@ const TeamFilter: FunctionComponent = () => {
         alignItems: "center",
       }}
     >
-      {teamState.selectedTeam === undefined ? (
+      {selectedState.selectedTeam === undefined ? (
         <p style={{ margin: "0 50px 0 0" }}>
           Select a team from the dropdown. The list contains all clubs to have featured in the
           Football League or Premier League since 1992.
         </p>
       ) : (
-        <h1 style={{ margin: 0 }}>{teamState.selectedTeam.name}</h1>
+        <h1 style={{ margin: 0 }}>{selectedState.selectedTeam.name}</h1>
       )}
       <Dropdown
         placeholder={"Select Team"}
+        text={selectedState.selectedTeam?.name ?? ""}
         clearable
         search
         selection
-        options={createDropdown()}
+        options={createDropdown(teamState.data)}
         onChange={(_, data) =>
-          chooseTeam(isNaN(Number(data.value)) ? undefined : Number(data.value))
+          chooseTeam(teamState.data, isNaN(Number(data.value)) ? undefined : Number(data.value))
         }
         style={{ maxHeight: "25px" }}
       />
     </div>
-  );
+  ) : null;
+
+  return body;
 };
 
 export { TeamFilter };

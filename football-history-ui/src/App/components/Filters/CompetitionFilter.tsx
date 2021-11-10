@@ -1,53 +1,37 @@
-import React, { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import { Dropdown, DropdownItemProps } from "semantic-ui-react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import { selectCompetitionsBySeasonId, setSelectedCompetition } from "../../competitionsSlice";
+import { Competition, useGetAllCompetitionsQuery } from "../../competitionsSlice";
+import { setSelectedCompetition } from "../../selectionSlice";
 
 const CompetitionFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const seasonState = useAppSelector((state) => state.season);
-  const competitionState = useAppSelector((state) => state.competition);
+  const { selectedSeason, selectedCompetition } = useAppSelector((state) => state.selected);
+  const competitionState = useGetAllCompetitionsQuery();
 
-  useEffect(() => {
-    if (seasonState.selectedSeason !== undefined) {
-      const competitions = selectCompetitionsBySeasonId(
-        competitionState,
-        seasonState.selectedSeason.id
-      );
-      dispatch(setSelectedCompetition(competitions[0]));
-    }
-  }, [seasonState.selectedSeason, dispatch]);
-
-  if (competitionState.status !== "LOADED") {
-    return null;
-  }
-
-  function createDropdown(): DropdownItemProps[] {
-    if (competitionState.status !== "LOADED") {
-      return [];
-    }
-
-    return selectCompetitionsBySeasonId(competitionState, seasonState.selectedSeason?.id).map(
-      (c) => {
+  function createDropdown(competitions: Competition[]): DropdownItemProps[] {
+    return competitions
+      .filter((x) => x.season.id === selectedSeason?.id)
+      .map((c) => {
         return {
           key: c.id,
           text: `${c.name} (${c.level})`,
           value: c.id,
         };
-      }
-    );
+      });
   }
 
-  function chooseCompetition(id: number | undefined) {
-    if (competitionState.status !== "LOADED") {
-      return [];
+  function chooseCompetition(competitions: Competition[], id: number | undefined) {
+    const competition = competitions.filter((x) => x.id === id);
+
+    if (competition.length === 0) {
+      return;
     }
 
-    const competition = competitionState.competitions.filter((x) => x.id === id)[0];
-    dispatch(setSelectedCompetition(competition));
+    dispatch(setSelectedCompetition(competition[0]));
   }
 
-  return (
+  const body = competitionState.isSuccess ? (
     <div
       style={{
         display: "flex",
@@ -55,24 +39,30 @@ const CompetitionFilter: FunctionComponent = () => {
         alignItems: "center",
       }}
     >
-      {competitionState.selectedCompetition === undefined ? (
+      {selectedCompetition === undefined ? (
         <p style={{ margin: "0 50px 0 0" }}>Select a competition from the dropdown.</p>
       ) : (
-        <h1 style={{ margin: 0 }}>{competitionState.selectedCompetition.name}</h1>
+        <h1 style={{ margin: 0 }}>{selectedCompetition.name}</h1>
       )}
       <Dropdown
         placeholder="Select Division"
+        text={selectedCompetition?.name ?? ""}
         clearable
         search
         selection
-        options={createDropdown()}
+        options={createDropdown(competitionState.data)}
         onChange={(_, data) =>
-          chooseCompetition(isNaN(Number(data.value)) ? undefined : Number(data.value))
+          chooseCompetition(
+            competitionState.data,
+            isNaN(Number(data.value)) ? undefined : Number(data.value)
+          )
         }
         style={{ maxHeight: "25px" }}
       />
     </div>
-  );
+  ) : null;
+
+  return body;
 };
 
 export { CompetitionFilter };

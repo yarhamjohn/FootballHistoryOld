@@ -1,39 +1,36 @@
-import React, { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 import { Divider } from "semantic-ui-react";
 import { CompetitionFilter } from "../components/Filters/CompetitionFilter";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
 import { Matches } from "./Matches";
 import { League } from "../components/League";
-import { useAppDispatch, useAppSelector } from "../../reduxHooks";
-import { setSelectedCompetition } from "../competitionsSlice";
+import { useAppSelector } from "../../reduxHooks";
 
 const LeaguePage: FunctionComponent = () => {
-  const seasonState = useAppSelector((state) => state.season);
-  const competitionState = useAppSelector((state) => state.competition);
+  const selectedSeason = useAppSelector((state) => state.selected.selectedSeason);
+  const selectedCompetition = useAppSelector((state) => state.selected.selectedCompetition);
 
   return (
     <>
-      {seasonState.selectedSeason && <CompetitionFilter />}
+      {selectedSeason && <CompetitionFilter />}
       <Divider />
-      {competitionState.selectedCompetition && (
+      {selectedCompetition && (
         <>
           <SeasonFilter />
-          {seasonState.selectedSeason && (
-            <League
-              props={{
-                season: seasonState.selectedSeason,
-                competition: competitionState.selectedCompetition,
-              }}
-            />
+          {selectedSeason && (
+            <>
+              <League
+                props={{
+                  season: selectedSeason,
+                  competition: selectedCompetition,
+                }}
+              />
+              <div style={{ display: "grid", gridGap: "1rem" }}>
+                {selectedSeason ? <Matches competitionId={selectedCompetition.id} /> : null}
+              </div>
+            </>
           )}
         </>
-      )}
-      {competitionState.selectedCompetition && (
-        <div style={{ display: "grid", gridGap: "1rem" }}>
-          {seasonState.selectedSeason ? (
-            <Matches competitionId={competitionState.selectedCompetition.id} />
-          ) : null}
-        </div>
       )}
     </>
   );
