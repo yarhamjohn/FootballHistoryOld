@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
-namespace football.history.api.Repositories.Team;
+namespace football.history.api.Repositories;
 
 public interface IPositionRepository
 {
@@ -90,7 +90,7 @@ public class PositionRepository : IPositionRepository
             CompetitionName: reader.GetString(2),
             TeamId: reader.GetInt64(3),
             TeamName: reader.GetString(4),
-            Position: reader.GetByte(5),
+            LeaguePosition: reader.GetByte(5),
             Status: reader.IsDBNull(6) ? null : reader.GetString(6));
 
     private static DbCommand BuildCommand(IDatabaseConnection connection, long? competitionId, long? teamId)

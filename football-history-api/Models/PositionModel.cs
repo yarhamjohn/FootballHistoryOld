@@ -6,5 +6,5 @@ public record PositionModel (
     string CompetitionName,
     long TeamId, 
     string TeamName,
-    int Position, 
+    int LeaguePosition, 
     string? Status);

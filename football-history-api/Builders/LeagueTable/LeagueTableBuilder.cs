@@ -5,7 +5,6 @@ using football.history.api.Bindings;
 using football.history.api.Models;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Team;
 
 namespace football.history.api.Builders;
 
@@ -53,7 +52,7 @@ public class LeagueTableBuilder : ILeagueTableBuilder
 
         foreach (var row in rows)
         {
-            row.Position = positions.Single(x => x.TeamId == row.TeamId).Position;
+            row.Position = positions.Single(x => x.TeamId == row.TeamId).LeaguePosition;
             row.Status = positions.Single(x => x.TeamId == row.TeamId).Status;
         }
             

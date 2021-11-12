@@ -5,7 +5,6 @@ using football.history.api.Builders.Statistics;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories.Season;
-using football.history.api.Repositories.Team;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -41,9 +40,7 @@ public class Startup
         services.AddTransient<ITeamBuilder, TeamBuilder>();
         services.AddTransient<ISeasonBuilder, SeasonBuilder>();
         services.AddTransient<IMatchBuilder, MatchBuilder>();
-            
-        services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
-        services.AddTransient<IPositionCommandBuilder, PositionCommandBuilder>();
+        services.AddTransient<IPositionBuilder, PositionBuilder>();
 
         services.AddTransient<IDatabaseConnection, DatabaseConnection>();
             
@@ -52,9 +49,10 @@ public class Startup
         services.AddTransient<ISeasonRepository, SeasonRepository>();
         services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
         services.AddTransient<IMatchRepository, MatchRepository>();
+        services.AddTransient<IPositionRepository, PositionRepository>();
 
         services.AddTransient<ICompetitionRepository, CompetitionRepository>();
-        services.AddTransient<IPositionRepository, PositionRepository>();
+        services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
 
         var connString = Configuration.GetConnectionString("FootballHistory");
         services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString));

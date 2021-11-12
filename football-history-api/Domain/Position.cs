@@ -1,10 +1,10 @@
-namespace football.history.api.Dtos;
+namespace football.history.api.Domain;
 
-public record PositionDto(
+public record Position(
     long Id, 
     long CompetitionId, 
     string CompetitionName, 
     long TeamId, 
     string TeamName,
-    int Position, 
+    int LeaguePosition, 
     string? Status);

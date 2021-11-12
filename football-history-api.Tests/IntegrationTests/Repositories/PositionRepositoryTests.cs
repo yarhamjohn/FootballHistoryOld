@@ -1,5 +1,5 @@
 using System.Linq;
-using football.history.api.Repositories.Team;
+using football.history.api.Repositories;
 using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using NUnit.Framework;
 
@@ -50,7 +50,7 @@ public class PositionRepositoryTests
         var result = repository.GetTeamPositions(1);
         
         Assert.That(result.Count, Is.EqualTo(2));
-        Assert.That(result.Select(x => x.Position), Is.EquivalentTo(new[] { 1, 1 }));
+        Assert.That(result.Select(x => x.LeaguePosition), Is.EquivalentTo(new[] { 1, 1 }));
         Assert.That(result.Select(x => x.CompetitionId), Is.EquivalentTo(new[] { 1, 2 }));
         Assert.That(result.Select(x => x.Status), Is.EquivalentTo(new[] { "Champions", "Champions" }));
     }
@@ -73,6 +73,6 @@ public class PositionRepositoryTests
         var result = repository.GetCompetitionPositions(1);
         
         Assert.That(result.Count, Is.EqualTo(10));
-        Assert.That(result.Single(x => x.Position == 1).Status, Is.EqualTo("Champions"));
+        Assert.That(result.Single(x => x.LeaguePosition == 1).Status, Is.EqualTo("Champions"));
     }
 }
