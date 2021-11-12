@@ -1,8 +1,7 @@
-namespace football.history.api.Repositories
+namespace football.history.api.Repositories;
+
+public enum MatchType
 {
-    public enum MatchType
-    {
-        League,
-        PlayOff
-    }
+    League,
+    PlayOff
 }

@@ -4,111 +4,111 @@ using System.Linq;
 using football.history.api.Bindings;
 using Microsoft.Data.SqlClient;
 
-namespace football.history.api.Repositories
+namespace football.history.api.Repositories;
+
+public interface IHistoricalSeasonRepository
 {
-    public interface IHistoricalSeasonRepository
+    /// <summary>
+    /// Retrieves models for each historical season that matches
+    /// the provided <paramref name="teamId"/> and <paramref name="seasonIds"/>.
+    /// </summary>
+    ///
+    /// <param name="teamId">
+    /// The id of the required team.
+    /// </param>
+    /// 
+    /// <param name="seasonIds">
+    /// A collection of ids for the required seasons.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of <see cref="HistoricalSeasonModel">HistoricalSeasonModels</see>.
+    /// Can be empty if the <paramref name="teamId"/> matched no team or
+    /// none of the <paramref name="seasonIds"/> matches a season. 
+    /// </returns>
+    public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds);
+}
+
+public class HistoricalSeasonRepository : IHistoricalSeasonRepository
+{
+    private readonly IDatabaseConnection _connection;
+
+    public HistoricalSeasonRepository(IDatabaseConnection connection)
     {
-        /// <summary>
-        /// Retrieves models for each historical season that matches
-        /// the provided <paramref name="teamId"/> and <paramref name="seasonIds"/>.
-        /// </summary>
-        ///
-        /// <param name="teamId">
-        /// The id of the required team.
-        /// </param>
-        /// 
-        /// <param name="seasonIds">
-        /// A collection of ids for the required seasons.
-        /// </param>
-        /// 
-        /// <returns>
-        /// A collection of <see cref="HistoricalSeasonModel">HistoricalSeasonModels</see>.
-        /// Can be empty if the <paramref name="teamId"/> matched no team or
-        /// none of the <paramref name="seasonIds"/> matches a season. 
-        /// </returns>
-        public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds);
+        _connection = connection;
     }
 
-    public class HistoricalSeasonRepository : IHistoricalSeasonRepository
+    public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds)
     {
-        private readonly IDatabaseConnection _connection;
+        _connection.Open();
 
-        public HistoricalSeasonRepository(IDatabaseConnection connection)
+        var cmd = BuildCommand(_connection, teamId, seasonIds);
+        var seasons = GetHistoricalSeasonModels(cmd);
+
+        _connection.Close();
+
+        return seasons;
+    }
+
+    private static List<HistoricalSeasonModel> GetHistoricalSeasonModels(DbCommand cmd)
+    {
+        var historicalSeasons = new List<HistoricalSeasonModel>();
+
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
         {
-            _connection = connection;
+            historicalSeasons.Add(GetHistoricalSeasonModel(reader));
         }
 
-        public List<HistoricalSeasonModel> GetHistoricalSeasons(long teamId, long[] seasonIds)
-        {
-            _connection.Open();
+        return historicalSeasons;
+    }
 
-            var cmd = BuildCommand(_connection, teamId, seasonIds);
-            var seasons = GetHistoricalSeasonModels(cmd);
+    private static HistoricalSeasonModel GetHistoricalSeasonModel(DbDataReader reader)
+        => new(
+            SeasonId: reader.GetInt64(0),
+            StartYear: reader.GetInt16(1),
+            PositionModel: reader.IsDBNull(2)
+                ? null
+                : new HistoricalPositionModel(
+                    CompetitionId: reader.GetInt64(2),
+                    CompetitionName: reader.GetString(3),
+                    Tier: reader.GetByte(4),
+                    TotalPlaces: reader.GetByte(5),
+                    Position: reader.IsDBNull(6) ? null : reader.GetByte(6),
+                    Status: reader.IsDBNull(7) ? null : reader.GetString(7)));
 
-            _connection.Close();
+    private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
+    {
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = GetSql(seasonIds, teamId);
 
-            return seasons;
-        }
+        AddParameters(cmd, teamId, seasonIds);
 
-        private static List<HistoricalSeasonModel> GetHistoricalSeasonModels(DbCommand cmd)
-        {
-            var historicalSeasons = new List<HistoricalSeasonModel>();
+        return cmd;
+    }
 
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+    private static void AddParameters(DbCommand cmd, long teamId, long[] seasonIds)
+    {
+        cmd.Parameters.Add(
+            new SqlParameter
             {
-                historicalSeasons.Add(GetHistoricalSeasonModel(reader));
-            }
+                ParameterName = "@TeamId",
+                Value         = teamId
+            });
 
-            return historicalSeasons;
-        }
-
-        private static HistoricalSeasonModel GetHistoricalSeasonModel(DbDataReader reader)
-            => new(
-                SeasonId: reader.GetInt64(0),
-                StartYear: reader.GetInt16(1),
-                PositionModel: reader.IsDBNull(2)
-                    ? null
-                    : new HistoricalPositionModel(
-                        CompetitionId: reader.GetInt64(2),
-                        CompetitionName: reader.GetString(3),
-                        Tier: reader.GetByte(4),
-                        TotalPlaces: reader.GetByte(5),
-                        Position: reader.IsDBNull(6) ? null : reader.GetByte(6),
-                        Status: reader.IsDBNull(7) ? null : reader.GetString(7)));
-
-        private static DbCommand BuildCommand(IDatabaseConnection connection, long teamId, long[] seasonIds)
-        {
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = GetSql(seasonIds, teamId);
-
-            AddParameters(cmd, teamId, seasonIds);
-
-            return cmd;
-        }
-
-        private static void AddParameters(DbCommand cmd, long teamId, long[] seasonIds)
+        for (var i = 0; i < seasonIds.Length; i++)
         {
             cmd.Parameters.Add(
                 new SqlParameter
                 {
-                    ParameterName = "@TeamId",
-                    Value         = teamId
+                    ParameterName = $"SeasonId{i}",
+                    Value         = seasonIds[i]
                 });
-
-            for (var i = 0; i < seasonIds.Length; i++)
-            {
-                cmd.Parameters.Add(
-                    new SqlParameter
-                    {
-                        ParameterName = $"SeasonId{i}",
-                        Value         = seasonIds[i]
-                    });
-            }
         }
+    }
 
-        private static string GetSql(long[] seasonIds, long teamId)
-            => $@"
+    private static string GetSql(long[] seasonIds, long teamId)
+        => $@"
                 SELECT 
                        s.Id AS SeasonId, 
                        s.StartYear, 
@@ -128,10 +128,9 @@ namespace football.history.api.Repositories
                 {BuildWhereClause(seasonIds, teamId)}
                 ";
 
-        private static string BuildWhereClause(long[] seasonIds, long teamId)
-            => seasonIds.Any()
-                ? $@"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})
+    private static string BuildWhereClause(long[] seasonIds, long teamId)
+        => seasonIds.Any()
+            ? $@"WHERE s.Id IN ({string.Join(",", seasonIds.Select((_, i) => $"@SeasonId{i}"))})
                         AND EXISTS (SELECT Id FROM dbo.Teams AS t WHERE t.Id = {teamId})"
-                : "WHERE 1 = 0";
-    }
+            : "WHERE 1 = 0";
 }

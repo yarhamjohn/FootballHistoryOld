@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace football.history.api.Domain
+namespace football.history.api;
+
+public class DatabaseContext : DbContext
 {
-    public class DatabaseContext : DbContext
-    {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options)
-            : base(options) {}
-    }
+    public DatabaseContext(DbContextOptions<DatabaseContext> options)
+        : base(options) {}
 }
