@@ -16,7 +16,7 @@ public interface ILeagueTableBuilder
         CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
-        List<PointDeductionModel> pointDeductions);
+        PointDeductionModel[] pointDeductions);
 }
     
 public class LeagueTableBuilder : ILeagueTableBuilder
@@ -60,7 +60,7 @@ public class LeagueTableBuilder : ILeagueTableBuilder
         return new LeagueTable(rows);
     }
         
-    public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions)
+    public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, PointDeductionModel[] pointDeductions)
     {
         var matchesToDate = leagueMatches.Where(x => x.MatchDate < targetDate).ToArray();
         var teamsInLeague = GetTeamsInLeague(leagueMatches);
@@ -87,7 +87,7 @@ public class LeagueTableBuilder : ILeagueTableBuilder
         CompetitionModel competition,
         IEnumerable<TeamModel> teamsInLeague,
         MatchModel[] leagueMatches,
-        List<PointDeductionModel> pointDeductions)
+        PointDeductionModel[] pointDeductions)
     {
         return teamsInLeague
             .Select(team => _rowBuilder.Build(competition, team, leagueMatches, pointDeductions))

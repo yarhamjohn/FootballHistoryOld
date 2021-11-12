@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
+using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories.Team;
 using Microsoft.AspNetCore.Mvc;

@@ -11,12 +11,18 @@ public interface IPointDeductionRepository
     /// Retrieves models for all point deductions imposed for the
     /// provided <paramref name="competitionId" />.
     /// </summary>
+    ///
+    /// <param name="competitionId">
+    /// The id of the required competition.
+    /// </param>
     /// 
     /// <returns>
     /// A collection of <see cref="PointDeductionModel">PointDeductionModels</see>
     /// for the given <paramref name="competitionId" />.
+    /// Can be empty if the <paramref name="competitionId"/> matched no competition
+    /// or there were no point deductions in the competition.
     /// </returns>
-    List<PointDeductionModel> GetPointDeductions(long competitionId);
+    PointDeductionModel[] GetPointDeductions(long competitionId);
 }
 
 public class PointDeductionRepository : IPointDeductionRepository
@@ -28,7 +34,7 @@ public class PointDeductionRepository : IPointDeductionRepository
         _connection = connection;
     }
 
-    public List<PointDeductionModel> GetPointDeductions(long competitionId)
+    public PointDeductionModel[] GetPointDeductions(long competitionId)
     {
         _connection.Open();
         
@@ -40,7 +46,7 @@ public class PointDeductionRepository : IPointDeductionRepository
         return pointsDeductions;
     }
 
-    private static List<PointDeductionModel> GetPointDeductionModels(DbCommand cmd)
+    private static PointDeductionModel[] GetPointDeductionModels(DbCommand cmd)
     {
         var pointDeductions = new List<PointDeductionModel>();
 
@@ -51,7 +57,7 @@ public class PointDeductionRepository : IPointDeductionRepository
             pointDeductions.Add(pointDeductionModel);
         }
 
-        return pointDeductions;
+        return pointDeductions.ToArray();
     }
 
     private static PointDeductionModel GetPointDeductionModel(DbDataReader reader)

@@ -47,7 +47,7 @@ public class LeaguePositionBuilder : ILeaguePositionBuilder
         long teamId, CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
-        List<PointDeductionModel> pointDeductions)
+        PointDeductionModel[] pointDeductions)
     {
         var partialLeagueTable =
             _leagueTableBuilder.BuildPartialLeagueTable(competition, leagueMatches, targetDate, pointDeductions);

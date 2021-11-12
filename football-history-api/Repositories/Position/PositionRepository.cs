@@ -1,67 +1,76 @@
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using football.history.api.Exceptions;
+using Microsoft.Data.SqlClient;
 
 namespace football.history.api.Repositories.Team;
 
 public interface IPositionRepository
 {
-    List<PositionModel> GetCompetitionPositions(long competitionId);
-    List<PositionModel> GetTeamPositions(long teamId);
-    PositionModel GetPosition(long competitionId, long teamId);
+    /// <summary>
+    /// Retrieves models for each position in the given <paramref name="competitionId" />.
+    /// </summary>
+    ///
+    /// <param name="competitionId">
+    /// The id of the required competition.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of <see cref="PositionModel">PositionModels</see>.
+    /// Can be empty if the <paramref name="competitionId"/> matched no competition.
+    /// </returns>
+    PositionModel[] GetCompetitionPositions(long competitionId);
+    
+    /// <summary>
+    /// Retrieves models for each position the given <paramref name="teamId" />
+    /// has finished in across all competitions.
+    /// </summary>
+    ///
+    /// <param name="teamId">
+    /// The id of the required team.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of <see cref="PositionModel">PositionModels</see>.
+    /// Can be empty if the <paramref name="teamId"/> matched no team or the
+    /// team has never been positioned in a competition.
+    /// </returns>
+    PositionModel[] GetTeamPositions(long teamId);
 }
 
 public class PositionRepository : IPositionRepository
 {
     private readonly IDatabaseConnection _connection;
-    private readonly IPositionCommandBuilder _queryBuilder;
 
-    public PositionRepository(IDatabaseConnection connection, IPositionCommandBuilder queryBuilder)
+    public PositionRepository(IDatabaseConnection connection)
     {
         _connection = connection;
-        _queryBuilder = queryBuilder;
     }
 
-    public List<PositionModel> GetCompetitionPositions(long competitionId)
+    public PositionModel[] GetCompetitionPositions(long competitionId)
     {
         _connection.Open();
-        var cmd = _queryBuilder.Build(_connection, competitionId, null);
+
+        var cmd = BuildCommand(_connection, competitionId, null);
         var positions = GetPositionModels(cmd);
+
         _connection.Close();
 
         return positions;
     }
 
-    public List<PositionModel> GetTeamPositions(long teamId)
+    public PositionModel[] GetTeamPositions(long teamId)
     {
         _connection.Open();
-        var cmd = _queryBuilder.Build(_connection, null, teamId);
+
+        var cmd = BuildCommand(_connection, null, teamId);
         var positions = GetPositionModels(cmd);
+
         _connection.Close();
 
         return positions;
     }
 
-
-    public PositionModel GetPosition(long competitionId, long teamId)
-    {
-        _connection.Open();
-        var cmd = _queryBuilder.Build(_connection, competitionId, teamId);
-        var positions = GetPositionModels(cmd);
-        _connection.Close();
-
-        return positions.Count switch
-        {
-            1 => positions.Single(),
-            0 => throw new DataNotFoundException(
-                $"No position was found for the specified competitionId ({competitionId}) and teamId ({teamId})."),
-            _ => throw new DataInvalidException(
-                $"{positions.Count} were found for the specified competitionId ({competitionId}) and teamId ({teamId}).")
-        };
-    }
-
-    private static List<PositionModel> GetPositionModels(DbCommand cmd)
+    private static PositionModel[] GetPositionModels(DbCommand cmd)
     {
         var positions = new List<PositionModel>();
 
@@ -71,7 +80,7 @@ public class PositionRepository : IPositionRepository
             positions.Add(GetPositionModel(reader));
         }
 
-        return positions;
+        return positions.ToArray();
     }
 
     private static PositionModel GetPositionModel(DbDataReader reader)
@@ -83,4 +92,75 @@ public class PositionRepository : IPositionRepository
             TeamName: reader.GetString(4),
             Position: reader.GetByte(5),
             Status: reader.IsDBNull(6) ? null : reader.GetString(6));
+
+    private static DbCommand BuildCommand(IDatabaseConnection connection, long? competitionId, long? teamId)
+    {
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = GetSql(competitionId, teamId);
+
+        AddParameters(cmd, competitionId, teamId);
+
+        return cmd;
+    }
+
+    private static void AddParameters(
+        DbCommand cmd,
+        long? competitionId,
+        long? teamId)
+    {
+        if (competitionId is not null)
+        {
+            cmd.Parameters.Add(
+                new SqlParameter
+                {
+                    ParameterName = "@CompetitionId",
+                    Value = competitionId
+                });
+        }
+
+        if (teamId is not null)
+        {
+            cmd.Parameters.Add(
+                new SqlParameter
+                {
+                    ParameterName = "@TeamId",
+                    Value = teamId
+                });
+        }
+    }
+
+    private static string GetSql(long? competitionId, long? teamId)
+        => $@"
+            SELECT 
+                   p.Id,
+                   p.CompetitionId,
+                   c.Name,
+                   p.TeamId,
+                   t.Name,
+                   p.Position,
+                   p.Status
+            FROM [dbo].[Positions] AS p
+            LEFT JOIN [dbo].[Teams] AS t
+                ON t.Id = p.TeamId
+            LEFT JOIN [dbo].[Competitions] AS c
+                ON c.Id = p.CompetitionId
+            {BuildWhereClause(competitionId, teamId)}
+            ";
+
+    private static string BuildWhereClause(long? competitionId, long? teamId)
+    {
+        var clauses = new List<string>();
+
+        if (competitionId is not null)
+        {
+            clauses.Add("p.CompetitionId = @CompetitionId");
+        }
+
+        if (teamId is not null)
+        {
+            clauses.Add("p.TeamId = @TeamId");
+        }
+
+        return clauses.Count > 0 ? $"WHERE {string.Join(" AND ", clauses)}" : "";
+    }
 }

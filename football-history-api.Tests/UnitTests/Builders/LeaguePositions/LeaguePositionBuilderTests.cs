@@ -40,7 +40,7 @@ public class LeaguePositionBuilderTests
         mockLeagueTable.Setup(x => x.GetPosition(It.IsAny<long>())).Returns(1);
 
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
-        var pointDeductions = new List<PointDeductionModel>();
+        var pointDeductions = Array.Empty<PointDeductionModel>();
         mockPointDeductionRepository.Setup(x => x.GetPointDeductions(competition.Id))
             .Returns(pointDeductions);
 

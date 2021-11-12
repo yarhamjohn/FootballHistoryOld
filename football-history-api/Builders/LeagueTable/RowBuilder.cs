@@ -12,7 +12,7 @@ public interface IRowBuilder
         CompetitionModel competition,
         TeamModel team,
         MatchModel[] matches,
-        List<PointDeductionModel> pointDeductions);
+        PointDeductionModel[] pointDeductions);
 }
 
 public class RowBuilder : IRowBuilder
@@ -21,7 +21,7 @@ public class RowBuilder : IRowBuilder
         CompetitionModel competition,
         TeamModel team,
         MatchModel[] matches,
-        List<PointDeductionModel> pointDeductions)
+        PointDeductionModel[] pointDeductions)
     {
         var teamMatches = matches.Where(m => MatchInvolvesTeam(m, team)).ToList();
         var teamHomeMatches = teamMatches.Where(m => m.HomeTeamId == team.Id).ToList();

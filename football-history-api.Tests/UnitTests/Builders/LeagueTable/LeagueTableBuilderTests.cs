@@ -29,7 +29,7 @@ public class LeagueTableBuilderTests
             .Returns(matches);
             
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
-        var pointDeductions = new List<PointDeductionModel>();
+        var pointDeductions = Array.Empty<PointDeductionModel>();
         mockPointDeductionRepository
             .Setup(x => x.GetPointDeductions(competition.Id))
             .Returns(pointDeductions);
@@ -52,7 +52,7 @@ public class LeagueTableBuilderTests
         mockPositionRepository
             .Setup(x => x.GetCompetitionPositions(competition.Id))
             .Returns(
-                new List<PositionModel>
+                new PositionModel[]
                 {
                     new(1, competition.Id, competition.Name, 1, "Norwich City", 1, "assigned-status"),
                     new(2, competition.Id, competition.Name, 2, "Newcastle United", 2, "assigned-status"),
@@ -93,7 +93,7 @@ public class LeagueTableBuilderTests
         var matches = GetMatches();
             
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
-        var pointDeductions = new List<PointDeductionModel>();
+        var pointDeductions = Array.Empty<PointDeductionModel>();
         mockPointDeductionRepository
             .Setup(x => x.GetPointDeductions(competition.Id))
             .Returns(pointDeductions);

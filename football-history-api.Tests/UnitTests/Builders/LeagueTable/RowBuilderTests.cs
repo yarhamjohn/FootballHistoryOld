@@ -144,7 +144,7 @@ public class RowBuilderTests
         var builder = new RowBuilder();
             
         var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
-        var result = builder.Build(competition, teamModel, new [] { match }, new List<PointDeductionModel>());
+        var result = builder.Build(competition, teamModel, new [] { match }, Array.Empty<PointDeductionModel>());
 
         result.Should().BeEquivalentTo(new LeagueTableRowDto
         {
@@ -173,7 +173,7 @@ public class RowBuilderTests
         var builder = new RowBuilder();
             
         var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
-        var result = builder.Build(competition, teamModel, Array.Empty<MatchModel>(), new List<PointDeductionModel>());
+        var result = builder.Build(competition, teamModel, Array.Empty<MatchModel>(), Array.Empty<PointDeductionModel>());
 
         result.Should().BeEquivalentTo(new LeagueTableRowDto
         {
@@ -215,8 +215,8 @@ public class RowBuilderTests
             FailedReElectionPosition: null);
     }
 
-    private static List<PointDeductionModel> GetPointDeductions()
-        => new()
+    private static PointDeductionModel[] GetPointDeductions()
+        => new[]
         {
             new PointDeductionModel(1, 1, 3, 4, "Arsenal", "Financial Irregularities")
         };
