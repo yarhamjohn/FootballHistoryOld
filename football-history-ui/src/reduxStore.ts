@@ -1,14 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
-import seasonReducer from "./App/seasonsSlice";
-import competitionReducer from "./App/competitionsSlice";
-import teamReducer from "./App/teamsSlice";
+import { competitionsApi } from "./App/competitionsSlice";
+import { seasonsApi } from "./App/seasonsSlice";
+import { teamsApi } from "./App/teamsSlice";
+import selectionReducer from "./App/selectionSlice";
 
 const reduxStore = configureStore({
   reducer: {
-    season: seasonReducer,
-    competition: competitionReducer,
-    team: teamReducer,
+    selected: selectionReducer,
+    [seasonsApi.reducerPath]: seasonsApi.reducer,
+    [teamsApi.reducerPath]: teamsApi.reducer,
+    [competitionsApi.reducerPath]: competitionsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware()
+      .concat(seasonsApi.middleware)
+      .concat(teamsApi.middleware)
+      .concat(competitionsApi.middleware),
 });
 
 export type RootState = ReturnType<typeof reduxStore.getState>;

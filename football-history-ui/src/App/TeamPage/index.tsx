@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { Divider, Message } from "semantic-ui-react";
 import { TeamFilter } from "../components/Filters/TeamFilter";
 import { SeasonFilter } from "../components/Filters/SeasonFilter";
@@ -6,23 +6,24 @@ import { Matches } from "./Matches";
 import { HistoricalPositions } from "../components/HistoricalPositions";
 import { League } from "../components/League";
 import { useAppSelector } from "../../reduxHooks";
-import { Team } from "../teamsSlice";
+import { setSelectedSeason } from "../selectionSlice";
+import { useGetAllSeasonsQuery } from "../seasonsSlice";
 
 const TeamPage: FunctionComponent = () => {
-  const seasonState = useAppSelector((state) => state.season);
-  const teamState = useAppSelector((state) => state.team);
+  const selectedSeason = useAppSelector((state) => state.selected.selectedSeason);
+  const selectedTeam = useAppSelector((state) => state.selected.selectedTeam);
 
   return (
     <>
       <TeamFilter />
       <Divider />
-      {teamState.selectedTeam === undefined ? (
+      {selectedTeam === undefined ? (
         <Message info>Please select a team from the dropdown filter box.</Message>
       ) : (
         <>
           <h2>League positions by season</h2>
-          <HistoricalPositions teamId={teamState.selectedTeam.id} />
-          {seasonState.selectedSeason && (
+          <HistoricalPositions teamId={selectedTeam.id} />
+          {selectedSeason && (
             <>
               <Divider />
               <div
@@ -31,14 +32,9 @@ const TeamPage: FunctionComponent = () => {
                 <h2>League table for season:</h2>
                 <SeasonFilter />
               </div>
-              <League
-                props={{ season: seasonState.selectedSeason, team: teamState.selectedTeam }}
-              />
+              <League props={{ season: selectedSeason, team: selectedTeam }} />
               <h2>League matches</h2>
-              <Matches
-                selectedSeason={seasonState.selectedSeason}
-                selectedTeam={teamState.selectedTeam}
-              />
+              <Matches selectedSeason={selectedSeason} selectedTeam={selectedTeam} />
             </>
           )}
         </>

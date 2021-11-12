@@ -5,27 +5,26 @@ using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Moq;
 using NUnit.Framework;
 
-namespace football.history.api.Tests.IntegrationTests.Repositories.PointDeduction
+namespace football.history.api.Tests.IntegrationTests.Repositories.PointDeduction;
+
+[TestFixture]
+public class PointDeductionCommandBuilderTests
 {
-    [TestFixture]
-    public class PointDeductionCommandBuilderTests
+    [Test]
+    public void Build_returns_correct_dbCommand()
     {
-        [Test]
-        public void Build_returns_correct_dbCommand()
-        {
-            var mockDatabaseConnection = new Mock<IDatabaseConnection>();
-            mockDatabaseConnection
-                .Setup(x => x.CreateCommand())
-                .Returns(new MockDbCommand());
-            var builder = new PointDeductionCommandBuilder();
+        var mockDatabaseConnection = new Mock<IDatabaseConnection>();
+        mockDatabaseConnection
+            .Setup(x => x.CreateCommand())
+            .Returns(new MockDbCommand());
+        var builder = new PointDeductionCommandBuilder();
 
-            const int competitionId = 1;
-            var dbCommand = builder.Build(mockDatabaseConnection.Object, competitionId);
+        const int competitionId = 1;
+        var dbCommand = builder.Build(mockDatabaseConnection.Object, competitionId);
 
-            dbCommand.CommandText.Should().Contain("FROM [dbo].[Deductions] AS d");
-            dbCommand.CommandText.Should().Contain("WHERE d.CompetitionId = @CompetitionId");
-            dbCommand.Parameters.Count.Should().Be(1);
-            dbCommand.Parameters["@CompetitionId"].Value.Should().Be(competitionId);
-        }
+        dbCommand.CommandText.Should().Contain("FROM [dbo].[Deductions] AS d");
+        dbCommand.CommandText.Should().Contain("WHERE d.CompetitionId = @CompetitionId");
+        dbCommand.Parameters.Count.Should().Be(1);
+        dbCommand.Parameters["@CompetitionId"].Value.Should().Be(competitionId);
     }
 }

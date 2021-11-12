@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
 import "./App.css";
 import { HomePage } from "./HomePage";
 import { AppHeader } from "./components/AppHeader";
@@ -6,23 +6,19 @@ import { TeamPage } from "./TeamPage";
 import { Icon } from "semantic-ui-react";
 import { LeaguePage } from "./LeaguePage";
 import { SeasonPage } from "./SeasonPage";
-import { useAppDispatch } from "../reduxHooks";
-import { fetchSeasons } from "./seasonsSlice";
-import { fetchTeams } from "./teamsSlice";
-import { fetchCompetitions } from "./competitionsSlice";
+import { useGetAllSeasonsQuery } from "./seasonsSlice";
+import { useGetAllTeamsQuery } from "./teamsSlice";
+import { useGetAllCompetitionsQuery } from "./competitionsSlice";
+import { setSelectedSeason } from "./selectionSlice";
 
 export type AppPage = "Home" | "Team" | "League" | "Season";
 
 const App: FunctionComponent = () => {
-  const dispatch = useAppDispatch();
-
   const [activePage, setActivePage] = useState<AppPage>("Home");
 
-  useEffect(() => {
-    dispatch(fetchSeasons());
-    dispatch(fetchTeams());
-    dispatch(fetchCompetitions());
-  }, [dispatch]);
+  useGetAllSeasonsQuery();
+  useGetAllTeamsQuery();
+  useGetAllCompetitionsQuery();
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { api } from "./shared/useApi";
 
 export type Team = {
@@ -8,58 +8,14 @@ export type Team = {
   notes: string | null;
 };
 
-type TeamState = {
-  status: "UNLOADED" | "LOADING" | "LOADED" | "LOAD_FAILED";
-  teams: Team[];
-  selectedTeam: Team | undefined;
-  error: string | undefined;
-};
-
-const initialState: TeamState = {
-  status: "UNLOADED",
-  teams: [],
-  selectedTeam: undefined,
-  error: undefined,
-};
-
-export const fetchTeams = createAsyncThunk("teams/fetchTeams", async () => {
-  const response = await fetch(`${api}/api/v2/teams`);
-  return (await response.json()) as Team[];
+export const teamsApi = createApi({
+  reducerPath: "teamsApi",
+  baseQuery: fetchBaseQuery({ baseUrl: `${api}/api/v2/teams` }),
+  endpoints: (builder) => ({
+    getAllTeams: builder.query<Team[], void>({
+      query: () => "",
+    }),
+  }),
 });
 
-export const teamsSlice = createSlice({
-  name: "teams",
-  initialState,
-  reducers: {
-    setSelectedTeam: (state, action: PayloadAction<Team>) => {
-      state.selectedTeam = action.payload;
-    },
-    clearSelectedTeam: (state) => {
-      state.selectedTeam = undefined;
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchTeams.pending, (state, _) => {
-      state.status = "LOADING";
-    });
-    builder.addCase(fetchTeams.fulfilled, (state, action) => {
-      state.status = "LOADED";
-      state.teams = action.payload;
-    });
-    builder.addCase(fetchTeams.rejected, (state, action) => {
-      state.status = "LOAD_FAILED";
-      state.error = action.error.message;
-    });
-  },
-});
-
-const selectTeams = (state: TeamState) => state.teams;
-const selectTeamId = (_: TeamState, id: number) => id;
-export const selectTeamById = createSelector(
-  [selectTeams, selectTeamId],
-  (teams, id) => teams.filter((x) => x.id === id)[0]
-);
-
-export const { setSelectedTeam, clearSelectedTeam } = teamsSlice.actions;
-
-export default teamsSlice.reducer;
+export const { useGetAllTeamsQuery } = teamsApi;

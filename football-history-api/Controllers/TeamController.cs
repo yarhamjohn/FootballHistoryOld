@@ -3,49 +3,48 @@ using football.history.api.Builders;
 using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
-namespace football.history.api.Controllers
+namespace football.history.api.Controllers;
+
+[ApiVersion("2")]
+[Route("api/v{version:apiVersion}/teams")]
+public class TeamController : Controller
 {
-    [ApiVersion("2")]
-    [Route("api/v{version:apiVersion}/teams")]
-    public class TeamController : Controller
+    private readonly ITeamBuilder _builder;
+
+    public TeamController(ITeamBuilder builder)
     {
-        private readonly ITeamBuilder _builder;
+        _builder = builder;
+    }
 
-        public TeamController(ITeamBuilder builder)
+    [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Team[]> GetAllTeams()
+    {
+        var teams = _builder.BuildAllTeams();
+
+        if (!teams.Any())
         {
-            _builder = builder;
+            return NotFound("No teams were found.");
         }
 
-        [HttpGet]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public ActionResult<Team[]> GetAllTeams()
+        return teams;
+    }
+
+    [HttpGet("{id:long}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Team> GetTeam(long id)
+    {
+        var team = _builder.BuildTeam(id);
+
+        if (team is null)
         {
-            var teams = _builder.BuildAllTeams();
-
-            if (!teams.Any())
-            {
-                return NotFound("No teams were found.");
-            }
-
-            return teams;
+            return NotFound($"No team was found with id {id}.");
         }
-
-        [HttpGet("{id:long}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public ActionResult<Team> GetTeam(long id)
-        {
-            var team = _builder.BuildTeam(id);
-
-            if (team is null)
-            {
-                return NotFound($"No team was found with id {id}.");
-            }
             
-            return team;
-        }
+        return team;
     }
 }

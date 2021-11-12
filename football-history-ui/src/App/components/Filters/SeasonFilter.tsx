@@ -1,14 +1,18 @@
 import { Dropdown, DropdownItemProps, Icon } from "semantic-ui-react";
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../reduxHooks";
-import { Season, selectSeason } from "../../seasonsSlice";
+import { Season, useGetAllSeasonsQuery } from "../../seasonsSlice";
+import { setSelectedSeason } from "../../selectionSlice";
+import { useGetAllCompetitionsQuery } from "../../competitionsSlice";
 
 const SeasonFilter: FunctionComponent = () => {
   const dispatch = useAppDispatch();
-  const seasonState = useAppSelector((state) => state.season);
+  const seasonState = useGetAllSeasonsQuery();
+  const competitionState = useGetAllCompetitionsQuery();
+  const selectedState = useAppSelector((state) => state.selected);
 
-  function createDropdown(): DropdownItemProps[] {
-    return seasonState.seasons
+  function createDropdown(seasons: Season[]): DropdownItemProps[] {
+    return seasons
       .slice()
       .sort((a, b) => b.startYear - a.startYear)
       .map((s) => {
@@ -20,68 +24,70 @@ const SeasonFilter: FunctionComponent = () => {
       });
   }
 
-  const changeSeason = (nextSeason: Season) => {
-    if (seasonState.seasons.some((s) => s.startYear === nextSeason.startYear)) {
-      dispatch(selectSeason(nextSeason));
+  const changeSeason = (seasons: Season[], nextSeason: Season) => {
+    if (seasons.some((s) => s.startYear === nextSeason.startYear)) {
+      dispatch(setSelectedSeason({ season: nextSeason, competitions: competitionState.data! }));
     } else {
       return;
     }
   };
 
-  const forwardOneSeason = () => {
-    if (seasonState.selectedSeason !== undefined) {
-      const nextStartYear = seasonState.selectedSeason.startYear + 1;
-      const nextSeason = seasonState.seasons.filter((x) => x.startYear === nextStartYear);
+  const forwardOneSeason = (seasons: Season[]) => {
+    if (selectedState.selectedSeason !== undefined) {
+      const nextStartYear = selectedState.selectedSeason.startYear + 1;
+      const nextSeason = seasons.filter((x) => x.startYear === nextStartYear);
 
       if (nextSeason.length === 1) {
-        changeSeason(nextSeason[0]);
+        changeSeason(seasons, nextSeason[0]);
       }
     }
   };
 
-  const backOneSeason = () => {
-    if (seasonState.selectedSeason !== undefined) {
-      const previousStartYear = seasonState.selectedSeason.startYear - 1;
-      const previousSeason = seasonState.seasons.filter((x) => x.startYear === previousStartYear);
+  const backOneSeason = (seasons: Season[]) => {
+    if (selectedState.selectedSeason !== undefined) {
+      const previousStartYear = selectedState.selectedSeason.startYear - 1;
+      const previousSeason = seasons.filter((x) => x.startYear === previousStartYear);
 
       if (previousSeason.length === 1) {
-        changeSeason(previousSeason[0]);
+        changeSeason(seasons, previousSeason[0]);
       }
     }
   };
 
-  function chooseSeason(startYear: number | undefined) {
-    const season = seasonState.seasons.filter((x) => x.startYear === startYear)[0];
-    dispatch(selectSeason(season));
+  function chooseSeason(seasons: Season[], startYear: number | undefined) {
+    const season = seasons.filter((x) => x.startYear === startYear)[0];
+    dispatch(setSelectedSeason({ season: season, competitions: competitionState.data! }));
   }
 
-  return (
+  const body = seasonState.isSuccess ? (
     <div style={{ display: "flex", alignItems: "center", color: "#00B5AD" }}>
       <Icon
         name="caret left"
         size="huge"
-        onClick={() => backOneSeason()}
+        onClick={() => backOneSeason(seasonState.data)}
         style={{ cursor: "pointer" }}
       />
       <Dropdown
         placeholder="Select Season"
         fluid
         selection
-        options={createDropdown()}
+        options={createDropdown(seasonState.data)}
         onChange={(_, data) =>
-          chooseSeason(isNaN(Number(data.value)) ? undefined : Number(data.value))
+          chooseSeason(seasonState.data, isNaN(Number(data.value)) ? undefined : Number(data.value))
         }
-        value={seasonState.selectedSeason?.startYear}
+        value={selectedState.selectedSeason?.startYear}
         style={{ gridArea: "filter" }}
       />
       <Icon
         name="caret right"
         size="huge"
-        onClick={() => forwardOneSeason()}
+        onClick={() => forwardOneSeason(seasonState.data)}
         style={{ cursor: "pointer" }}
       />
     </div>
-  );
+  ) : null;
+
+  return body;
 };
 
 export { SeasonFilter };

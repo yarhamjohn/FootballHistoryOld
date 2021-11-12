@@ -1,6 +1,5 @@
 using System;
 
-namespace football.history.api.Builders
-{
-    public record LeaguePositionDto(DateTime Date, int Position);
-}
+namespace football.history.api.Builders;
+
+public record LeaguePositionDto(DateTime Date, int Position);

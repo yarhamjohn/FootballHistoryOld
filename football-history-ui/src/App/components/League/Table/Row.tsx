@@ -1,10 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { Row } from "../../../shared/useFetchLeague";
 import { Icon, Table } from "semantic-ui-react";
 import { LeagueTableDrillDown } from "../DrillDown/DrillDown";
 import { LeagueTableRowCell } from "./Cell";
-import { selectTeamById, setSelectedTeam, Team } from "../../../teamsSlice";
-import { useAppDispatch, useAppSelector } from "../../../../reduxHooks";
+import { useAppSelector } from "../../../../reduxHooks";
 import { CompetitionRules } from "../../../competitionsSlice";
 import { Color, getLeagueStatusColor } from "../../../shared/functions";
 
@@ -15,11 +14,10 @@ const LeagueTableRow: FunctionComponent<{
   competitionId: number;
   highlightSelectedTeam: boolean;
 }> = ({ row, numRows, rules, competitionId, highlightSelectedTeam }) => {
-  const dispatch = useAppDispatch();
-  const teamState = useAppSelector((state) => state.team);
+  const selectedState = useAppSelector((state) => state.selected);
 
   const [selectedTeam] = useState<boolean>(
-    highlightSelectedTeam && row.team === teamState.selectedTeam?.name
+    highlightSelectedTeam && row.team === selectedState.selectedTeam?.name
   );
   const [rowColor] = useState<Color | null>(
     getLeagueStatusColor(row.status) == null && selectedTeam
@@ -30,12 +28,6 @@ const LeagueTableRow: FunctionComponent<{
   const [showDrillDown, setShowDrillDown] = useState<boolean>(
     highlightSelectedTeam && selectedTeam
   );
-
-  const selectTeam = (teamId: number) => {
-    const team = selectTeamById(teamState, teamId);
-    setShowDrillDown(true);
-    dispatch(setSelectedTeam(team));
-  };
 
   return (
     <>

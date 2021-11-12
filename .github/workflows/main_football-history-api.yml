@@ -5,8 +5,6 @@ name: Build and deploy Api
 
 on:
   push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -54,6 +52,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
+    if: github.ref == 'refs/heads/main'
     environment:
       name: "production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}

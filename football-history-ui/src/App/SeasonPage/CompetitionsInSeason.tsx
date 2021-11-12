@@ -1,27 +1,29 @@
-import React, { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { Tab } from "semantic-ui-react";
-import {
-  Competition,
-  selectCompetitionsBySeasonId,
-  setSelectedCompetition,
-} from "../competitionsSlice";
+import { Competition, useGetAllCompetitionsQuery } from "../competitionsSlice";
 import { useAppDispatch, useAppSelector } from "../../reduxHooks";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { useEffect } from "react";
 import { CompetitionInSeasonPane } from "./CompetitionInSeasonPane";
+import { setSelectedCompetition } from "../selectionSlice";
 
 const CompetitionsInSeason: FunctionComponent = () => {
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const dispatch = useAppDispatch();
-  const competitionState = useAppSelector((state) => state.competition);
-  const selectedSeason = useAppSelector((state) => state.season.selectedSeason);
+  const selectedSeason = useAppSelector((state) => state.selected.selectedSeason);
+
+  const { competitionsInSeason } = useGetAllCompetitionsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      competitionsInSeason:
+        data === undefined ? [] : data.filter((x) => x.season.id === selectedSeason?.id),
+    }),
+  });
 
   useEffect(() => {
-    const competitions = selectCompetitionsBySeasonId(competitionState, selectedSeason?.id);
-    setCompetitions(competitions);
-  }, [competitionState, selectedSeason]);
+    setCompetitions(competitionsInSeason);
+  }, [selectedSeason]);
 
   useEffect(() => {
     if (competitions.length === 0) {

@@ -3,50 +3,49 @@ using football.history.api.Builders;
 using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
-namespace football.history.api.Controllers
+namespace football.history.api.Controllers;
+
+[ApiVersion("2")]
+[Route("api/v{version:apiVersion}/seasons")]
+public class SeasonController : Controller
 {
-    [ApiVersion("2")]
-    [Route("api/v{version:apiVersion}/seasons")]
-    public class SeasonController : Controller
+    private readonly ISeasonBuilder _builder;
+
+    public SeasonController(ISeasonBuilder builder)
     {
-        private readonly ISeasonBuilder _builder;
+        _builder = builder;
+    }
 
-        public SeasonController(ISeasonBuilder builder)
+    [HttpGet]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Season[]> GetAllSeasons()
+    {
+        var seasons = _builder.BuildAllSeasons();
+
+        if (!seasons.Any())
         {
-            _builder = builder;
+            return NotFound("No seasons were found.");
         }
 
-        [HttpGet]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public ActionResult<Season[]> GetAllSeasons()
+        return seasons;
+    }
+
+    [HttpGet]
+    [Route("{id:long}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Season?> GetSeason(long id)
+    {
+        var season = _builder.BuildSeason(id);
+
+        if (season is null)
         {
-            var seasons = _builder.BuildAllSeasons();
-
-            if (!seasons.Any())
-            {
-                return NotFound("No seasons were found.");
-            }
-
-            return seasons;
+            return NotFound($"No season was found with id {id}.");
         }
-
-        [HttpGet]
-        [Route("{id:long}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public ActionResult<Season?> GetSeason(long id)
-        {
-            var season = _builder.BuildSeason(id);
-
-            if (season is null)
-            {
-                return NotFound($"No season was found with id {id}.");
-            }
             
-            return season;
-        }
+        return season;
     }
 }
