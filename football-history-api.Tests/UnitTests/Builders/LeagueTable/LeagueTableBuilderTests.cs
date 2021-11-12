@@ -7,7 +7,6 @@ using football.history.api.Builders;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.PointDeduction;
 using football.history.api.Repositories.Team;
 using football.history.api.Tests.UnitTests.Builders.LeagueTable.Sorter;
 using Moq;

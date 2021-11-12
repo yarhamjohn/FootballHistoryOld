@@ -1,4 +1,4 @@
-namespace football.history.api.Repositories.PointDeduction;
+namespace football.history.api.Models;
 
 public record PointDeductionModel (
     long Id,

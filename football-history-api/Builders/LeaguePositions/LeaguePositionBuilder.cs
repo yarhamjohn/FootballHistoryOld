@@ -4,7 +4,6 @@ using System.Linq;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.PointDeduction;
 
 namespace football.history.api.Builders;
 

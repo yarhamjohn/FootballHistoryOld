@@ -5,7 +5,6 @@ using football.history.api.Builders;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.PointDeduction;
 using Moq;
 using NUnit.Framework;
 

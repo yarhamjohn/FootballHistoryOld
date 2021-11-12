@@ -5,7 +5,6 @@ using football.history.api.Bindings;
 using football.history.api.Models;
 using football.history.api.Repositories.Competition;
 using football.history.api.Repositories;
-using football.history.api.Repositories.PointDeduction;
 using football.history.api.Repositories.Team;
 
 namespace football.history.api.Builders;
@@ -13,7 +12,11 @@ namespace football.history.api.Builders;
 public interface ILeagueTableBuilder
 {
     ILeagueTable BuildFullLeagueTable(CompetitionModel competition);
-    ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions);
+    ILeagueTable BuildPartialLeagueTable(
+        CompetitionModel competition,
+        MatchModel[] leagueMatches,
+        DateTime targetDate,
+        List<PointDeductionModel> pointDeductions);
 }
     
 public class LeagueTableBuilder : ILeagueTableBuilder

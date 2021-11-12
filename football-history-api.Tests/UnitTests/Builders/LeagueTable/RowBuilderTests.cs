@@ -6,7 +6,6 @@ using football.history.api.Bindings;
 using football.history.api.Builders;
 using football.history.api.Models;
 using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.PointDeduction;
 using NUnit.Framework;
 
 namespace football.history.api.Tests.UnitTests.Builders.LeagueTable;

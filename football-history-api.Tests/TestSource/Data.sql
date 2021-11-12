@@ -61,11 +61,11 @@ CREATE TABLE [dbo].[Teams](
 GO
 
 CREATE TABLE [dbo].[Deductions](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
     [CompetitionId] [bigint] NOT NULL,
     [PointsDeducted] [smallint] NOT NULL,
     [Reason] [nvarchar](255) NULL,
     [TeamId] [bigint] NOT NULL,
-    [Id] [bigint] IDENTITY(1,1) NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -318,6 +318,16 @@ SET IDENTITY_INSERT [dbo].[Seasons] OFF
 GO
 
 SET IDENTITY_INSERT [dbo].[Deductions] ON
+GO
+
+INSERT [dbo].[Deductions] ([Id], [CompetitionId], [PointsDeducted], [Reason], [TeamId])
+VALUES (1, 1, 9, 'Financial irregularities', 1)
+GO
+INSERT [dbo].[Deductions] ([Id], [CompetitionId], [PointsDeducted], [Reason], [TeamId])
+VALUES (2, 1, 12, 'Going into administration', 2)
+GO
+INSERT [dbo].[Deductions] ([Id], [CompetitionId], [PointsDeducted], [Reason], [TeamId])
+VALUES (3, 3, 3, 'Failing to control players', 20)
 GO
 
 SET IDENTITY_INSERT [dbo].[Deductions] OFF
