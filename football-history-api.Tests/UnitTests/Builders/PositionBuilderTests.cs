@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using football.history.api.Builders;
 using football.history.api.Repositories;
@@ -13,11 +14,43 @@ public class PositionBuilderTests
     [Test]
     public void BuildSeasonPositions_returns_empty_array_given_no_competition_models()
     {
+        var mockCompetitionRepository = new Mock<ICompetitionRepository>();
+        mockCompetitionRepository
+            .Setup(x => x.GetCompetitionsInSeason(It.IsAny<long>()))
+            .Returns(Array.Empty<CompetitionModel>());
+        
+        var mockPositionRepository = new Mock<IPositionRepository>();
+        
+        var builder = new PositionBuilder(mockPositionRepository.Object, mockCompetitionRepository.Object);
+
+        var actualPositions = builder.BuildSeasonPositions(1);
+
+        Assert.That(actualPositions, Is.Empty);
     }
     
     [Test]
     public void BuildSeasonPositions_returns_empty_array_given_no_position_models()
     {
+        var competitionModels = new[]
+        {
+            new CompetitionModel(1, "Premier League", 1, 2000, 2001, 1, null, null, 0, 0, 0, 0, 0, 0, 0, null)
+        };
+
+        var mockCompetitionRepository = new Mock<ICompetitionRepository>();
+        mockCompetitionRepository
+            .Setup(x => x.GetCompetitionsInSeason(It.IsAny<long>()))
+            .Returns(competitionModels);
+        
+        var mockPositionRepository = new Mock<IPositionRepository>();
+        mockPositionRepository
+            .Setup(x => x.GetCompetitionPositions(It.IsAny<long>()))
+            .Returns(Array.Empty<PositionModel>());
+        
+        var builder = new PositionBuilder(mockPositionRepository.Object, mockCompetitionRepository.Object);
+
+        var actualPositions = builder.BuildSeasonPositions(1);
+
+        Assert.That(actualPositions, Is.Empty);
     }
 
     [Test]
@@ -81,6 +114,18 @@ public class PositionBuilderTests
     [Test]
     public void BuildTeamPositions_returns_empty_array_given_no_models()
     {
+        var mockPositionRepository = new Mock<IPositionRepository>();
+        mockPositionRepository
+            .Setup(x => x.GetTeamPositions(It.IsAny<long>()))
+            .Returns(Array.Empty<PositionModel>());
+        
+        var mockCompetitionRepository = new Mock<ICompetitionRepository>();
+        
+        var builder = new PositionBuilder(mockPositionRepository.Object, mockCompetitionRepository.Object);
+
+        var actualPositions = builder.BuildTeamPositions(1);
+
+        Assert.That(actualPositions, Is.Empty);
     }
     
     [Test]

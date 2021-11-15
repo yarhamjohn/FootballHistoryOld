@@ -24,7 +24,7 @@ const SeasonPage: FunctionComponent = () => {
 
   useEffect(() => {
     setCompetitionsInSeason(data);
-  }, [competitionsState, selectedSeason]);
+  }, [competitionsState, selectedSeason, data]);
 
   if (selectedSeason === undefined) {
     return (
@@ -102,13 +102,15 @@ const SeasonPage: FunctionComponent = () => {
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <Label.Group color="yellow">
                   {positions.status === "LOAD_SUCCESSFUL" &&
-                    positions.data.map((p) => (
-                      <Label key={p.teamId} as={"p"} size={"big"} style={{ cursor: "default" }}>
-                        <Icon name="trophy" />
-                        {p.teamName}
-                        <Label.Detail>{p.competitionName}</Label.Detail>
-                      </Label>
-                    ))}
+                    positions.data
+                      .filter((x) => x.leaguePosition === 1)
+                      .map((p) => (
+                        <Label key={p.teamId} as={"div"} size={"big"} style={{ cursor: "default" }}>
+                          <Icon name="trophy" />
+                          {p.teamName}
+                          <Label.Detail>{p.competitionName}</Label.Detail>
+                        </Label>
+                      ))}
                 </Label.Group>
               </div>
               <Divider />

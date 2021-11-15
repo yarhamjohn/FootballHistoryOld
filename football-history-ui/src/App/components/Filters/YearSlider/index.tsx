@@ -10,10 +10,7 @@ const YearSlider: FunctionComponent<{
 }> = ({ sliderRange, selectedRange, setSelectedRange }) => {
   const [newSelectedRange, setNewSelectedRange] = useState<SeasonDateRange>(selectedRange);
 
-  useEffect(
-    () => setSelectedRange(newSelectedRange),
-    [newSelectedRange.startYear, newSelectedRange.endYear]
-  );
+  useEffect(() => setSelectedRange(newSelectedRange), [newSelectedRange, setSelectedRange]);
 
   const onChange = (values: readonly number[]) => {
     setNewSelectedRange({ startYear: Math.min(...values), endYear: Math.max(...values) });

@@ -1,5 +1,6 @@
 import { SeasonDateRange } from "./index";
 import { HistoricalSeason } from "../../shared/useFetchHistoricalRecord";
+import { Serie } from "@nivo/line";
 
 const useHistoricalPositionsGraph = (seasons: HistoricalSeason[], range: SeasonDateRange) => {
   const getSeasonStartYears = (start: number, end: number) =>
@@ -27,7 +28,7 @@ const useHistoricalPositionsGraph = (seasons: HistoricalSeason[], range: SeasonD
       });
   };
 
-  const series = [
+  const series: Serie[] = [
     {
       id: "positions",
       data: getPositionSeries(seasons, range),
