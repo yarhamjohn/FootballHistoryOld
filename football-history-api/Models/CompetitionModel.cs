@@ -1,10 +1,7 @@
 using football.history.api.Dtos;
 
-namespace football.history.api.Repositories.Competition;
+namespace football.history.api.Models;
 
-/// <summary>
-/// Database model representation for the Competition query output
-/// </summary>
 public record CompetitionModel (
     long Id,
     string Name,

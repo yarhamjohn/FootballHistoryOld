@@ -4,6 +4,7 @@ using FluentAssertions;
 using football.history.api.Controllers;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
+using football.history.api.Models;
 using football.history.api.Repositories.Competition;
 using Moq;
 using NUnit.Framework;

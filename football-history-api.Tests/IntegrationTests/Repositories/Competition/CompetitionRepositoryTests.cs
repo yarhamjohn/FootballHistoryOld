@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using FluentAssertions;
 using football.history.api.Exceptions;
+using football.history.api.Models;
 using football.history.api.Repositories.Competition;
 using football.history.api.Tests.IntegrationTests.Repositories.TestUtilities;
 using Microsoft.Data.SqlClient.Server;

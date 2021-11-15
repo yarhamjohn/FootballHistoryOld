@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using football.history.api.Exceptions;
+using football.history.api.Models;
 
 namespace football.history.api.Repositories.Competition;
 

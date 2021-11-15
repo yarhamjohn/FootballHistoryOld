@@ -1,6 +1,6 @@
 using FluentAssertions;
 using football.history.api.Builders;
-using football.history.api.Repositories.Competition;
+using football.history.api.Models;
 using NUnit.Framework;
 
 namespace football.history.api.Tests.UnitTests.Builders.LeagueTable.Sorter;

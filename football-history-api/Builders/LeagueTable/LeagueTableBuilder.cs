@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Bindings;
 using football.history.api.Models;
-using football.history.api.Repositories.Competition;
 using football.history.api.Repositories;
 
 namespace football.history.api.Builders;
