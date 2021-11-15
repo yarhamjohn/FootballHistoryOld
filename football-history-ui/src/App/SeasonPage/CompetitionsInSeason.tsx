@@ -35,7 +35,7 @@ const CompetitionsInSeason: FunctionComponent = () => {
     }
 
     dispatch(setSelectedCompetition({ ...competitions[tabIndex] }));
-  }, [tabIndex, competitions]);
+  }, [dispatch, tabIndex, competitions]);
 
   if (selectedSeason === undefined) {
     return (

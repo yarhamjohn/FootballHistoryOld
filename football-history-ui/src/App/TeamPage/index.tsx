@@ -6,8 +6,6 @@ import { Matches } from "./Matches";
 import { HistoricalPositions } from "../components/HistoricalPositions";
 import { League } from "../components/League";
 import { useAppSelector } from "../../reduxHooks";
-import { setSelectedSeason } from "../selectionSlice";
-import { useGetAllSeasonsQuery } from "../seasonsSlice";
 
 const TeamPage: FunctionComponent = () => {
   const selectedSeason = useAppSelector((state) => state.selected.selectedSeason);

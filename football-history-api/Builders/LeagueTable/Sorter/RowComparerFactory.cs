@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using football.history.api.Repositories.Competition;
+using football.history.api.Models;
 
 namespace football.history.api.Builders;
 

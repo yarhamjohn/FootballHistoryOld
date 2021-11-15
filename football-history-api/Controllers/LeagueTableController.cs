@@ -3,7 +3,8 @@ using System.Linq;
 using football.history.api.Builders;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -55,7 +56,7 @@ public class LeagueTableController : Controller
     {
         try
         {
-            var competition = _competitionRepository.GetCompetitionForSeasonAndTeam(seasonId, teamId);
+            var competition = _competitionRepository.GetTeamCompetition(seasonId, teamId);
             if (competition is null)
             {
                 throw new DataNotFoundException($"No competition was found for the specified seasonId ({seasonId}) and teamId ({teamId}).");

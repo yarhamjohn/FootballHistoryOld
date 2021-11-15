@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Bindings;
 using football.history.api.Models;
-using football.history.api.Repositories.Competition;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Team;
 
 namespace football.history.api.Builders;
 
@@ -16,7 +13,7 @@ public interface ILeagueTableBuilder
         CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
-        List<PointDeductionModel> pointDeductions);
+        PointDeductionModel[] pointDeductions);
 }
     
 public class LeagueTableBuilder : ILeagueTableBuilder
@@ -53,14 +50,14 @@ public class LeagueTableBuilder : ILeagueTableBuilder
 
         foreach (var row in rows)
         {
-            row.Position = positions.Single(x => x.TeamId == row.TeamId).Position;
+            row.Position = positions.Single(x => x.TeamId == row.TeamId).LeaguePosition;
             row.Status = positions.Single(x => x.TeamId == row.TeamId).Status;
         }
             
         return new LeagueTable(rows);
     }
         
-    public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, List<PointDeductionModel> pointDeductions)
+    public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, PointDeductionModel[] pointDeductions)
     {
         var matchesToDate = leagueMatches.Where(x => x.MatchDate < targetDate).ToArray();
         var teamsInLeague = GetTeamsInLeague(leagueMatches);
@@ -87,7 +84,7 @@ public class LeagueTableBuilder : ILeagueTableBuilder
         CompetitionModel competition,
         IEnumerable<TeamModel> teamsInLeague,
         MatchModel[] leagueMatches,
-        List<PointDeductionModel> pointDeductions)
+        PointDeductionModel[] pointDeductions)
     {
         return teamsInLeague
             .Select(team => _rowBuilder.Build(competition, team, leagueMatches, pointDeductions))

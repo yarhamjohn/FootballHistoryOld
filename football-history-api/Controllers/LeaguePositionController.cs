@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using football.history.api.Builders;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
+using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;

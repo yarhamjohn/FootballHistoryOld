@@ -10,7 +10,7 @@ const HistoricalPositionsGraph: FunctionComponent<{
   isLoading: boolean;
   seasons: HistoricalSeason[];
   range: SeasonDateRange;
-}> = ({ isLoading, seasons: seasons, range }) => {
+}> = ({ isLoading, seasons, range }) => {
   const { series, colors, yValues } = useHistoricalPositionsGraph(seasons, range);
 
   return (

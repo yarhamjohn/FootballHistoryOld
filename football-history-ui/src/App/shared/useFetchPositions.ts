@@ -7,7 +7,7 @@ export type Position = {
   competitionName: string;
   teamId: number;
   teamName: string;
-  position: number;
+  leaguePosition: number;
   status: string | null;
 };
 

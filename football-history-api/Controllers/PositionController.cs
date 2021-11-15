@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Dtos;
-using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Team;
+using football.history.api.Builders;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -13,62 +9,42 @@ namespace football.history.api.Controllers;
 [Route("api/v{version:apiVersion}/positions")]
 public class PositionController : Controller
 {
-    private readonly IPositionRepository _repository;
-    private readonly ICompetitionRepository _competitionRepository;
+    private readonly IPositionBuilder _builder;
 
-    public PositionController(IPositionRepository repository, ICompetitionRepository competitionRepository)
+    public PositionController(IPositionBuilder builder)
     {
-        _repository = repository;
-        _competitionRepository = competitionRepository;
+        _builder = builder;
     }
 
-    [HttpGet("season/{id:long}")]
+    [HttpGet("season/{seasonId:long}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public ActionResult<List<PositionDto>> GetSeasonChampions(long id)
+    public ActionResult<Position[]> GetSeasonPositions(long seasonId)
     {
-        try
-        {
-            var competitions = _competitionRepository.GetCompetitionsInSeason(id);
-
-            return competitions
-                .Select(competition => _repository.GetCompetitionPositions(competition.Id)
-                    .Single(x => x.Position == 1)).Select(BuildPositionDto).ToList();
-        }
-        catch (Exception ex)
-        {
-            return ex switch
-            {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
-        }
-    }
-
-    [HttpGet("team/{id:long}")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    [ProducesResponseType(500)]
-    public ActionResult<List<PositionDto>> GetTeamChampions(long id)
-    {
-        try
-        {
-            return _repository.GetTeamPositions(id)
-                .Where(x => x.Position == 1).Select(BuildPositionDto).ToList();
-        }
-        catch (Exception ex)
-        {
-            return ex switch
-            {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
-        }
-    }
+        var positions = _builder.BuildSeasonPositions(seasonId);
         
-    private static PositionDto BuildPositionDto(PositionModel position) =>
-        new(position.Id, position.CompetitionId, position.CompetitionName, position.TeamId, position.TeamName, position.Position, position.Status);
+        if (!positions.Any())
+        {
+            return NotFound($"No positions were found for the given season ({seasonId}).");
+        }
+
+        return positions;
+    }
+
+    [HttpGet("team/{teamId:long}")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Position[]> GetTeamPositions(long teamId)
+    {
+        var positions = _builder.BuildTeamPositions(teamId);
+
+        if (!positions.Any())
+        {
+            return NotFound($"No positions were found for the given team ({teamId}).");
+        }
+
+        return positions;
+    }
 }

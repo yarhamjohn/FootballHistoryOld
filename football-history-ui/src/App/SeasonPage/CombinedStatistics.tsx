@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Card, Loader, Table } from "semantic-ui-react";
+import { Card, Loader } from "semantic-ui-react";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { useFetchStatistics } from "../shared/useFetchStatistics";
 
@@ -31,14 +31,12 @@ const CombinedStatistics: FunctionComponent<{ seasonId: number }> = ({ seasonId 
             <Card.Header>{x.category}</Card.Header>
           </Card.Content>
           {x.statistics.map((y, i) => (
-            <>
-              <Card.Content key={i}>
-                <Card.Meta>{y.name}</Card.Meta>
-                <Card.Description>
-                  {y.teamName} ({y.competitionName}): <strong>{Number(y.value.toFixed(2))}</strong>
-                </Card.Description>
-              </Card.Content>
-            </>
+            <Card.Content key={i}>
+              <Card.Meta>{y.name}</Card.Meta>
+              <Card.Description>
+                {y.teamName} ({y.competitionName}): <strong>{Number(y.value.toFixed(2))}</strong>
+              </Card.Description>
+            </Card.Content>
           ))}
         </Card>
       ))}

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Models;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Competition;
 
 namespace football.history.api.Builders;
 
@@ -47,7 +46,7 @@ public class LeaguePositionBuilder : ILeaguePositionBuilder
         long teamId, CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
-        List<PointDeductionModel> pointDeductions)
+        PointDeductionModel[] pointDeductions)
     {
         var partialLeagueTable =
             _leagueTableBuilder.BuildPartialLeagueTable(competition, leagueMatches, targetDate, pointDeductions);

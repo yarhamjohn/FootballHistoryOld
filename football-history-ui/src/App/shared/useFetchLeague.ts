@@ -1,5 +1,5 @@
 import { useApi } from "./useApi";
-import { callApi, useFetch } from "./useFetch";
+import { useFetch } from "./useFetch";
 import { Competition } from "../competitionsSlice";
 
 export type Row = {

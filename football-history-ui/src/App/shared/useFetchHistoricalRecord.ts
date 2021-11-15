@@ -1,6 +1,6 @@
-import { Reducer, useEffect, useReducer, useState } from "react";
+import { Reducer, useEffect, useReducer, useState, useCallback } from "react";
 import { useApi } from "./useApi";
-import { SeasonDateRange as SeasonDateRange } from "../components/HistoricalPositions";
+import { SeasonDateRange } from "../components/HistoricalPositions";
 import { Season } from "../seasonsSlice";
 import { callApi } from "./useFetch";
 
@@ -76,22 +76,28 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
     }
   );
 
-  const getSeasonsInRange = (seasons: HistoricalSeason[]) =>
-    seasons.filter(
-      (x) => x.seasonStartYear >= range.startYear && x.seasonStartYear <= range.endYear
-    );
+  const getSeasonsInRange = useCallback(
+    (seasons: HistoricalSeason[]) =>
+      seasons.filter(
+        (x) => x.seasonStartYear >= range.startYear && x.seasonStartYear <= range.endYear
+      ),
+    [range]
+  );
 
   const getInclusiveYears = (start: number, end: number) =>
     Array.from({ length: end - start + 1 }, (v, k) => k + start);
 
-  const getUrl = (yearsToFetch: number[]) => {
-    const seasonIds = allSeasons
-      .filter((x) => yearsToFetch.includes(x.startYear))
-      .map((y, i) => `${i === 0 ? "?" : "&"}seasonIds=${y.id}`)
-      .join("");
+  const getUrl = useCallback(
+    (yearsToFetch: number[]) => {
+      const seasonIds = allSeasons
+        .filter((x) => yearsToFetch.includes(x.startYear))
+        .map((y, i) => `${i === 0 ? "?" : "&"}seasonIds=${y.id}`)
+        .join("");
 
-    return `${api}/api/v2/historical-record/teamId/${teamId}${seasonIds}`;
-  };
+      return `${api}/api/v2/historical-record/teamId/${teamId}${seasonIds}`;
+    },
+    [allSeasons, teamId, api]
+  );
 
   useEffect(() => {
     const allYearsInRange = getInclusiveYears(range.startYear, range.endYear);
@@ -99,7 +105,7 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
     const newUrl = getUrl(allYearsInRange);
 
     setUrl(newUrl);
-  }, [teamId]);
+  }, [getUrl, range, teamId]);
 
   useEffect(() => {
     const allYearsInRange = getInclusiveYears(range.startYear, range.endYear);
@@ -123,7 +129,7 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
     const newUrl = getUrl(yearsNotYetFetched);
 
     setUrl(newUrl);
-  }, [range]);
+  }, [getUrl, range, allFetchedSeasons, getSeasonsInRange, teamId]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -151,7 +157,7 @@ const useFetchHistoricalRecord = (teamId: number, allSeasons: Season[], range: S
     return () => {
       abortController.abort();
     };
-  }, [url]);
+  }, [url, teamId, getSeasonsInRange]);
 
   return { state };
 };

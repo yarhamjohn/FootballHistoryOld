@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Dtos;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
+using football.history.api.Models;
+using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -72,7 +73,7 @@ public class CompetitionController : Controller
         try
         {
             var matches = _repository
-                .GetCompetitionsInSeason(seasonId)
+                .GetCompetitions(seasonId)
                 .Select(BuildCompetitionDto)
                 .ToList();
             return new(matches);

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { FunctionComponent, useState } from "react";
 import "./App.css";
 import { HomePage } from "./HomePage";
 import { AppHeader } from "./components/AppHeader";
@@ -9,7 +9,6 @@ import { SeasonPage } from "./SeasonPage";
 import { useGetAllSeasonsQuery } from "./seasonsSlice";
 import { useGetAllTeamsQuery } from "./teamsSlice";
 import { useGetAllCompetitionsQuery } from "./competitionsSlice";
-import { setSelectedSeason } from "./selectionSlice";
 
 export type AppPage = "Home" | "Team" | "League" | "Season";
 

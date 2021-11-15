@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using football.history.api.Models;
 using Microsoft.Data.SqlClient;
 
-namespace football.history.api.Repositories.Season;
+namespace football.history.api.Repositories;
 
 public interface ISeasonRepository
 {
@@ -33,7 +34,7 @@ public interface ISeasonRepository
     ///
     /// <returns>
     /// Returns the matching <see cref="SeasonModel"/> or null if
-    /// the given <paramref name="seasonId"/> matched no team.
+    /// the given <paramref name="seasonId"/> matched no season.
     /// </returns>
     SeasonModel? GetSeason(long seasonId);
 }
