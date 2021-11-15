@@ -3,8 +3,6 @@ using System.Reflection;
 using football.history.api.Builders;
 using football.history.api.Builders.Statistics;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Competition;
-using football.history.api.Repositories.Season;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,22 +35,20 @@ public class Startup
         services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
 
         services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
-        services.AddTransient<ITeamBuilder, TeamBuilder>();
-        services.AddTransient<ISeasonBuilder, SeasonBuilder>();
         services.AddTransient<IMatchBuilder, MatchBuilder>();
         services.AddTransient<IPositionBuilder, PositionBuilder>();
+        services.AddTransient<ISeasonBuilder, SeasonBuilder>();
+        services.AddTransient<ITeamBuilder, TeamBuilder>();
 
         services.AddTransient<IDatabaseConnection, DatabaseConnection>();
             
-        services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
-        services.AddTransient<ITeamRepository, TeamRepository>();
-        services.AddTransient<ISeasonRepository, SeasonRepository>();
-        services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
-        services.AddTransient<IMatchRepository, MatchRepository>();
-        services.AddTransient<IPositionRepository, PositionRepository>();
-
         services.AddTransient<ICompetitionRepository, CompetitionRepository>();
-        services.AddTransient<ICompetitionCommandBuilder, CompetitionCommandBuilder>();
+        services.AddTransient<IHistoricalSeasonRepository, HistoricalSeasonRepository>();
+        services.AddTransient<IMatchRepository, MatchRepository>();
+        services.AddTransient<IPointDeductionRepository, PointDeductionRepository>();
+        services.AddTransient<IPositionRepository, PositionRepository>();
+        services.AddTransient<ISeasonRepository, SeasonRepository>();
+        services.AddTransient<ITeamRepository, TeamRepository>();
 
         var connString = Configuration.GetConnectionString("FootballHistory");
         services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString));

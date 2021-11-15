@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Bindings;
 using football.history.api.Models;
 using football.history.api.Repositories;
 

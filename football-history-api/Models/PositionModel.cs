@@ -1,4 +1,4 @@
-namespace football.history.api.Repositories;
+namespace football.history.api.Models;
 
 public record PositionModel (
     long Id, 

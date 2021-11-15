@@ -1,4 +1,4 @@
-namespace football.history.api.Bindings;
+namespace football.history.api.Models;
 
 public record HistoricalSeasonModel(
     long SeasonId,

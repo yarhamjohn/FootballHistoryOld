@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Domain;
 using football.history.api.Exceptions;
-using football.history.api.Bindings;
+using football.history.api.Models;
 using football.history.api.Repositories;
 
 namespace football.history.api.Builders;

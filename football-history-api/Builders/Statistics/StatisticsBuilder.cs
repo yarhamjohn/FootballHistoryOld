@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using football.history.api.Models;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Competition;
 using max = MoreLinq.Extensions.MaxByExtension;
 using min = MoreLinq.Extensions.MinByExtension;
 
@@ -34,7 +33,7 @@ public class StatisticsBuilder : IStatisticsBuilder
             MatchType.League,
             matchDate: null);
 
-        var competitions = _competitionRepository.GetCompetitionsInSeason(seasonId);
+        var competitions = _competitionRepository.GetCompetitions(seasonId);
         var pointsForWin = competitions.Select(x => x.PointsForWin).Distinct().ToList();
         if (pointsForWin.Count != 1)
         {

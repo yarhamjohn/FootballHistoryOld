@@ -1,5 +1,3 @@
-using football.history.api.Dtos;
-
 namespace football.history.api.Models;
 
 public record CompetitionModel (
@@ -21,27 +19,4 @@ public record CompetitionModel (
     int? FailedReElectionPosition)
 {
     public readonly string Level = $@"{Tier}{Region}";
-}
-
-public static class CompetitionModelExtensions
-{
-    public static CompetitionDto ToCompetitionDto(this CompetitionModel model)
-        =>
-            new(model.Id,
-                model.Name,
-                Season: new(
-                    model.SeasonId,
-                    model.StartYear,
-                    model.EndYear),
-                model.Level,
-                model.Comment,
-                Rules: new(
-                    model.PointsForWin,
-                    model.TotalPlaces,
-                    model.PromotionPlaces,
-                    model.RelegationPlaces,
-                    model.PlayOffPlaces,
-                    model.RelegationPlayOffPlaces,
-                    model.ReElectionPlaces,
-                    model.FailedReElectionPosition));
 }

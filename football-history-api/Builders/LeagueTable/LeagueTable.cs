@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Dtos;
 using football.history.api.Exceptions;
-using football.history.api.Repositories.Competition;
 
 namespace football.history.api.Builders;
 

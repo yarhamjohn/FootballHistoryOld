@@ -1,7 +1,7 @@
 using System.Linq;
 using football.history.api.Domain;
+using football.history.api.Models;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Competition;
 
 namespace football.history.api.Builders;
 
@@ -24,7 +24,7 @@ public class PositionBuilder : IPositionBuilder
 
     public Position[] BuildSeasonPositions(long seasonId)
     {
-        var competitions = _competitionRepository.GetCompetitionsInSeason(seasonId);
+        var competitions = _competitionRepository.GetCompetitions(seasonId);
 
         return competitions
             .SelectMany(competition =>

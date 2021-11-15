@@ -3,7 +3,6 @@ using System.Linq;
 using football.history.api.Exceptions;
 using football.history.api.Models;
 using football.history.api.Repositories;
-using football.history.api.Repositories.Competition;
 
 namespace football.history.api.Builders;
 
@@ -52,7 +51,7 @@ public class PlayOffWinnerChecker : IPlayOffWinnerChecker
         }
 
         var feederTier = competition.Tier + 1;
-        var feederCompetition = _competitionRepository.GetCompetitionForSeasonAndTier(
+        var feederCompetition = _competitionRepository.GetTierCompetition(
             competition.SeasonId,
             feederTier);
 
