@@ -1,6 +1,6 @@
 namespace football.history.api.Domain;
 
-public enum MatchType
+public enum CompetitionMatchType
 {
     League,
     PlayOff

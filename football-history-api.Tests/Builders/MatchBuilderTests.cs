@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using football.history.api.Builders;
 using football.history.api.Domain;
 using football.history.api.Models;
@@ -27,15 +25,15 @@ public class MatchBuilderTests
         Assert.That(matches, Is.Empty);
     }
         
-    [TestCase(1, 2, 3, MatchType.League, "2000-01-01")]
-    [TestCase(null, 2, 3, MatchType.League, "2000-01-01")]
-    [TestCase(1, null, 3, MatchType.League, "2000-01-01")]
-    [TestCase(1, 2, null, MatchType.League, "2000-01-01")]
+    [TestCase(1, 2, 3, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(null, 2, 3, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(1, null, 3, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(1, 2, null, CompetitionMatchType.League, "2000-01-01")]
     [TestCase(1, 2, 3, null, "2000-01-01")]
-    [TestCase(1, 2, 3, MatchType.League, null)]
+    [TestCase(1, 2, 3, CompetitionMatchType.League, null)]
     [TestCase(null, null, null, null, null)]
     public void BuildMatches_returns_empty_array_given_no_matches(
-        long? competitionId, long? seasonId, long? teamId, MatchType? type, DateTime? matchDate)
+        long? competitionId, long? seasonId, long? teamId, CompetitionMatchType? type, DateTime? matchDate)
     {
         var mockMatchRepository = new Mock<IMatchRepository>();
         mockMatchRepository

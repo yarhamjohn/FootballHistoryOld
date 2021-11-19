@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
@@ -31,7 +28,7 @@ public class StatisticsBuilder : IStatisticsBuilder
             competitionId: null,
             seasonId,
             teamId: null,
-            MatchType.League,
+            CompetitionMatchType.League,
             matchDate: null);
 
         var competitions = _competitionRepository.GetCompetitions(seasonId);

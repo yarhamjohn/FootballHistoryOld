@@ -1,5 +1,3 @@
-using System;
-
 namespace football.history.api.Models;
 
 public record MatchModel (

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using football.history.api.Domain;
 using football.history.api.Models;
 using Microsoft.Data.SqlClient;
@@ -14,7 +11,7 @@ public interface IMatchRepository
         long? competitionId = null,
         long? seasonId = null,
         long? teamId = null,
-        MatchType? type = null,
+        CompetitionMatchType? type = null,
         DateTime? matchDate = null);
 
     public MatchModel? GetMatch(long matchId);
@@ -37,7 +34,7 @@ public class MatchRepository : IMatchRepository
         long? competitionId = null,
         long? seasonId = null,
         long? teamId = null,
-        MatchType? type = null,
+        CompetitionMatchType? type = null,
         DateTime? matchDate = null)
     {
         _connection.Open();
@@ -63,10 +60,10 @@ public class MatchRepository : IMatchRepository
     }
 
     public MatchModel[] GetLeagueMatches(long competitionId)
-        => GetMatches(competitionId, seasonId: null, teamId: null, MatchType.League);
+        => GetMatches(competitionId, seasonId: null, teamId: null, CompetitionMatchType.League);
 
     public MatchModel[] GetPlayOffMatches(long competitionId)
-        => GetMatches(competitionId, seasonId: null, teamId: null, MatchType.PlayOff);
+        => GetMatches(competitionId, seasonId: null, teamId: null, CompetitionMatchType.PlayOff);
 
     private static MatchModel[] GetMatchModels(DbCommand cmd)
     {
@@ -119,7 +116,7 @@ public class MatchRepository : IMatchRepository
         long? competitionId = null, 
         long? seasonId = null, 
         long? teamId = null, 
-        MatchType? type = null,
+        CompetitionMatchType? type = null,
         DateTime? matchDate = null)
     {
         var cmd = connection.CreateCommand();
@@ -136,7 +133,7 @@ public class MatchRepository : IMatchRepository
         long? competitionId, 
         long? seasonId, 
         long? teamId, 
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
     {
         if (matchId is not null)
@@ -192,7 +189,7 @@ public class MatchRepository : IMatchRepository
                 new SqlParameter
                 {
                     ParameterName = "@Type",
-                    Value         = Enum.GetName((MatchType) type)
+                    Value         = Enum.GetName((CompetitionMatchType) type)
                 });
         }
 
@@ -212,7 +209,7 @@ public class MatchRepository : IMatchRepository
         long? competitionId, 
         long? seasonId, 
         long? teamId, 
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
         => $@"
                 SELECT m.Id
@@ -258,7 +255,7 @@ public class MatchRepository : IMatchRepository
         long? competitionId, 
         long? seasonId, 
         long? teamId, 
-        MatchType? type, 
+        CompetitionMatchType? type, 
         DateTime? matchDate)
     {
         var clauses = new List<string>();

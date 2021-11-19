@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
@@ -19,7 +17,7 @@ public interface IMatchBuilder
         long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate);
 
     /// <summary>
@@ -53,7 +51,7 @@ public class MatchBuilder : IMatchBuilder
     public Match[] BuildMatches(long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
         => _repository.GetMatches(competitionId, seasonId, teamId, type, matchDate)
             .Select(ToDomain)

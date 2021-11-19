@@ -1,7 +1,4 @@
-using System;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using football.history.api.Builders;
 using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -109,22 +106,22 @@ public class MatchControllerTests
         Assert.That(actualMatchs, Is.EqualTo(expectedMatches));
     }
 
-    [TestCase(1, 2, 3, MatchType.League, "2000-01-01", 
+    [TestCase(1, 2, 3, CompetitionMatchType.League, "2000-01-01", 
         "api/v2/matches?competitionId=1&seasonId=2&teamId=3&type=League&matchDate=2000-01-01")]
-    [TestCase(null, 2, 3, MatchType.League, "2000-01-01", 
+    [TestCase(null, 2, 3, CompetitionMatchType.League, "2000-01-01", 
         "api/v2/matches?seasonId=2&teamId=3&type=League&matchDate=2000-01-01")]
-    [TestCase(1, null, 3, MatchType.League, "2000-01-01", 
+    [TestCase(1, null, 3, CompetitionMatchType.League, "2000-01-01", 
         "api/v2/matches?competitionId=1&teamId=3&type=League&matchDate=2000-01-01")]
-    [TestCase(1, 2, null, MatchType.League, "2000-01-01", 
+    [TestCase(1, 2, null, CompetitionMatchType.League, "2000-01-01", 
         "api/v2/matches?competitionId=1&seasonId=2&type=League&matchDate=2000-01-01")]
     [TestCase(1, 2, 3, null, "2000-01-01", 
         "api/v2/matches?competitionId=1&seasonId=2&teamId=3&matchDate=2000-01-01")]
-    [TestCase(1, 2, 3, MatchType.League, null, 
+    [TestCase(1, 2, 3, CompetitionMatchType.League, null, 
         "api/v2/matches?competitionId=1&seasonId=2&teamId=3&type=League")]
     [TestCase(null, null, null, null, null, 
         "api/v2/matches")]
     public async Task GetAllMatches_passes_all_provided_parameters_to_builder(
-        long? competitionId, long? seasonId, long? teamId, MatchType? type, DateTime? matchDate, string url)
+        long? competitionId, long? seasonId, long? teamId, CompetitionMatchType? type, DateTime? matchDate, string url)
     {
         var mockMatchBuilder = new Mock<IMatchBuilder>();
         mockMatchBuilder

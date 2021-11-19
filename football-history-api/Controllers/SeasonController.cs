@@ -1,4 +1,3 @@
-using System.Linq;
 using football.history.api.Builders;
 using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;

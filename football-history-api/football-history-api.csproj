@@ -6,6 +6,7 @@
         <RootNamespace>football-history-api</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>

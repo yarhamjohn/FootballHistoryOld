@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using football.history.api.Builders;
 using football.history.api.Domain;
 using football.history.api.Exceptions;

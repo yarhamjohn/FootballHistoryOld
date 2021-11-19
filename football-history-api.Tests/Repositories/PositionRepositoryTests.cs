@@ -1,4 +1,3 @@
-using System.Linq;
 using football.history.api.Repositories;
 using football.history.api.Tests.TestUtilities;
 using NUnit.Framework;

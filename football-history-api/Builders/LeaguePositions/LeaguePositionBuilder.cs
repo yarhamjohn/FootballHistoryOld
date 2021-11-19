@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;

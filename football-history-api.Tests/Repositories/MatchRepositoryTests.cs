@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using football.history.api.Models;
 using football.history.api.Domain;
 using football.history.api.Repositories;
@@ -35,16 +33,16 @@ public class MatchRepositoryTests
         Assert.That(result.Length, Is.EqualTo(2));
     }
 
-    [TestCase(0, 1, 1, MatchType.League, "2000-01-01")]
-    [TestCase(1, 0, 1, MatchType.League, "2000-01-01")]
-    [TestCase(1, 1, 0, MatchType.League, "2000-01-01")]
-    [TestCase(2, 1, 1, MatchType.PlayOff, "2000-01-02")]
-    [TestCase(1, 1, 1, MatchType.League, "2000-01-02")]
+    [TestCase(0, 1, 1, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(1, 0, 1, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(1, 1, 0, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(2, 1, 1, CompetitionMatchType.PlayOff, "2000-01-02")]
+    [TestCase(1, 1, 1, CompetitionMatchType.League, "2000-01-02")]
     public void GetMatches_returns_empty_array_given_a_non_matching_parameter(
         long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
     {
         var repository = new MatchRepository(_testDbConnection);
@@ -54,13 +52,13 @@ public class MatchRepositoryTests
         Assert.That(result, Is.Empty);
     }
 
-    [TestCase(1, 1, null, MatchType.League, "2000-01-01")]
-    [TestCase(null, 1, 1, MatchType.PlayOff, "2000-01-02")]
+    [TestCase(1, 1, null, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(null, 1, 1, CompetitionMatchType.PlayOff, "2000-01-02")]
     public void GetMatches_returns_correct_matches_given_matching_or_missing_parameters(
         long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
     {
         var repository = new MatchRepository(_testDbConnection);
@@ -72,13 +70,13 @@ public class MatchRepositoryTests
         Assert.That(result.Single().MatchDate, Is.EqualTo(matchDate));
     }
 
-    [TestCase(1, 1, 1, MatchType.League, "2000-01-01")]
-    [TestCase(1, 1, 1, MatchType.PlayOff, "2000-01-02")]
+    [TestCase(1, 1, 1, CompetitionMatchType.League, "2000-01-01")]
+    [TestCase(1, 1, 1, CompetitionMatchType.PlayOff, "2000-01-02")]
     public void GetMatches_returns_correct_matches_given_complete_matching_parameters(
         long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
     {
         var repository = new MatchRepository(_testDbConnection);

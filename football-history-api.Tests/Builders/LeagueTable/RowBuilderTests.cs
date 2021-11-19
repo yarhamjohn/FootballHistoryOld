@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using FluentAssertions;
 using football.history.api.Builders;

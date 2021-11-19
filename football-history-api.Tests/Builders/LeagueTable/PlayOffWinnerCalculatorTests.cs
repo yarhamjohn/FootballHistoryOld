@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using FluentAssertions;
 using football.history.api.Builders;
 using football.history.api.Exceptions;

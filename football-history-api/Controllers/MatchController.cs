@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using football.history.api.Builders;
 using football.history.api.Domain;
-using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -26,7 +23,7 @@ public class MatchController : Controller
         long? competitionId,
         long? seasonId,
         long? teamId,
-        MatchType? type,
+        CompetitionMatchType? type,
         DateTime? matchDate)
     {
         var matches = _builder.BuildMatches(competitionId, seasonId, teamId, type, matchDate);
