@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using football.history.api.Domain;
 using football.history.api.Models;
 using Microsoft.Data.SqlClient;
 

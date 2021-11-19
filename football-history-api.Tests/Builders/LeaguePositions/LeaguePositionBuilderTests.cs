@@ -79,7 +79,7 @@ public class LeaguePositionBuilderTests
                 matches,
                 It.IsAny<DateTime>(),
                 pointDeductions))
-            .Returns(new api.Builders.LeagueTable(
+            .Returns(new Domain.LeagueTable(
                 new LeagueTableRow[] {new(){ TeamId = 1, Position = 1, Points = 3}}, 
                 new Competition(Id: 1,
                 Name: "First Division",

@@ -1,7 +1,6 @@
-using football.history.api.Domain;
 using JetBrains.Annotations;
 
-namespace football.history.api.Builders;
+namespace football.history.api.Domain;
 
 public record LeagueTable(LeagueTableRow[] Table, [UsedImplicitly] Competition Competition);
 

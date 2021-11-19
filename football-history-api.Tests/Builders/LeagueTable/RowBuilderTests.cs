@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using FluentAssertions;
 using football.history.api.Builders;
+using football.history.api.Domain;
 using football.history.api.Models;
 using NUnit.Framework;
 

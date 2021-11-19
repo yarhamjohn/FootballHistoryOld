@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using football.history.api.Builders;
+using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using football.history.api.Tests.Builders.LeagueTable.Sorter;
