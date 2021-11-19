@@ -22,8 +22,6 @@ public class Startup
         services.AddTransient<ILeagueTableBuilder, LeagueTableBuilder>();
         services.AddTransient<IStatisticsBuilder, StatisticsBuilder>();
         services.AddTransient<IRowComparerFactory, RowComparerFactory>();
-        services.AddTransient<IPlayOffWinnerChecker, PlayOffWinnerChecker>();
-        services.AddTransient<IPlayOffWinnerCalculator, PlayOffWinnerCalculator>();
         services.AddTransient<IRowBuilder, RowBuilder>();
         services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
 
