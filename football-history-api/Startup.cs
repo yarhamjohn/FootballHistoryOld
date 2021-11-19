@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
 using football.history.api.Builders;
-using football.history.api.Builders.Statistics;
 using football.history.api.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

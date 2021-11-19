@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using max = MoreLinq.Extensions.MaxByExtension;
 using min = MoreLinq.Extensions.MinByExtension;
 
-namespace football.history.api.Builders.Statistics;
+namespace football.history.api.Builders;
 
 public interface IStatisticsBuilder
 {
-    List<StatisticsDto> BuildSeasonStatistics(long seasonId);
+    CategorisedStatistics[] BuildSeasonStatistics(long seasonId);
 }
 
 public class StatisticsBuilder : IStatisticsBuilder
@@ -24,7 +25,7 @@ public class StatisticsBuilder : IStatisticsBuilder
         _competitionRepository = competitionRepository;
     }
 
-    public List<StatisticsDto> BuildSeasonStatistics(long seasonId)
+    public CategorisedStatistics[] BuildSeasonStatistics(long seasonId)
     {
         var matches = _matchRepository.GetMatches(
             competitionId: null,
@@ -41,20 +42,20 @@ public class StatisticsBuilder : IStatisticsBuilder
                 $"Expected points for win to be the same for all competitions in a single season ({seasonId})");
         }
 
-        var statistics = new List<StatisticsDto>();
+        var statistics = new List<CategorisedStatistics>();
 
         var metrics = CalculateResultMetrics(matches);
 
-        statistics.Add(new StatisticsDto("Points",
-            new List<StatisticDto>
+        statistics.Add(new CategorisedStatistics("Points",
+            new []
             {
                 GetMostPointsStatistic(metrics, pointsForWin.Single()),
                 GetFewestPointsStatistic(metrics, pointsForWin.Single()),
                 GetBestPointsPerGameStatistic(metrics, pointsForWin.Single())
             }));
             
-        statistics.Add(new StatisticsDto("Goals",
-            new List<StatisticDto>
+        statistics.Add(new CategorisedStatistics("Goals",
+            new []
             {
                 GetMostGoalsStatistic(metrics),
                 GetFewestGoalsStatistic(metrics),
@@ -64,8 +65,8 @@ public class StatisticsBuilder : IStatisticsBuilder
 
         var consecutiveMetrics = GetConsecutiveMetrics(matches);
 
-        statistics.Add(new StatisticsDto("Results",
-            new List<StatisticDto>
+        statistics.Add(new CategorisedStatistics("Results",
+            new []
             {
                 GetMostWinsStatistic(metrics),
                 GetMostDrawsStatistic(metrics),
@@ -77,53 +78,53 @@ public class StatisticsBuilder : IStatisticsBuilder
                 GetMostGamesWithoutWin(consecutiveMetrics)
             }));
             
-        return statistics;
+        return statistics.ToArray();
     }
 
-    private StatisticDto GetMostConsecutiveWins(List<ConsecutiveResult> metrics)
+    private Statistic GetMostConsecutiveWins(List<ConsecutiveResult> metrics)
     {
         var mostConsecutiveWins = max.MaxBy(metrics, x => x.ConsecutiveWins);
-        return new StatisticDto(
+        return new Statistic(
             "Most Consecutive Wins",
             mostConsecutiveWins.First().ConsecutiveWins,
             GetTeamNames(mostConsecutiveWins),
             GetCompetitionNames(mostConsecutiveWins));
     }
 
-    private StatisticDto GetMostConsecutiveDraws(List<ConsecutiveResult> metrics)
+    private Statistic GetMostConsecutiveDraws(List<ConsecutiveResult> metrics)
     {
         var mostConsecutiveDraws = max.MaxBy(metrics, x => x.ConsecutiveDraws);
-        return new StatisticDto(
+        return new Statistic(
             "Most Consecutive Draws",
             mostConsecutiveDraws.First().ConsecutiveDraws,
             GetTeamNames(mostConsecutiveDraws),
             GetCompetitionNames(mostConsecutiveDraws));
     }
 
-    private StatisticDto GetMostConsecutiveLosses(List<ConsecutiveResult> metrics)
+    private Statistic GetMostConsecutiveLosses(List<ConsecutiveResult> metrics)
     {
         var mostConsecutiveLosses = max.MaxBy(metrics, x => x.ConsecutiveLosses);
-        return new StatisticDto(
+        return new Statistic(
             "Most Consecutive Losses",
             mostConsecutiveLosses.First().ConsecutiveLosses,
             GetTeamNames(mostConsecutiveLosses),
             GetCompetitionNames(mostConsecutiveLosses));
     }
 
-    private StatisticDto GetMostGamesWithoutDefeat(List<ConsecutiveResult> metrics)
+    private Statistic GetMostGamesWithoutDefeat(List<ConsecutiveResult> metrics)
     {
         var winningStreak = max.MaxBy(metrics, x => x.WinningStreak);
-        return new StatisticDto(
+        return new Statistic(
             "Most Games Without Defeat",
             winningStreak.First().WinningStreak,
             GetTeamNames(winningStreak),
             GetCompetitionNames(winningStreak));
     }
 
-    private StatisticDto GetMostGamesWithoutWin(List<ConsecutiveResult> metrics)
+    private Statistic GetMostGamesWithoutWin(List<ConsecutiveResult> metrics)
     {
         var losingStreak = max.MaxBy(metrics, x => x.LosingStreak);
-        return new StatisticDto(
+        return new Statistic(
             "Most Games Without Win",
             losingStreak.First().LosingStreak,
             GetTeamNames(losingStreak),
@@ -162,7 +163,7 @@ public class StatisticsBuilder : IStatisticsBuilder
                 away => away.Info.teamId,
                 (home, away) => new
                 {
-                    Info = home.Info,
+                    home.Info,
                     ResultSequence = home.ResultSequence.Concat(away.ResultSequence).OrderBy(x => x.Date)
                 })
             .ToList();
@@ -263,31 +264,31 @@ public class StatisticsBuilder : IStatisticsBuilder
         int ConsecutiveWins, int ConsecutiveDraws, int ConsecutiveLosses, int WinningStreak,
         int LosingStreak);
 
-    private StatisticDto GetMostPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
+    private Statistic GetMostPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
     {
         var mostPoints = max.MaxBy(metrics, x => x.NumDraws + x.NumWins * pointsForWin);
-        return new StatisticDto(
+        return new Statistic(
             "Most Points",
             mostPoints.First().NumDraws + mostPoints.First().NumWins * pointsForWin,
             GetTeamNames(mostPoints),
             GetCompetitionNames(mostPoints));
     }
 
-    private StatisticDto GetFewestPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
+    private Statistic GetFewestPointsStatistic(List<ResultMetrics> metrics, int pointsForWin)
     {
         var fewestPoints = min.MinBy(metrics, x => x.NumDraws + x.NumWins * pointsForWin);
-        return new StatisticDto(
+        return new Statistic(
             "Fewest Points",
             fewestPoints.First().NumDraws + fewestPoints.First().NumWins * pointsForWin,
             GetTeamNames(fewestPoints),
             GetCompetitionNames(fewestPoints));
     }
 
-    private StatisticDto GetBestPointsPerGameStatistic(List<ResultMetrics> metrics, int pointsForWin)
+    private Statistic GetBestPointsPerGameStatistic(List<ResultMetrics> metrics, int pointsForWin)
     {
         var fewestPoints = max.MaxBy(metrics, x =>
             (double)(x.NumDraws + x.NumWins * pointsForWin) / (x.NumWins + x.NumDraws + x.NumLosses));
-        return new StatisticDto(
+        return new Statistic(
             "Best Points Per Game",
             (double)(fewestPoints.First().NumDraws + fewestPoints.First().NumWins * pointsForWin) /
             (fewestPoints.First().NumWins + fewestPoints.First().NumDraws + fewestPoints.First().NumLosses),
@@ -295,70 +296,70 @@ public class StatisticsBuilder : IStatisticsBuilder
             GetCompetitionNames(fewestPoints));
     }
 
-    private StatisticDto GetMostGoalsStatistic(List<ResultMetrics> metrics)
+    private Statistic GetMostGoalsStatistic(List<ResultMetrics> metrics)
     {
         var mostGoals = max.MaxBy(metrics, x => x.NumGoalsScored);
-        return new StatisticDto(
+        return new Statistic(
             "Most Goals",
             mostGoals.First().NumGoalsScored,
             GetTeamNames(mostGoals),
             GetCompetitionNames(mostGoals));
     }
 
-    private StatisticDto GetFewestGoalsStatistic(List<ResultMetrics> metrics)
+    private Statistic GetFewestGoalsStatistic(List<ResultMetrics> metrics)
     {
         var fewestGoals = min.MinBy(metrics, x => x.NumGoalsScored);
-        return new StatisticDto(
+        return new Statistic(
             "Fewest Goals",
             fewestGoals.First().NumGoalsScored,
             GetTeamNames(fewestGoals),
             GetCompetitionNames(fewestGoals));
     }
 
-    private StatisticDto GetBestGoalDifferenceStatistic(List<ResultMetrics> metrics)
+    private Statistic GetBestGoalDifferenceStatistic(List<ResultMetrics> metrics)
     {
         var bestGoalDifference = max.MaxBy(metrics, x => x.NumGoalsScored - x.NumGoalsConceded);
-        return new StatisticDto(
+        return new Statistic(
             "Best Goal Difference",
             bestGoalDifference.First().NumGoalsScored - bestGoalDifference.First().NumGoalsConceded,
             GetTeamNames(bestGoalDifference),
             GetCompetitionNames(bestGoalDifference));
     }
 
-    private StatisticDto GetBestGoalAverageStatistic(List<ResultMetrics> metrics)
+    private Statistic GetBestGoalAverageStatistic(List<ResultMetrics> metrics)
     {
         var bestGoalAverage = max.MaxBy(metrics, x => (double)x.NumGoalsScored / x.NumGoalsConceded);
-        return new StatisticDto(
+        return new Statistic(
             "Best Goal Average",
             (double)bestGoalAverage.First().NumGoalsScored / bestGoalAverage.First().NumGoalsConceded,
             GetTeamNames(bestGoalAverage),
             GetCompetitionNames(bestGoalAverage));
     }
 
-    private StatisticDto GetMostWinsStatistic(List<ResultMetrics> metrics)
+    private Statistic GetMostWinsStatistic(List<ResultMetrics> metrics)
     {
         var mostWins = max.MaxBy(metrics, x => x.NumWins);
-        return new StatisticDto(
+        return new Statistic(
             "Most Wins",
             mostWins.First().NumWins,
             GetTeamNames(mostWins),
             GetCompetitionNames(mostWins));
     }
 
-    private StatisticDto GetMostDrawsStatistic(List<ResultMetrics> metrics)
+    private Statistic GetMostDrawsStatistic(List<ResultMetrics> metrics)
     {
         var mostDraws = max.MaxBy(metrics, x => x.NumDraws);
-        return new StatisticDto(
+        return new Statistic(
             "Most Draws",
             mostDraws.First().NumDraws,
             GetTeamNames(mostDraws),
             GetCompetitionNames(mostDraws));
     }
 
-    private StatisticDto GetMostLossesStatistic(List<ResultMetrics> metrics)
+    private Statistic GetMostLossesStatistic(List<ResultMetrics> metrics)
     {
         var mostLosses = max.MaxBy(metrics, x => x.NumLosses);
-        return new StatisticDto(
+        return new Statistic(
             "Most Losses",
             mostLosses.First().NumLosses,
             GetTeamNames(mostLosses),

@@ -271,6 +271,4 @@ public class CompetitionControllerTests
             
         return factory.CreateClient();
     }
-        
-    private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
 }

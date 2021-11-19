@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using football.history.api.Builders.Statistics;
+using System.Linq;
 using football.history.api.Builders;
-using football.history.api.Exceptions;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
 
 [ApiVersion("2")]
+[Route("api/v{version:apiVersion}/statistics")]
 public class StatisticsController : Controller
 {
     private readonly IStatisticsBuilder _statisticsBuilder;
@@ -18,25 +17,19 @@ public class StatisticsController : Controller
     }
 
     [HttpGet]
-    [MapToApiVersion("2")]
-    [Route("api/v{version:apiVersion}/statistics/season/{id:long}")]
+    [Route("season/{seasonId:long}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public ActionResult<List<StatisticsDto>> GetSeasonStatistics(long id)
+    public ActionResult<CategorisedStatistics[]> GetSeasonStatistics(long seasonId)
     {
-        try
+        var statistics = _statisticsBuilder.BuildSeasonStatistics(seasonId);
+
+        if (!statistics.Any())
         {
-            return _statisticsBuilder.BuildSeasonStatistics(id);
+            return NotFound($"No statistics available for the specified season ({seasonId}).");
         }
-        catch (Exception ex)
-        {
-            return ex switch
-            {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
-        }
+        
+        return statistics;
     }
 }
