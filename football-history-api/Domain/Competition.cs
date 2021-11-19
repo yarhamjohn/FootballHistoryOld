@@ -1,17 +1,14 @@
-namespace football.history.api.Dtos;
+namespace football.history.api.Domain;
 
-/// <summary>
-/// DTO for the Competition object returned by the API
-/// </summary>
-public record CompetitionDto (
+public record Competition (
     long Id,
     string Name,
-    CompetitionSeasonDto Season,
+    CompetitionSeason Season,
     string Level,
     string? Comment,
-    CompetitionRulesDto Rules);
+    CompetitionRules Rules);
 
-public record CompetitionRulesDto(
+public record CompetitionRules(
     int PointsForWin,
     int TotalPlaces,
     int PromotionPlaces,
@@ -21,7 +18,7 @@ public record CompetitionRulesDto(
     int ReElectionPlaces,
     int? FailedReElectionPosition);
 
-public record CompetitionSeasonDto
+public record CompetitionSeason
 (
     long Id,
     int StartYear,

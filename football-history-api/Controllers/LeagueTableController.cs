@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using football.history.api.Builders;
-using football.history.api.Dtos;
+using football.history.api.Domain;
 using football.history.api.Exceptions;
 using football.history.api.Models;
 using football.history.api.Repositories;
@@ -84,7 +84,7 @@ public class LeagueTableController : Controller
             Competition: BuildCompetitionDto(competition));
     }
         
-    private static CompetitionDto BuildCompetitionDto(CompetitionModel competition) =>
+    private static Competition BuildCompetitionDto(CompetitionModel competition) =>
         new(competition.Id,
             competition.Name,
             Season: new(

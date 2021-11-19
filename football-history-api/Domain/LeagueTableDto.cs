@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using football.history.api.Dtos;
+using football.history.api.Domain;
 
 namespace football.history.api.Builders;
 
-public record LeagueTableDto (List<LeagueTableRowDto> Table, CompetitionDto Competition);
+public record LeagueTableDto (List<LeagueTableRowDto> Table, Competition Competition);
 
 public class LeagueTableRowDto
 {

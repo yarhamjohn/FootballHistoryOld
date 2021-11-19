@@ -34,6 +34,7 @@ public class Startup
         services.AddTransient<IRowBuilder, RowBuilder>();
         services.AddTransient<ILeaguePositionBuilder, LeaguePositionBuilder>();
 
+        services.AddTransient<ICompetitionBuilder, CompetitionBuilder>();
         services.AddTransient<IHistoricalRecordBuilder, HistoricalRecordBuilder>();
         services.AddTransient<IMatchBuilder, MatchBuilder>();
         services.AddTransient<IPositionBuilder, PositionBuilder>();

@@ -1,359 +1,276 @@
-// using System;
-// using System.Collections.Generic;
-// using FluentAssertions;
-// using football.history.api.Controllers;
-// using football.history.api.Dtos;
-// using football.history.api.Exceptions;
-// using football.history.api.Models;
-// using football.history.api.Repositories;
-// using Moq;
-// using NUnit.Framework;
-//
-// namespace football.history.api.Tests.IntegrationTests.Controllers;
-//
-// [TestFixture]
-// public class CompetitionControllerTests
-// {
-//     [Test]
-//     public void GetAllCompetitions_should_return_message_for_unhandled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetAllCompetitions())
-//             .Throws(new Exception("Unhandled error occurred."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetAllCompetitions();
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//         error!.Code.Should().Be("UNKNOWN_ERROR");
-//     }
-//
-//     [Test]
-//     public void GetAllCompetitions_should_return_message_for_handled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetAllCompetitions())
-//             .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetAllCompetitions();
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Repository data was invalid.");
-//         error!.Code.Should().Be("DATA_INVALID");
-//     }
-//
-//     [Test]
-//     public void GetAllCompetitions_should_return_result()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         var matchModels = new CompetitionModel[]
-//         {
-//             new(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null),
-//             new(
-//                 Id: 2,
-//                 Name: "Premier League",
-//                 SeasonId: 2,
-//                 StartYear: 2001,
-//                 EndYear: 2002,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null)
-//         };
-//
-//         mockRepository
-//             .Setup(x => x.GetAllCompetitions())
-//             .Returns(matchModels);
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetAllCompetitions();
-//
-//         mockRepository.VerifyAll();
-//         var competitionDtos = new List<CompetitionDto>
-//         {
-//             new(Id: 1,
-//                 Name: "Premier League",
-//                 Season: new (
-//                     Id: 1,
-//                     StartYear: 2000,
-//                     EndYear: 2001),
-//                 Level: "1",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 20,
-//                     PromotionPlaces: 0,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 0,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null)),
-//             new(Id: 2,
-//                 Name: "Premier League",
-//                 Season: new (
-//                     Id: 2,
-//                     StartYear: 2001,
-//                     EndYear: 2002),
-//                 Level: "1",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 20,
-//                     PromotionPlaces: 0,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 0,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null))
-//         };
-//         result.Should().BeEquivalentTo(competitionDtos);
-//         error.Should().BeNull();
-//     }
-//
-//     [Test]
-//     public void GetCompetition_should_return_message_for_unhandled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetCompetition(1))
-//             .Throws(new Exception("Unhandled error occurred."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetition(1);
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//         error!.Code.Should().Be("UNKNOWN_ERROR");
-//     }
-//
-//     [Test]
-//     public void GetCompetition_should_return_message_for_handled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetCompetition(1))
-//             .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetition(1);
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Repository data was invalid.");
-//         error!.Code.Should().Be("DATA_INVALID");
-//     }
-//
-//     [Test]
-//     public void GetCompetition_should_return_result()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         var competitionModel = new CompetitionModel(
-//             Id: 1,
-//             Name: "Premier League",
-//             SeasonId: 1,
-//             StartYear: 2000,
-//             EndYear: 2001,
-//             Tier: 1,
-//             Region: null,
-//             Comment: null,
-//             PointsForWin: 3,
-//             TotalPlaces: 20,
-//             PromotionPlaces: 0,
-//             RelegationPlaces: 3,
-//             PlayOffPlaces: 0,
-//             RelegationPlayOffPlaces: 0,
-//             ReElectionPlaces: 0,
-//             FailedReElectionPosition: null);
-//
-//         mockRepository
-//             .Setup(x => x.GetCompetition(1))
-//             .Returns(competitionModel);
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetition(1);
-//
-//         var competitionDto = new CompetitionDto(Id: 1,
-//             Name: "Premier League",
-//             Season: new (
-//                 Id: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001),
-//             Level: "1",
-//             Comment: null,
-//             Rules: new (
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null));
-//             
-//         mockRepository.VerifyAll();
-//         result.Should().Be(competitionDto);
-//         error.Should().BeNull();
-//     }
-//         
-//     [Test]
-//     public void GetCompetitions_should_return_message_for_unhandled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetCompetitions(1))
-//             .Throws(new Exception("Unhandled error occurred."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetitions(1);
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//         error!.Code.Should().Be("UNKNOWN_ERROR");
-//     }
-//
-//     [Test]
-//     public void GetCompetitions_should_return_message_for_handled_error()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         mockRepository
-//             .Setup(x => x.GetCompetitions(1))
-//             .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetitions(1);
-//
-//         mockRepository.VerifyAll();
-//         result.Should().BeNull();
-//         error.Should().NotBeNull();
-//         error!.Message.Should().Be("Repository data was invalid.");
-//         error!.Code.Should().Be("DATA_INVALID");
-//     }
-//
-//     [Test]
-//     public void GetCompetitions_should_return_result()
-//     {
-//         var mockRepository = new Mock<ICompetitionRepository>();
-//         var matchModels = new CompetitionModel[]
-//         {
-//             new(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null),
-//             new(
-//                 Id: 2,
-//                 Name: "Championship",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 2,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 24,
-//                 PromotionPlaces: 2,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 4,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null)
-//         };
-//
-//         mockRepository
-//             .Setup(x => x.GetCompetitions(1))
-//             .Returns(matchModels);
-//
-//         var controller = new CompetitionController(mockRepository.Object);
-//         var (result, error) = controller.GetCompetitions(1);
-//
-//         var competitionDtos = new List<CompetitionDto>
-//         {
-//             new(Id: 1,
-//                 Name: "Premier League",
-//                 Season: new (
-//                     Id: 1,
-//                     StartYear: 2000,
-//                     EndYear: 2001),
-//                 Level: "1",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 20,
-//                     PromotionPlaces: 0,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 0,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null)),
-//             new(Id: 2,
-//                 Name: "Championship",
-//                 Season: new (
-//                     Id: 1,
-//                     StartYear: 2000,
-//                     EndYear: 2001),
-//                 Level: "2",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 24,
-//                     PromotionPlaces: 2,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 4,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null))
-//         };
-//             
-//         mockRepository.VerifyAll();
-//         result.Should().BeEquivalentTo(competitionDtos);
-//         error.Should().BeNull();
-//     }
-// }
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using football.history.api.Builders;
+using football.history.api.Domain;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Moq;
+using Newtonsoft.Json;
+using NUnit.Framework;
+
+namespace football.history.api.Tests.Controllers;
+
+[TestFixture]
+public class CompetitionControllerTests
+{
+    [Test]
+    public async Task GetAllCompetitions_returns_not_found_given_no_matching_competitions()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(null))
+            .Returns(Array.Empty<Competition>());
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No competitions were found."));
+    }
+        
+    [Test]
+    public async Task GetAllCompetitions_returns_internal_server_error_given_exception()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(null))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+        
+    [Test]
+    public async Task GetAllCompetitions_returns_competitions()
+    {
+        var expectedCompetitions = new []
+        {
+            new Competition(Id: 1,
+                Name: "First Division",
+                Season: new (Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new (
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null))
+        };
+
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(null))
+            .Returns(expectedCompetitions);
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualCompetitions = JsonConvert.DeserializeObject<Competition[]>(responseString);
+            
+        Assert.That(actualCompetitions, Is.EqualTo(expectedCompetitions));
+    }
+        
+    [Test]
+    public async Task GetCompetitions_returns_not_found_given_no_matching_competitions()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(It.IsAny<long>()))
+            .Returns(Array.Empty<Competition>());
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/season/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No competitions were found."));
+    }
+        
+    [TestCase(null)]
+    [TestCase("not-an-id")]
+    public async Task GetCompetitions_returns_not_found_given_invalid_id(string? id)
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync($"api/v2/competitions/season/{id}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+        
+    [Test]
+    public async Task GetCompetitions_returns_internal_server_error_given_exception()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(It.IsAny<long>()))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/season/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+        
+    [Test]
+    public async Task GetCompetitions_returns_competitions()
+    {
+        var expectedCompetitions = new []
+        {
+            new Competition(Id: 1,
+                Name: "First Division",
+                Season: new (Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new (
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null))
+        };
+
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetitions(It.IsAny<long>()))
+            .Returns(expectedCompetitions);
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/season/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualCompetitions = JsonConvert.DeserializeObject<Competition[]>(responseString);
+            
+        Assert.That(actualCompetitions, Is.EqualTo(expectedCompetitions));
+    }
+        
+    [Test]
+    public async Task GetCompetition_returns_not_found_given_no_matching_competition()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetition(It.IsAny<long>()))
+            .Returns((Competition?) null);
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No competition was found with id 1."));
+    }
+        
+    [Test]
+    public async Task GetCompetition_returns_not_found_given_invalid_id()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/not-an-id");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+        
+    [Test]
+    public async Task GetCompetition_returns_internal_server_error_given_exception()
+    {
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetition(It.IsAny<long>()))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+        
+    [Test]
+    public async Task GetCompetition_returns_competition()
+    {
+        var expectedCompetition = 
+            new Competition(Id: 1,
+                Name: "First Division",
+                Season: new(Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new(
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null));
+
+        var mockCompetitionBuilder = new Mock<ICompetitionBuilder>();
+        mockCompetitionBuilder
+            .Setup(x => x.BuildCompetition(It.IsAny<long>()))
+            .Returns(expectedCompetition);
+
+        var client = GetTestClient(mockCompetitionBuilder);
+
+        var response = await client.GetAsync("api/v2/competitions/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualCompetition = JsonConvert.DeserializeObject<Competition>(responseString);
+            
+        Assert.That(actualCompetition, Is.EqualTo(expectedCompetition));
+    }
+        
+    private static HttpClient GetTestClient(IMock<ICompetitionBuilder> mockCompetitionBuilder)
+    {
+        var factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(b =>
+        {
+            b.ConfigureServices(s =>
+            {
+                s.SwapTransient(mockCompetitionBuilder.Object);
+            });
+        });
+            
+        return factory.CreateClient();
+    }
+        
+    private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
+}

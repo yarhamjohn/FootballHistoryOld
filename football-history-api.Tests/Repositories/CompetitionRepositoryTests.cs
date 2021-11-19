@@ -23,11 +23,11 @@ public class CompetitionRepositoryTests
     }
 
     [Test]
-    public void GetAllCompetitions_returns_all_competitions()
+    public void GetCompetitions_returns_all_competitions_given_no_season_id()
     {
         var repository = new CompetitionRepository(_testDbConnection);
 
-        var result = repository.GetAllCompetitions();
+        var result = repository.GetCompetitions();
 
         Assert.That(result.Length, Is.EqualTo(3));
     }

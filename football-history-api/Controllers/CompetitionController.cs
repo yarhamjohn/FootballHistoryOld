@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using football.history.api.Dtos;
-using football.history.api.Exceptions;
-using football.history.api.Models;
-using football.history.api.Repositories;
+using football.history.api.Builders;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -13,101 +9,58 @@ namespace football.history.api.Controllers;
 [Route("api/v{version:apiVersion}/competitions")]
 public class CompetitionController : Controller
 {
-    private readonly ICompetitionRepository _repository;
+    private readonly ICompetitionBuilder _builder;
 
-    public CompetitionController(ICompetitionRepository repository)
+    public CompetitionController(ICompetitionBuilder builder)
     {
-        _repository = repository;
+        _builder = builder;
     }
 
     [HttpGet]
-    public ApiResponse<List<CompetitionDto>?> GetAllCompetitions()
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Competition[]> GetAllCompetitions()
     {
-        try
+        var competitions = _builder.BuildCompetitions();
+        
+        if (!competitions.Any())
         {
-            var competitions = _repository
-                .GetAllCompetitions()
-                .Select(BuildCompetitionDto)
-                .ToList();
-            return new(competitions);
+            return NotFound("No competitions were found.");
         }
-        catch (FootballHistoryException ex)
-        {
-            return new(
-                Result: null,
-                Error: new(ex.Message, ex.Code));
-        }
-        catch (Exception ex)
-        {
-            return new(
-                Result: null,
-                Error: new($"Something went wrong. {ex.Message}"));
-        }
+
+        return competitions;
     }
 
     [HttpGet("{id:long}")]
-    public ApiResponse<CompetitionDto?> GetCompetition(long id)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Competition?> GetCompetition(long id)
     {
-        try
+        var competition = _builder.BuildCompetition(id);
+
+        if (competition is null)
         {
-            var match = _repository.GetCompetition(id);
-            return new(BuildCompetitionDto(match));
+            return NotFound($"No competition was found with id {id}.");
         }
-        catch (FootballHistoryException ex)
-        {
-            return new(
-                Result: null,
-                Error: new(ex.Message, ex.Code));
-        }
-        catch (Exception ex)
-        {
-            return new(
-                Result: null,
-                Error: new($"Something went wrong. {ex.Message}"));
-        }
+        
+        return competition;
     }
 
     [HttpGet("season/{seasonId:long}")]
-    public ApiResponse<List<CompetitionDto>?> GetCompetitions(long seasonId)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public ActionResult<Competition[]> GetCompetitions(long seasonId)
     {
-        try
+        var competitions = _builder.BuildCompetitions(seasonId);
+                
+        if (!competitions.Any())
         {
-            var matches = _repository
-                .GetCompetitions(seasonId)
-                .Select(BuildCompetitionDto)
-                .ToList();
-            return new(matches);
+            return NotFound("No competitions were found.");
         }
-        catch (FootballHistoryException ex)
-        {
-            return new(
-                Result: null,
-                Error: new(ex.Message, ex.Code));
-        }
-        catch (Exception ex)
-        {
-            return new(
-                Result: null,
-                Error: new($"Something went wrong. {ex.Message}"));
-        }
+
+        return competitions;
     }
-        
-    private static CompetitionDto BuildCompetitionDto(CompetitionModel competition) =>
-        new(competition.Id,
-            competition.Name,
-            Season: new(
-                competition.SeasonId,
-                competition.StartYear,
-                competition.EndYear),
-            competition.Level,
-            competition.Comment,
-            Rules: new(
-                competition.PointsForWin,
-                competition.TotalPlaces,
-                competition.PromotionPlaces,
-                competition.RelegationPlaces,
-                competition.PlayOffPlaces,
-                competition.RelegationPlayOffPlaces,
-                competition.ReElectionPlaces,
-                competition.FailedReElectionPosition));
 }

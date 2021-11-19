@@ -10,16 +10,6 @@ namespace football.history.api.Repositories;
 public interface ICompetitionRepository
 {
     /// <summary>
-    /// Retrieves models for all competitions in the database.
-    /// </summary>
-    /// 
-    /// <returns>
-    /// A collection of <see cref="CompetitionModel">CompetitionModels</see>
-    /// for each competition in the database.
-    /// </returns>
-    CompetitionModel[] GetAllCompetitions();
-    
-    /// <summary>
     /// Retrieves a model from the database for the competition
     /// matching the provided <paramref name="competitionId"/>.
     /// </summary>
@@ -92,19 +82,21 @@ public interface ICompetitionRepository
     
     /// <summary>
     /// Retrieves models for all competitions in the season
-    /// matching the given <paramref name="seasonId"/>.
+    /// matching the given <paramref name="seasonId"/>. If no
+    /// seasonId is specified, returns all competitions in the database.
     /// </summary>
     /// 
     /// <param name="seasonId">
-    /// The id of the required season.
+    /// Optional. The id of the required season.
     /// </param>
     /// 
     /// <returns>
     /// A collection of <see cref="CompetitionModel">CompetitionModels</see>
-    /// for each competition in the given <paramref name="seasonId"/>. Can
-    /// be empty if the season contained no competitions.
+    /// for each competition in the given <paramref name="seasonId"/>, or the
+    /// entire database if no seasonId is provided.
+    /// Can be empty if the season contained no competitions.
     /// </returns>
-    CompetitionModel[] GetCompetitions(long seasonId);
+    CompetitionModel[] GetCompetitions(long? seasonId = null);
 }
 
 public class CompetitionRepository : ICompetitionRepository
@@ -114,18 +106,6 @@ public class CompetitionRepository : ICompetitionRepository
     public CompetitionRepository(IDatabaseConnection connection)
     {
         _connection = connection;
-    }
-
-    public CompetitionModel[] GetAllCompetitions()
-    {
-        _connection.Open();
-
-        var cmd = BuildCommand();
-        var competitions = GetCompetitionModels(cmd);
-
-        _connection.Close();
-
-        return competitions;
     }
 
     public CompetitionModel? GetCompetition(long competitionId)
@@ -172,7 +152,7 @@ public class CompetitionRepository : ICompetitionRepository
         return competitions.SingleOrDefault();
     }
 
-    public CompetitionModel[] GetCompetitions(long seasonId)
+    public CompetitionModel[] GetCompetitions(long? seasonId = null)
     {
         _connection.Open();
 
