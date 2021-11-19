@@ -1,6 +1,3 @@
-using System.Data.Common;
-using football.history.api.Models;
-using Microsoft.Data.SqlClient;
 
 namespace football.history.api.Repositories;
 

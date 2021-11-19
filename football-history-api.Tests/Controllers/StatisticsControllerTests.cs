@@ -1,10 +1,4 @@
-using System.Net;
-using football.history.api.Builders;
-using football.history.api.Domain;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Moq;
-using Newtonsoft.Json;
-using NUnit.Framework;
+using Statistic = football.history.api.Domain.Statistic;
 
 namespace football.history.api.Tests.Controllers;
 

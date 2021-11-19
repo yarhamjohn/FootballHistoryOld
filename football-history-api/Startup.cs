@@ -1,12 +1,4 @@
-﻿using System.Reflection;
-using football.history.api.Builders;
-using football.history.api.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace football.history.api;
+﻿namespace football.history.api;
 
 public class Startup
 {

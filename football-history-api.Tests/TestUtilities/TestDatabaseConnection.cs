@@ -1,8 +1,3 @@
-using System.Data.Common;
-using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
-
 namespace football.history.api.Tests.TestUtilities;
 
 public class TestDatabaseConnection : IDatabaseConnection

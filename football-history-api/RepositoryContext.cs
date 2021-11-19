@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace football.history.api;
 
 public class DatabaseContext : DbContext

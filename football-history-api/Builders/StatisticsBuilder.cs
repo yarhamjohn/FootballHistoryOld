@@ -1,6 +1,3 @@
-using football.history.api.Domain;
-using football.history.api.Models;
-using football.history.api.Repositories;
 using max = MoreLinq.Extensions.MaxByExtension;
 using min = MoreLinq.Extensions.MinByExtension;
 

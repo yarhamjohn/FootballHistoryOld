@@ -1,8 +1,3 @@
-using football.history.api.Domain;
-using football.history.api.Exceptions;
-using football.history.api.Models;
-using football.history.api.Repositories;
-
 namespace football.history.api.Builders;
 
 public interface ILeagueTableBuilder

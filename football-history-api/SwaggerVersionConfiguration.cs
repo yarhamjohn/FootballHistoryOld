@@ -1,6 +1,3 @@
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
 namespace football.history.api;
 
 // ReSharper disable once ClassNeverInstantiated.Global

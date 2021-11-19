@@ -1,5 +1,3 @@
-using football.history.api.Domain;
-
 namespace football.history.api.Builders;
 
 public class PointsPerGameGoalDiffGoalsForComparer : IComparer<LeagueTableRow>

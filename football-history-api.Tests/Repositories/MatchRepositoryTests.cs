@@ -1,9 +1,3 @@
-using football.history.api.Models;
-using football.history.api.Domain;
-using football.history.api.Repositories;
-using football.history.api.Tests.TestUtilities;
-using NUnit.Framework;
-
 namespace football.history.api.Tests.Repositories;
 
 [TestFixture]

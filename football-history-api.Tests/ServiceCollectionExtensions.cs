@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace football.history.api.Tests;
 
 public static class ServiceCollectionExtensions

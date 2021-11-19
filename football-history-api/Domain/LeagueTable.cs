@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-
 namespace football.history.api.Domain;
 
 public record LeagueTable(LeagueTableRow[] Table, [UsedImplicitly] Competition Competition);

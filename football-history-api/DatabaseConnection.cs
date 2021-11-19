@@ -1,6 +1,3 @@
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
-
 namespace football.history.api;
 
 public interface IDatabaseConnection

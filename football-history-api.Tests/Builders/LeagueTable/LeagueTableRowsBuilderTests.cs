@@ -1,14 +1,3 @@
-// using System;
-// using System.Collections.Generic;
-// using FluentAssertions;
-// using football.history.api.Builders;
-// using football.history.api.Repositories.Competition;
-// using football.history.api.Repositories.Match;
-// using football.history.api.Repositories.PointDeduction;
-// using football.history.api.Repositories.Team;
-// using Moq;
-// using NUnit.Framework;
-//
 // namespace football.history.api.Tests.Builders.LeagueTable
 // {
 //     [TestFixture]

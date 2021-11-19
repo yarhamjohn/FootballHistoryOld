@@ -1,6 +1,3 @@
-using football.history.api.Domain;
-using football.history.api.Models;
-
 namespace football.history.api.Builders;
 
 public interface IRowComparerFactory

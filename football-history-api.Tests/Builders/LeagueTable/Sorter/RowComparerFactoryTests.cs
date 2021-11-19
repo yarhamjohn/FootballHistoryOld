@@ -1,8 +1,3 @@
-using FluentAssertions;
-using football.history.api.Builders;
-using football.history.api.Models;
-using NUnit.Framework;
-
 namespace football.history.api.Tests.Builders.LeagueTable.Sorter;
 
 [TestFixture]

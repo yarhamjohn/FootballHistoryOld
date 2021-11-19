@@ -1,11 +1,3 @@
-using FluentAssertions;
-using football.history.api.Builders;
-using football.history.api.Domain;
-using football.history.api.Models;
-using football.history.api.Repositories;
-using Moq;
-using NUnit.Framework;
-
 namespace football.history.api.Tests.Builders.LeaguePositions;
 
 [TestFixture]

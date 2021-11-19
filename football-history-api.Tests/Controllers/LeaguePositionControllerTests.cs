@@ -1,11 +1,3 @@
-using System.Net;
-using football.history.api.Builders;
-using football.history.api.Domain;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Moq;
-using Newtonsoft.Json;
-using NUnit.Framework;
-
 namespace football.history.api.Tests.Controllers;
 
 [TestFixture]
