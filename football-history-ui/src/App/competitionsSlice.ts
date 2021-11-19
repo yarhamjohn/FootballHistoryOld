@@ -28,7 +28,6 @@ export const competitionsApi = createApi({
   endpoints: (builder) => ({
     getAllCompetitions: builder.query<Competition[], void>({
       query: () => "",
-      transformResponse: (response: { result: Competition[] }) => response.result,
     }),
   }),
 });
