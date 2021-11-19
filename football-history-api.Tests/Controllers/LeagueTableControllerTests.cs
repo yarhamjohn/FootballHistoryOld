@@ -1,220 +1,218 @@
-// using System;
-// using System.Collections.Generic;
-// using FluentAssertions;
-// using football.history.api.Builders;
-// using football.history.api.Controllers;
-// using football.history.api.Dtos;
-// using football.history.api.Exceptions;
-// using football.history.api.Repositories.Competition;
-// using Moq;
-// using NUnit.Framework;
-//
-// namespace football.history.api.Tests.Controllers
-// {
-//     [TestFixture]
-//     public class LeagueTableControllerTests
-//     {
-//         [Test]
-//         public void GetLeagueTable_given_competitionId_should_return_message_for_unhandled_error()
-//         {
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Throws(new Exception("Unhandled error occurred."));
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//             error!.Code.Should().Be("UNKNOWN_ERROR");
-//         }
-//
-//         [Test]
-//         public void GetLeagueTable_given_competitionId_should_return_message_for_handled_error()
-//         {
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Repository data was invalid.");
-//             error!.Code.Should().Be("DATA_INVALID");
-//         }
-//
-//         [Test]
-//         public void GetLeagueTable_given_competitionId_should_return_result()
-//         {
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             var competitionModel = new CompetitionModel(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null);
-//
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Returns(competitionModel);
-//
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var leagueTable = new LeagueTable(new List<LeagueTableRowDto>());
-//             mockBuilder
-//                 .Setup(x => x.BuildFullLeagueTable(competitionModel))
-//                 .Returns(leagueTable);
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1);
-//
-//             var expectedCompetitionDto = new CompetitionDto(Id: 1,
-//                 Name: "Premier League",
-//                 Season: new (
-//                     Id: 1,
-//                     StartYear: 2000,
-//                     EndYear: 2001),
-//                 Level: "1",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 20,
-//                     PromotionPlaces: 0,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 0,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null));
-//             
-//             var teamDtos = new LeagueTableDto(
-//                 Table: leagueTable.GetRows(), 
-//                 Competition: expectedCompetitionDto);
-//             
-//             mockBuilder.VerifyAll();
-//             mockRepository.VerifyAll();
-//             result!.Table.Should().BeEquivalentTo(teamDtos.Table);
-//             result!.Competition.Should().BeEquivalentTo(expectedCompetitionDto);
-//             error.Should().BeNull();
-//         }
-//         
-//         [Test]
-//         public void GetLeagueTable_given_seasonId_and_teamId_should_return_message_for_unhandled_error()
-//         {
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetitionForSeasonAndTeam(1, 1L))
-//                 .Throws(new Exception("Unhandled error occurred."));
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1, 1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//             error!.Code.Should().Be("UNKNOWN_ERROR");
-//         }
-//
-//         [Test]
-//         public void GetLeagueTable_given_seasonId_and_teamId_should_return_message_for_handled_error()
-//         {
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetitionForSeasonAndTeam(1, 1L))
-//                 .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1, 1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Repository data was invalid.");
-//             error!.Code.Should().Be("DATA_INVALID");
-//         }
-//         
-//         [Test]
-//         public void GetLeagueTable_given_seasonId_and_teamId_should_return_result()
-//         {
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             var competitionModel = new CompetitionModel(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null);
-//
-//             mockRepository
-//                 .Setup(x => x.GetCompetitionForSeasonAndTeam(1, 1L))
-//                 .Returns(competitionModel);
-//
-//             var mockBuilder = new Mock<ILeagueTableBuilder>();
-//             var leagueTable = new LeagueTable(new List<LeagueTableRowDto>());
-//             mockBuilder
-//                 .Setup(x => x.BuildFullLeagueTable(competitionModel))
-//                 .Returns(leagueTable);
-//
-//             var controller = new LeagueTableController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeagueTable(1, 1);
-//
-//             var expectedCompetitionDto = new CompetitionDto(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 Season: new (
-//                     Id: 1,
-//                     StartYear: 2000,
-//                     EndYear: 2001),
-//                 Level: "1",
-//                 Comment: null,
-//                 Rules: new (
-//                     PointsForWin: 3,
-//                     TotalPlaces: 20,
-//                     PromotionPlaces: 0,
-//                     RelegationPlaces: 3,
-//                     PlayOffPlaces: 0,
-//                     RelegationPlayOffPlaces: 0,
-//                     ReElectionPlaces: 0,
-//                     FailedReElectionPosition: null));
-//             var teamDtos = new LeagueTableDto(
-//                 Table: leagueTable.GetRows(), 
-//                 Competition: expectedCompetitionDto);
-//             
-//             mockBuilder.VerifyAll();
-//             mockRepository.VerifyAll();
-//             result!.Table.Should().BeEquivalentTo(teamDtos.Table);
-//             result!.Competition.Should().BeEquivalentTo(teamDtos.Competition);
-//             error.Should().BeNull();
-//         }
-//     }}
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using football.history.api.Builders;
+using football.history.api.Domain;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Moq;
+using Newtonsoft.Json;
+using NUnit.Framework;
+
+namespace football.history.api.Tests.Controllers;
+
+[TestFixture]
+public class LeagueTableControllerTests
+{
+    [Test]
+    public async Task GetLeagueTable_from_competition_id_returns_not_found_given_no_league_table()
+    {
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(It.IsAny<long>()))
+            .Returns((LeagueTable?)null);
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/competition/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No league table available for competition 1."));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_competition_id_returns_internal_server_error_given_exception()
+    {
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(It.IsAny<long>()))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/competition/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_competition_id_returns_not_found_given_invalid_id()
+    {
+        var client = GetTestClient();
+
+        var response = await client.GetAsync("api/v2/league-table/competition/not-an-id");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_competition_id_returns_league_table()
+    {
+        var expectedLeagueTable = new LeagueTable(
+            Table: new[] { new LeagueTableRow { TeamId = 1, Position = 1, Points = 3 } },
+            Competition: new Competition(Id: 1,
+                Name: "First Division",
+                Season: new(Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new(
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null))
+        );
+
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(1))
+            .Returns(expectedLeagueTable);
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/competition/1");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualLeagueTable = JsonConvert.DeserializeObject<LeagueTable>(responseString);
+
+        var actualTableRow = actualLeagueTable.Table.Single();
+        var expectedTableRow = expectedLeagueTable.Table.Single();
+        
+        Assert.That(actualTableRow.TeamId, Is.EqualTo(expectedTableRow.TeamId));
+        Assert.That(actualTableRow.Position, Is.EqualTo(expectedTableRow.Position));
+        Assert.That(actualTableRow.Points, Is.EqualTo(expectedTableRow.Points));
+        Assert.That(actualLeagueTable.Competition, Is.EqualTo(expectedLeagueTable.Competition));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_season_id_and_team_id_returns_not_found_given_no_league_table()
+    {
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(It.IsAny<long>(), It.IsAny<long>()))
+            .Returns((LeagueTable?)null);
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/season/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No league table available for season 1 and team 2."));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_season_id_and_team_id_returns_internal_server_error_given_exception()
+    {
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(It.IsAny<long>(), It.IsAny<long>()))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/season/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+
+    [TestCase("league-table")]
+    [TestCase("league-table/season")]
+    [TestCase("league-table/team")]
+    [TestCase("league-table/season/1")]
+    [TestCase("league-table/team/2")]
+    [TestCase("league-table/season/1/team")]
+    [TestCase("league-table/team/2/season")]
+    [TestCase("league-table/season/not-an-id/team/2")]
+    [TestCase("league-table/season/1/team/not-an-id")]
+    [TestCase("league-table/team/2/season/1")]
+    public async Task GetLeagueTable_from_competition_id_returns_not_found_given_invalid_id(string url)
+    {
+        var client = GetTestClient();
+
+        var response = await client.GetAsync($"api/v2/{url}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task GetLeagueTable_from_season_id_and_team_id_returns_league_table()
+    {
+        var expectedLeagueTable = new LeagueTable(
+            Table: new[] { new LeagueTableRow { TeamId = 1, Position = 1, Points = 3 } },
+            Competition: new Competition(Id: 1,
+                Name: "First Division",
+                Season: new(Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new(
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null))
+        );
+
+        var mockLeagueTableBuilder = new Mock<ILeagueTableBuilder>();
+        mockLeagueTableBuilder
+            .Setup(x => x.BuildFullLeagueTable(1, 2))
+            .Returns(expectedLeagueTable);
+
+        var client = GetTestClient(mockLeagueTableBuilder);
+
+        var response = await client.GetAsync("api/v2/league-table/season/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualLeagueTable = JsonConvert.DeserializeObject<LeagueTable>(responseString);
+
+        var actualTableRow = actualLeagueTable.Table.Single();
+        var expectedTableRow = expectedLeagueTable.Table.Single();
+        
+        Assert.That(actualTableRow.TeamId, Is.EqualTo(expectedTableRow.TeamId));
+        Assert.That(actualTableRow.Position, Is.EqualTo(expectedTableRow.Position));
+        Assert.That(actualTableRow.Points, Is.EqualTo(expectedTableRow.Points));
+        Assert.That(actualLeagueTable.Competition, Is.EqualTo(expectedLeagueTable.Competition));
+    }
+
+    private static HttpClient GetTestClient(IMock<ILeagueTableBuilder> mockLeagueTableBuilder)
+    {
+        var factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(b =>
+        {
+            b.ConfigureServices(s => { s.SwapTransient(mockLeagueTableBuilder.Object); });
+        });
+
+        return factory.CreateClient();
+    }
+
+    private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
+}

@@ -7,16 +7,18 @@ const LeagueTable: FunctionComponent<{
   league: League;
   highlightSelectedTeam: boolean;
 }> = ({ league, highlightSelectedTeam }) => {
-  const rows = league.table.map((r) => (
-    <LeagueTableRow
-      key={r.position}
-      row={r}
-      numRows={league.table.length}
-      rules={league.competition.rules}
-      competitionId={league.competition.id}
-      highlightSelectedTeam={highlightSelectedTeam}
-    />
-  ));
+  const rows = league.table
+    .sort((a, b) => a.position - b.position)
+    .map((r) => (
+      <LeagueTableRow
+        key={r.position}
+        row={r}
+        numRows={league.table.length}
+        rules={league.competition.rules}
+        competitionId={league.competition.id}
+        highlightSelectedTeam={highlightSelectedTeam}
+      />
+    ));
 
   return (
     <Table basic compact>

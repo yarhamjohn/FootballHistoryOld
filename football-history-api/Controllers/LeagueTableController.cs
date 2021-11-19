@@ -1,10 +1,4 @@
-using System;
-using System.Linq;
 using football.history.api.Builders;
-using football.history.api.Domain;
-using football.history.api.Exceptions;
-using football.history.api.Models;
-using football.history.api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -13,14 +7,10 @@ namespace football.history.api.Controllers;
 [Route("api/v{version:apiVersion}/league-table")]
 public class LeagueTableController : Controller
 {
-    private readonly ICompetitionRepository _competitionRepository;
     private readonly ILeagueTableBuilder _leagueTableBuilder;
 
-    public LeagueTableController(
-        ICompetitionRepository competitionRepository,
-        ILeagueTableBuilder leagueTableBuilder)
+    public LeagueTableController(ILeagueTableBuilder leagueTableBuilder)
     {
-        _competitionRepository = competitionRepository;
         _leagueTableBuilder = leagueTableBuilder;
     }
 
@@ -28,78 +18,31 @@ public class LeagueTableController : Controller
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public ActionResult<LeagueTableDto> GetLeagueTable(long id)
+    public ActionResult<LeagueTable> GetLeagueTable(long id)
     {
-        try
-        {
-            var competition = _competitionRepository.GetCompetition(id);
-            var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
+            var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(id);
 
-            return BuildLeagueTableDto(competition, leagueTable);
-        }
-        catch (Exception ex)
-        {
-            return ex switch
+            if (leagueTable is null)
             {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
-        }
+                return NotFound($"No league table available for competition {id}.");
+            }
+            
+            return leagueTable;
     }
 
     [HttpGet("season/{seasonId:long}/team/{teamId:long}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public ActionResult<LeagueTableDto> GetLeagueTable(long seasonId, long teamId)
+    public ActionResult<LeagueTable> GetLeagueTable(long seasonId, long teamId)
     {
-        try
-        {
-            var competition = _competitionRepository.GetTeamCompetition(seasonId, teamId);
-            if (competition is null)
-            {
-                throw new DataNotFoundException($"No competition was found for the specified seasonId ({seasonId}) and teamId ({teamId}).");
-            }
-                
-            var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(competition);
+        var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(seasonId, teamId);
 
-            return BuildLeagueTableDto(competition, leagueTable);
-        }
-        catch (Exception ex)
+        if (leagueTable is null)
         {
-            return ex switch
-            {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
+            return NotFound($"No league table available for season {seasonId} and team {teamId}.");
         }
+            
+        return leagueTable;
     }
-
-    private static LeagueTableDto BuildLeagueTableDto(CompetitionModel competition, ILeagueTable leagueTable)
-    {
-        return new(
-            Table: leagueTable.GetRows().OrderBy(x => x.Position).ToList(),
-            Competition: BuildCompetitionDto(competition));
-    }
-        
-    private static Competition BuildCompetitionDto(CompetitionModel competition) =>
-        new(competition.Id,
-            competition.Name,
-            Season: new(
-                competition.SeasonId,
-                competition.StartYear,
-                competition.EndYear),
-            competition.Level,
-            competition.Comment,
-            Rules: new(
-                competition.PointsForWin,
-                competition.TotalPlaces,
-                competition.PromotionPlaces,
-                competition.RelegationPlaces,
-                competition.PlayOffPlaces,
-                competition.RelegationPlayOffPlaces,
-                competition.ReElectionPlaces,
-                competition.FailedReElectionPosition));
 }

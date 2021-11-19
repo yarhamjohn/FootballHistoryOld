@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Domain;
+using football.history.api.Exceptions;
 using football.history.api.Models;
 using football.history.api.Repositories;
 
@@ -8,8 +10,9 @@ namespace football.history.api.Builders;
 
 public interface ILeagueTableBuilder
 {
-    ILeagueTable BuildFullLeagueTable(CompetitionModel competition);
-    ILeagueTable BuildPartialLeagueTable(
+    LeagueTable? BuildFullLeagueTable(long competitionId);
+    LeagueTable? BuildFullLeagueTable(long seasonId, long teamId);
+    LeagueTable BuildPartialLeagueTable(
         CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
@@ -19,6 +22,7 @@ public interface ILeagueTableBuilder
 public class LeagueTableBuilder : ILeagueTableBuilder
 {
     private readonly IRowComparerFactory _rowComparerFactory;
+    private readonly ICompetitionRepository _competitionRepository;
     private readonly IPositionRepository _positionRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly IPointDeductionRepository _pointDeductionRepository;
@@ -29,17 +33,21 @@ public class LeagueTableBuilder : ILeagueTableBuilder
         IPointDeductionRepository pointDeductionRepository,
         IRowBuilder rowBuilder,
         IPositionRepository positionRepository,
-        IRowComparerFactory rowComparerFactory)
+        IRowComparerFactory rowComparerFactory,
+        ICompetitionRepository competitionRepository)
     {
         _matchRepository = matchRepository;
         _pointDeductionRepository = pointDeductionRepository;
         _rowBuilder = rowBuilder;
         _positionRepository = positionRepository;
         _rowComparerFactory = rowComparerFactory;
+        _competitionRepository = competitionRepository;
     }
         
-    public ILeagueTable BuildFullLeagueTable(CompetitionModel competition)
+    public LeagueTable? BuildFullLeagueTable(long competitionId)
     {
+        var competition = _competitionRepository.GetCompetition(competitionId);
+        
         var leagueMatches = _matchRepository.GetLeagueMatches(competition.Id);
         var teamsInLeague = GetTeamsInLeague(leagueMatches);
         var pointDeductions = _pointDeductionRepository.GetPointDeductions(competition.Id);
@@ -54,19 +62,30 @@ public class LeagueTableBuilder : ILeagueTableBuilder
             row.Status = positions.Single(x => x.TeamId == row.TeamId).Status;
         }
             
-        return new LeagueTable(rows);
+        return new LeagueTable(rows, ToCompetitionDomain(competition));
     }
-        
-    public ILeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, PointDeductionModel[] pointDeductions)
+
+    public LeagueTable? BuildFullLeagueTable(long seasonId, long teamId)
+    {
+        var competition = _competitionRepository.GetTeamCompetition(seasonId, teamId);
+        if (competition is null)
+        {
+            throw new DataNotFoundException($"No competition was found for the specified seasonId ({seasonId}) and teamId ({teamId}).");
+        }
+
+        return BuildFullLeagueTable(competition.Id);
+    }
+
+    public LeagueTable BuildPartialLeagueTable(CompetitionModel competition, MatchModel[] leagueMatches, DateTime targetDate, PointDeductionModel[] pointDeductions)
     {
         var matchesToDate = leagueMatches.Where(x => x.MatchDate < targetDate).ToArray();
         var teamsInLeague = GetTeamsInLeague(leagueMatches);
 
         var rows = GetRows(competition, teamsInLeague, matchesToDate, pointDeductions);
 
-        SetPositions(competition, rows);
+        SetPositions(competition, rows.ToList());
             
-        return new LeagueTable(rows);
+        return new LeagueTable(rows, ToCompetitionDomain(competition));
     }
 
     private static IEnumerable<TeamModel> GetTeamsInLeague(MatchModel[] leagueMatches)
@@ -80,7 +99,7 @@ public class LeagueTableBuilder : ILeagueTableBuilder
             .Distinct();
     }
         
-    private List<LeagueTableRowDto> GetRows(
+    private LeagueTableRow[] GetRows(
         CompetitionModel competition,
         IEnumerable<TeamModel> teamsInLeague,
         MatchModel[] leagueMatches,
@@ -88,10 +107,10 @@ public class LeagueTableBuilder : ILeagueTableBuilder
     {
         return teamsInLeague
             .Select(team => _rowBuilder.Build(competition, team, leagueMatches, pointDeductions))
-            .ToList();
+            .ToArray();
     }
 
-    private void SetPositions(CompetitionModel competition, List<LeagueTableRowDto> rows)
+    private void SetPositions(CompetitionModel competition, List<LeagueTableRow> rows)
     {
         var leagueTableComparer = _rowComparerFactory.GetLeagueTableComparer(competition);
         rows.Sort(leagueTableComparer);
@@ -101,4 +120,23 @@ public class LeagueTableBuilder : ILeagueTableBuilder
             rows[i].Position = rows.Count - i;
         }
     }
+
+    private static Competition ToCompetitionDomain(CompetitionModel competition) =>
+        new(competition.Id,
+            competition.Name,
+            Season: new(
+                competition.SeasonId,
+                competition.StartYear,
+                competition.EndYear),
+            competition.Level,
+            competition.Comment,
+            Rules: new(
+                competition.PointsForWin,
+                competition.TotalPlaces,
+                competition.PromotionPlaces,
+                competition.RelegationPlaces,
+                competition.PlayOffPlaces,
+                competition.RelegationPlayOffPlaces,
+                competition.ReElectionPlaces,
+                competition.FailedReElectionPosition));
 }

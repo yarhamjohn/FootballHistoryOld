@@ -12,7 +12,7 @@ public class RowBuilderTests
 {
     private static IEnumerable RowCalculatedForTeam()
     {
-        var norwichCityRow = new LeagueTableRowDto
+        var norwichCityRow = new LeagueTableRow
         {
             TeamId                = 1,
             Team                  = "Norwich City",
@@ -31,7 +31,7 @@ public class RowBuilderTests
         };
         yield return new TestCaseData(norwichCityRow).SetName("Row calculated for Norwich City");
             
-        var newcastleUnitedRow = new LeagueTableRowDto
+        var newcastleUnitedRow = new LeagueTableRow
         {
             TeamId                = 2,
             Team                  = "Newcastle United",
@@ -50,7 +50,7 @@ public class RowBuilderTests
         };
         yield return new TestCaseData(newcastleUnitedRow).SetName("Row calculated for Newcastle United");
             
-        var sunderlandRow = new LeagueTableRowDto
+        var sunderlandRow = new LeagueTableRow
         {
             TeamId                = 3,
             Team                  = "Sunderland",
@@ -69,7 +69,7 @@ public class RowBuilderTests
         };
         yield return new TestCaseData(sunderlandRow).SetName("Row calculated for Sunderland");
             
-        var arsenalRow = new LeagueTableRowDto
+        var arsenalRow = new LeagueTableRow
         {
             TeamId                = 4,
             Team                  = "Arsenal",
@@ -90,7 +90,7 @@ public class RowBuilderTests
     }
 
     [TestCaseSource(nameof(RowCalculatedForTeam))]
-    public void Build_calculates_row_correctly(LeagueTableRowDto expectedRow)
+    public void Build_calculates_row_correctly(LeagueTableRow expectedRow)
     {
         var competition = GetCompetitionModel();
         var matches = GetMatches();
@@ -143,7 +143,7 @@ public class RowBuilderTests
         var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
         var result = builder.Build(competition, teamModel, new [] { match }, Array.Empty<PointDeductionModel>());
 
-        result.Should().BeEquivalentTo(new LeagueTableRowDto
+        result.Should().BeEquivalentTo(new LeagueTableRow
         {
             TeamId                = 1,
             Team                  = "Norwich City",
@@ -172,7 +172,7 @@ public class RowBuilderTests
         var teamModel = new TeamModel(1, "Norwich City", "NOR", null);
         var result = builder.Build(competition, teamModel, Array.Empty<MatchModel>(), Array.Empty<PointDeductionModel>());
 
-        result.Should().BeEquivalentTo(new LeagueTableRowDto
+        result.Should().BeEquivalentTo(new LeagueTableRow
         {
             TeamId                = 1,
             Team                  = "Norwich City",

@@ -20,6 +20,23 @@ public class LeaguePositionBuilderTests
         var mockMatchRepository = new Mock<IMatchRepository>();
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
         var mockCompetitionRepository = new Mock<ICompetitionRepository>();
+        mockCompetitionRepository.Setup(x => x.GetCompetition(It.IsAny<long>())).Returns(new CompetitionModel(
+            Id: 1,
+            Name: "First Division",
+            SeasonId: 1,
+            StartYear: 2000,
+            EndYear: 2001,
+            Tier: 1,
+            Region: null,
+            Comment: null,
+            PointsForWin: 1,
+            TotalPlaces: 1,
+            PromotionPlaces: 1,
+            RelegationPlaces: 1,
+            PlayOffPlaces: 1,
+            RelegationPlayOffPlaces: 1,
+            ReElectionPlaces: 1,
+            FailedReElectionPosition: null));
 
         mockMatchRepository.Setup(x => x.GetLeagueMatches(1)).Returns(Array.Empty<MatchModel>());
 
@@ -41,9 +58,6 @@ public class LeaguePositionBuilderTests
     {
         var competition = GetCompetitionModel();
 
-        var mockLeagueTable = new Mock<ILeagueTable>();
-        mockLeagueTable.Setup(x => x.GetPosition(It.IsAny<long>())).Returns(1);
-
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
         var pointDeductions = Array.Empty<PointDeductionModel>();
         mockPointDeductionRepository.Setup(x => x.GetPointDeductions(competition.Id))
@@ -56,7 +70,8 @@ public class LeaguePositionBuilderTests
             .Returns(matches);
         
         var mockCompetitionRepository = new Mock<ICompetitionRepository>();
-
+        mockCompetitionRepository.Setup(x => x.GetCompetition(It.IsAny<long>())).Returns(competition);
+        
         var mockDirector = new Mock<ILeagueTableBuilder>();
         mockDirector
             .Setup(x => x.BuildPartialLeagueTable(
@@ -64,7 +79,22 @@ public class LeaguePositionBuilderTests
                 matches,
                 It.IsAny<DateTime>(),
                 pointDeductions))
-            .Returns(mockLeagueTable.Object);
+            .Returns(new api.Builders.LeagueTable(
+                new LeagueTableRow[] {new(){ TeamId = 1, Position = 1, Points = 3}}, 
+                new Competition(Id: 1,
+                Name: "First Division",
+                Season: new (Id: 1, StartYear: 2000, EndYear: 2001),
+                Level: "1",
+                Comment: null,
+                Rules: new (
+                    PointsForWin: 1,
+                    TotalPlaces: 1,
+                    PromotionPlaces: 1,
+                    RelegationPlaces: 1,
+                    PlayOffPlaces: 1,
+                    RelegationPlayOffPlaces: 1,
+                    ReElectionPlaces: 1,
+                    FailedReElectionPosition: null))));
 
         var builder = new LeaguePositionBuilder(
             mockDirector.Object,

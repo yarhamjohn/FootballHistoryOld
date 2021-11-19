@@ -6,7 +6,7 @@ namespace football.history.api.Builders;
 
 public interface IRowBuilder
 {
-    LeagueTableRowDto Build(
+    LeagueTableRow Build(
         CompetitionModel competition,
         TeamModel team,
         MatchModel[] matches,
@@ -15,7 +15,7 @@ public interface IRowBuilder
 
 public class RowBuilder : IRowBuilder
 {
-    public LeagueTableRowDto Build(
+    public LeagueTableRow Build(
         CompetitionModel competition,
         TeamModel team,
         MatchModel[] matches,
@@ -30,7 +30,7 @@ public class RowBuilder : IRowBuilder
 
         var goalsFor = CalculateGoalsFor(teamHomeMatches, teamAwayMatches);
         var goalsAgainst = CalculateGoalsAgainst(teamHomeMatches, teamAwayMatches);
-        var leagueTableRow = new LeagueTableRowDto
+        var leagueTableRow = new LeagueTableRow
         {
             TeamId = team.Id,
             Team = team.Name,
@@ -51,8 +51,8 @@ public class RowBuilder : IRowBuilder
         return leagueTableRow;
     }
 
-    private static double? CalculatePointsPerGame(LeagueTableRowDto leagueTableRowDto) =>
-        leagueTableRowDto.Played == 0 ? null : leagueTableRowDto.Points / (double) leagueTableRowDto.Played;
+    private static double? CalculatePointsPerGame(LeagueTableRow leagueTableRow) =>
+        leagueTableRow.Played == 0 ? null : leagueTableRow.Points / (double) leagueTableRow.Played;
 
     private static int CalculateGoalsAgainst(
         IEnumerable<MatchModel> homeMatches,

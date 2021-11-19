@@ -5,12 +5,12 @@ namespace football.history.api.Builders;
 
 public interface IRowComparerFactory
 {
-    IComparer<LeagueTableRowDto> GetLeagueTableComparer(CompetitionModel competition);
+    IComparer<LeagueTableRow> GetLeagueTableComparer(CompetitionModel competition);
 }
     
 public class RowComparerFactory : IRowComparerFactory
 {
-    public IComparer<LeagueTableRowDto> GetLeagueTableComparer(CompetitionModel competition)
+    public IComparer<LeagueTableRow> GetLeagueTableComparer(CompetitionModel competition)
     {
         if (FootballLeagueBetween1992And1998(competition))
         {

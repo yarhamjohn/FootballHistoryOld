@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using football.history.api.Domain;
+using JetBrains.Annotations;
 
 namespace football.history.api.Builders;
 
-public record LeagueTableDto (List<LeagueTableRowDto> Table, Competition Competition);
+public record LeagueTable(LeagueTableRow[] Table, [UsedImplicitly] Competition Competition);
 
-public class LeagueTableRowDto
+public class LeagueTableRow
 {
     public int Position { get; set;}
     public long TeamId { get; set;}

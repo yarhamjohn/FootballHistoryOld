@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace football.history.api.Builders;
 
-public class PointsPerGameGoalDiffGoalsForComparer : IComparer<LeagueTableRowDto>
+public class PointsPerGameGoalDiffGoalsForComparer : IComparer<LeagueTableRow>
 {
     private const int Equal = 0;
     private const int XIsGreater = 1;
     private const int YIsGreater = -1;
 
-    public int Compare(LeagueTableRowDto? x, LeagueTableRowDto? y)
+    public int Compare(LeagueTableRow? x, LeagueTableRow? y)
     {
         if (ReferenceEquals(x, y))
         {

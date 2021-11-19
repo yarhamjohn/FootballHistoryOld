@@ -44,11 +44,11 @@ public class LeaguePositionBuilder : ILeaguePositionBuilder
         var pointDeductions = _pointDeductionRepository.GetPointDeductions(competition.Id);
 
         return GetDates(leagueMatches)
-            .Select(d => GetLeaguePositionDto(teamId, competition, leagueMatches, d, pointDeductions))
+            .Select(d => GetLeaguePosition(teamId, competition, leagueMatches, d, pointDeductions))
             .ToArray();
     }
 
-    private LeaguePosition GetLeaguePositionDto(
+    private LeaguePosition GetLeaguePosition(
         long teamId, CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
@@ -56,7 +56,7 @@ public class LeaguePositionBuilder : ILeaguePositionBuilder
     {
         var partialLeagueTable =
             _leagueTableBuilder.BuildPartialLeagueTable(competition, leagueMatches, targetDate, pointDeductions);
-        var position = partialLeagueTable.GetPosition(teamId);
+        var position = partialLeagueTable.Table.Single(x => x.TeamId == teamId).Position;
         return new(Date: targetDate, Position: position);
     }
 

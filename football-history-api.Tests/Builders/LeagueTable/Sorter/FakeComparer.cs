@@ -4,9 +4,9 @@ using football.history.api.Builders;
 
 namespace football.history.api.Tests.Builders.LeagueTable.Sorter;
 
-public class FakeComparer : IComparer<LeagueTableRowDto?>
+public class FakeComparer : IComparer<LeagueTableRow?>
 {
-    public int Compare(LeagueTableRowDto? x, LeagueTableRowDto? y)
+    public int Compare(LeagueTableRow? x, LeagueTableRow? y)
     {
         if (x is null || y is null)
         {
