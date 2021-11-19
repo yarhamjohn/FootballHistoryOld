@@ -1,94 +1,110 @@
-// using System;
-// using System.Collections.Generic;
-// using FluentAssertions;
-// using football.history.api.Builders;
-// using football.history.api.Controllers;
-// using football.history.api.Exceptions;
-// using football.history.api.Repositories.Competition;
-// using Moq;
-// using NUnit.Framework;
-//
-// namespace football.history.api.Tests.Controllers
-// {
-//     [TestFixture]
-//     public class LeaguePositionControllerTests
-//     {
-//         [Test]
-//         public void GetLeaguePositions_should_return_message_for_unhandled_error()
-//         {
-//             var mockBuilder = new Mock<ILeaguePositionBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Throws(new Exception("Unhandled error occurred."));
-//
-//             var controller = new LeaguePositionController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeaguePositions(1, 1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Something went wrong. Unhandled error occurred.");
-//             error!.Code.Should().Be("UNKNOWN_ERROR");
-//         }
-//
-//         [Test]
-//         public void GetLeaguePositions_should_return_message_for_handled_error()
-//         {
-//             var mockBuilder = new Mock<ILeaguePositionBuilder>();
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Throws(new DataInvalidException("Repository data was invalid."));
-//
-//             var controller = new LeaguePositionController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeaguePositions(1, 1);
-//
-//             mockRepository.VerifyAll();
-//             result.Should().BeNull();
-//             error.Should().NotBeNull();
-//             error!.Message.Should().Be("Repository data was invalid.");
-//             error!.Code.Should().Be("DATA_INVALID");
-//         }
-//
-//         [Test]
-//         public void GetLeaguePositions_should_return_result()
-//         {
-//             var mockRepository = new Mock<ICompetitionRepository>();
-//             var competitionModel = new CompetitionModel(
-//                 Id: 1,
-//                 Name: "Premier League",
-//                 SeasonId: 1,
-//                 StartYear: 2000,
-//                 EndYear: 2001,
-//                 Tier: 1,
-//                 Region: null,
-//                 Comment: null,
-//                 PointsForWin: 3,
-//                 TotalPlaces: 20,
-//                 PromotionPlaces: 0,
-//                 RelegationPlaces: 3,
-//                 PlayOffPlaces: 0,
-//                 RelegationPlayOffPlaces: 0,
-//                 ReElectionPlaces: 0,
-//                 FailedReElectionPosition: null);
-//             
-//             mockRepository
-//                 .Setup(x => x.GetCompetition(1))
-//                 .Returns(competitionModel);
-//
-//             var mockBuilder = new Mock<ILeaguePositionBuilder>();
-//             var leaguePositionDtos = new List<LeaguePositionDto>();
-//             mockBuilder
-//                 .Setup(x => x.GetPositions(1, competitionModel))
-//                 .Returns(leaguePositionDtos);
-//             
-//             var controller = new LeaguePositionController(mockRepository.Object, mockBuilder.Object);
-//             var (result, error) = controller.GetLeaguePositions(1, 1);
-//
-//             mockBuilder.VerifyAll();
-//             mockRepository.VerifyAll();
-//             result.Should().BeEquivalentTo(leaguePositionDtos);
-//             error.Should().BeNull();
-//         }
-//     }}
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using football.history.api.Builders;
+using football.history.api.Domain;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Moq;
+using Newtonsoft.Json;
+using NUnit.Framework;
+
+namespace football.history.api.Tests.Controllers;
+
+[TestFixture]
+public class LeaguePositionControllerTests
+{
+    [Test]
+    public async Task GetLeaguePositions_returns_not_found_given_no_available_positions()
+    {
+        var mockLeaguePositionBuilder = new Mock<ILeaguePositionBuilder>();
+        mockLeaguePositionBuilder
+            .Setup(x => x.GetPositions(It.IsAny<long>(), It.IsAny<long>()))
+            .Returns(Array.Empty<LeaguePosition>());
+
+        var client = GetTestClient(mockLeaguePositionBuilder);
+
+        var response = await client.GetAsync("api/v2/league-positions/competition/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Is.EqualTo("No league positions found for teamId 2 and competitionId 1."));
+    }
+
+    [Test]
+    public async Task GetLeaguePositions_returns_internal_server_error_given_exception()
+    {
+        var mockLeaguePositionBuilder = new Mock<ILeaguePositionBuilder>();
+        mockLeaguePositionBuilder
+            .Setup(x => x.GetPositions(It.IsAny<long>(), It.IsAny<long>()))
+            .Throws(new Exception("error message"));
+
+        var client = GetTestClient(mockLeaguePositionBuilder);
+
+        var response = await client.GetAsync("api/v2/league-positions/competition/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        Assert.That(responseString, Does.Contain("error message"));
+    }
+
+    [TestCase("league-positions")]
+    [TestCase("league-positions/competition")]
+    [TestCase("league-positions/team")]
+    [TestCase("league-positions/competition/1")]
+    [TestCase("league-positions/team/2")]
+    [TestCase("league-positions/competition/1/team")]
+    [TestCase("league-positions/team/2/competition")]
+    [TestCase("league-positions/competition/not-an-id/team/2")]
+    [TestCase("league-positions/competition/1/team/not-an-id")]
+    [TestCase("league-positions/team/2/competition/1")]
+    public async Task GetLeaguePositions_returns_not_found_given_invalid_id(string url)
+    {
+        var client = GetTestClient();
+
+        var response = await client.GetAsync($"api/v2/{url}");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task GetLeaguePositions_returns_league_positions()
+    {
+        var expectedLeaguePositions = new[]
+        {
+            new LeaguePosition(Date: new DateTime(2000, 1, 1), Position: 1)
+        };
+
+        var mockLeaguePositionBuilder = new Mock<ILeaguePositionBuilder>();
+        mockLeaguePositionBuilder
+            .Setup(x => x.GetPositions(1, 2))
+            .Returns(expectedLeaguePositions);
+
+        var client = GetTestClient(mockLeaguePositionBuilder);
+
+        var response = await client.GetAsync("api/v2/league-positions/competition/1/team/2");
+
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var responseString = await response.Content.ReadAsStringAsync();
+        var actualLeaguePositions = JsonConvert.DeserializeObject<LeaguePosition[]>(responseString);
+
+        Assert.That(actualLeaguePositions.Length, Is.EqualTo(1));
+        Assert.That(actualLeaguePositions.Single(), Is.EqualTo(expectedLeaguePositions.Single()));
+    }
+
+    private static HttpClient GetTestClient(IMock<ILeaguePositionBuilder> mockLeaguePositionBuilder)
+    {
+        var factory = new WebApplicationFactory<Startup>().WithWebHostBuilder(b =>
+        {
+            b.ConfigureServices(s => { s.SwapTransient(mockLeaguePositionBuilder.Object); });
+        });
+
+        return factory.CreateClient();
+    }
+
+    private static HttpClient GetTestClient() => new WebApplicationFactory<Startup>().CreateClient();
+}

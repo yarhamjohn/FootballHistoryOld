@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using football.history.api.Builders;
+using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
 using Moq;
@@ -18,13 +19,18 @@ public class LeaguePositionBuilderTests
         var mockDirector = new Mock<ILeagueTableBuilder>();
         var mockMatchRepository = new Mock<IMatchRepository>();
         var mockPointDeductionRepository = new Mock<IPointDeductionRepository>();
+        var mockCompetitionRepository = new Mock<ICompetitionRepository>();
+
         mockMatchRepository.Setup(x => x.GetLeagueMatches(1)).Returns(Array.Empty<MatchModel>());
 
-        var builder = new LeaguePositionBuilder(mockDirector.Object, mockMatchRepository.Object,
-            mockPointDeductionRepository.Object);
+        var builder = new LeaguePositionBuilder(
+            mockDirector.Object, 
+            mockMatchRepository.Object,
+            mockPointDeductionRepository.Object,
+            mockCompetitionRepository.Object);
         var competition = GetCompetitionModel();
 
-        var positions = builder.GetPositions(1, competition);
+        var positions = builder.GetPositions(1, competition.Id);
 
         mockMatchRepository.VerifyAll();
         positions.Should().BeEmpty();
@@ -48,6 +54,8 @@ public class LeaguePositionBuilderTests
         mockMatchRepository
             .Setup(x => x.GetLeagueMatches(1))
             .Returns(matches);
+        
+        var mockCompetitionRepository = new Mock<ICompetitionRepository>();
 
         var mockDirector = new Mock<ILeagueTableBuilder>();
         mockDirector
@@ -58,10 +66,13 @@ public class LeaguePositionBuilderTests
                 pointDeductions))
             .Returns(mockLeagueTable.Object);
 
-        var builder = new LeaguePositionBuilder(mockDirector.Object, mockMatchRepository.Object,
-            mockPointDeductionRepository.Object);
+        var builder = new LeaguePositionBuilder(
+            mockDirector.Object,
+            mockMatchRepository.Object,
+            mockPointDeductionRepository.Object,
+            mockCompetitionRepository.Object);
 
-        var positions = builder.GetPositions(1, competition);
+        var positions = builder.GetPositions(1, competition.Id);
 
         mockDirector.Verify(x =>
             x.BuildPartialLeagueTable(competition, matches, new DateTime(2000, 1, 9), pointDeductions), Times.Once);
@@ -82,7 +93,7 @@ public class LeaguePositionBuilderTests
             Times.Once);
 
         positions.Should().HaveCount(6);
-        positions.Should().BeEquivalentTo(new List<LeaguePositionDto>
+        positions.Should().BeEquivalentTo(new List<LeaguePosition>
         {
             new(new DateTime(2000, 1, 9), 1),
             new(new DateTime(2000, 1, 10), 1),

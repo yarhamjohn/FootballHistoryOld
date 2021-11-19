@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using football.history.api.Builders;
-using football.history.api.Exceptions;
-using football.history.api.Repositories;
+using football.history.api.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace football.history.api.Controllers;
@@ -11,36 +9,27 @@ namespace football.history.api.Controllers;
 [Route("api/v{version:apiVersion}/league-positions")]
 public class LeaguePositionController : Controller
 {
-    private readonly ICompetitionRepository _competitionRepository;
     private readonly ILeaguePositionBuilder _leaguePositionBuilder;
 
-    public LeaguePositionController(
-        ICompetitionRepository competitionRepository,
-        ILeaguePositionBuilder leaguePositionBuilder)
+    public LeaguePositionController(ILeaguePositionBuilder leaguePositionBuilder)
     {
-        _competitionRepository = competitionRepository;
         _leaguePositionBuilder = leaguePositionBuilder;
     }
 
     [HttpGet]
+    [Route("competition/{competitionId:long}/team/{teamId:long}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public ActionResult<List<LeaguePositionDto>> GetLeaguePositions(long teamId, long competitionId)
+    public ActionResult<LeaguePosition[]> GetLeaguePositions(long competitionId, long teamId)
     {
-        try
+        var positions = _leaguePositionBuilder.GetPositions(competitionId, teamId);
+
+        if (!positions.Any())
         {
-            var competition = _competitionRepository.GetCompetition(competitionId);
-            return _leaguePositionBuilder.GetPositions(teamId, competition);
+            return NotFound($"No league positions found for teamId {teamId} and competitionId {competitionId}.");
         }
-        catch (Exception ex)
-        {
-            return ex switch
-            {
-                DataNotFoundException => NotFound(ex.Message),
-                DataInvalidException => Problem(ex.Message),
-                _ => Problem()
-            };
-        }
+
+        return positions;
     }
 }

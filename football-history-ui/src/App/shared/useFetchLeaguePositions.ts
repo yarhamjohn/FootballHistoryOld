@@ -9,7 +9,7 @@ export type LeaguePosition = {
 const useFetchLeaguePositions = (competitionId: number, teamId: number) => {
   const api = useApi();
 
-  const url = `${api}/api/v2/league-positions?competitionId=${competitionId}&teamId=${teamId}`;
+  const url = `${api}/api/v2/league-positions/competition/${competitionId}/team/${teamId}`;
 
   return useFetch<LeaguePosition[]>(url);
 };

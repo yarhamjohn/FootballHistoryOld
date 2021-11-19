@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using football.history.api.Domain;
 using football.history.api.Models;
 using football.history.api.Repositories;
 
@@ -8,7 +9,7 @@ namespace football.history.api.Builders;
 
 public interface ILeaguePositionBuilder
 {
-    List<LeaguePositionDto> GetPositions(long teamId, CompetitionModel competition);
+    LeaguePosition[] GetPositions(long competitionId, long teamId);
 }
 
 public class LeaguePositionBuilder : ILeaguePositionBuilder
@@ -16,33 +17,38 @@ public class LeaguePositionBuilder : ILeaguePositionBuilder
     private readonly ILeagueTableBuilder _leagueTableBuilder;
     private readonly IMatchRepository _matchRepository;
     private readonly IPointDeductionRepository _pointDeductionRepository;
+    private readonly ICompetitionRepository _competitionRepository;
 
     public LeaguePositionBuilder(
         ILeagueTableBuilder leagueTableBuilder,
         IMatchRepository matchRepository,
-        IPointDeductionRepository pointDeductionRepository)
+        IPointDeductionRepository pointDeductionRepository,
+        ICompetitionRepository competitionRepository)
     {
         _leagueTableBuilder       = leagueTableBuilder;
         _matchRepository          = matchRepository;
         _pointDeductionRepository = pointDeductionRepository;
+        _competitionRepository = competitionRepository;
     }
 
-    public List<LeaguePositionDto> GetPositions(long teamId, CompetitionModel competition)
+    public LeaguePosition[] GetPositions(long competitionId, long teamId)
     {
+        var competition = _competitionRepository.GetCompetition(competitionId);
+
         var leagueMatches = _matchRepository.GetLeagueMatches(competition.Id);
         if (!leagueMatches.Any())
         {
-            return new List<LeaguePositionDto>();
+            return Array.Empty<LeaguePosition>();
         }
 
         var pointDeductions = _pointDeductionRepository.GetPointDeductions(competition.Id);
 
         return GetDates(leagueMatches)
             .Select(d => GetLeaguePositionDto(teamId, competition, leagueMatches, d, pointDeductions))
-            .ToList();
+            .ToArray();
     }
 
-    private LeaguePositionDto GetLeaguePositionDto(
+    private LeaguePosition GetLeaguePositionDto(
         long teamId, CompetitionModel competition,
         MatchModel[] leagueMatches,
         DateTime targetDate,
