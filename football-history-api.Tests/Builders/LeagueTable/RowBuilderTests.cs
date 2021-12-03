@@ -1,4 +1,4 @@
-namespace football.history.api.Tests.Builders.LeagueTable;
+namespace football.history.api.Tests.Builders;
 
 [TestFixture]
 public class RowBuilderTests

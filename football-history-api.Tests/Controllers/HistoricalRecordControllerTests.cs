@@ -1,7 +1,7 @@
 namespace football.history.api.Tests.Controllers;
 
 [TestFixture]
-public class HistoricalPositionControllerTests
+public class HistoricalRecordControllerTests
 {
     [Test]
     public async Task GetHistoricalRecord_returns_not_found_given_invalid_url()

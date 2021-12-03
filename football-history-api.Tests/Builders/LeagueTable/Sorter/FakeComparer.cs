@@ -1,4 +1,4 @@
-namespace football.history.api.Tests.Builders.LeagueTable.Sorter;
+namespace football.history.api.Tests.Builders;
 
 public class FakeComparer : IComparer<LeagueTableRow?>
 {

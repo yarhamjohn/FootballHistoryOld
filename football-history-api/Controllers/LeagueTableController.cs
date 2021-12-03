@@ -17,14 +17,14 @@ public class LeagueTableController : Controller
     [ProducesResponseType(500)]
     public ActionResult<LeagueTable> GetLeagueTable(long id)
     {
-            var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(id);
+        var leagueTable = _leagueTableBuilder.BuildFullLeagueTable(id);
 
-            if (leagueTable is null)
-            {
-                return NotFound($"No league table available for competition {id}.");
-            }
-            
-            return leagueTable;
+        if (leagueTable is null)
+        {
+            return NotFound($"No league table available for competition {id}.");
+        }
+        
+        return leagueTable;
     }
 
     [HttpGet("season/{seasonId:long}/team/{teamId:long}")]
