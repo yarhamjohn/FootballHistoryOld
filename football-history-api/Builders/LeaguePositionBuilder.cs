@@ -66,7 +66,7 @@ namespace football.history.api.Builders
 
             return Enumerable
                 .Range(0, 1 + endDate.Subtract(startDate).Days)
-                .Select(offset => startDate.AddDays(offset)).ToList();
+                .Select(offset => startDate.AddDays(offset));
         }
     }
 }

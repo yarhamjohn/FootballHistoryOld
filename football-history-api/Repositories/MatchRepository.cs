@@ -2,6 +2,37 @@ namespace football.history.api.Repositories;
 
 public interface IMatchRepository
 {
+    /// <summary>
+    /// Retrieves models for all matches that correspond to the
+    /// given set of filter parameters. If no parameters are
+    /// given, returns all matches in the database. 
+    /// </summary>
+    /// 
+    /// <param name="competitionId">
+    /// Optional. The id of the required competition.
+    /// </param>
+    /// 
+    /// <param name="seasonId">
+    /// Optional. The id of the required season.
+    /// </param>
+    /// 
+    /// <param name="teamId">
+    /// Optional. The id of the required team.
+    /// </param>
+    /// 
+    /// <param name="type">
+    /// Optional. The <see cref="CompetitionMatchType" /> required.
+    /// </param>
+    /// 
+    /// <param name="matchDate">
+    /// Optional. The date of the required match.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of all <see cref="MatchModel">MatchModels</see>
+    /// matching the set of filter parameters.
+    /// Can be empty if no matches correspond to the given set of filters.
+    /// </returns>
     public MatchModel[] GetMatches(
         long? competitionId = null,
         long? seasonId = null,
@@ -9,10 +40,55 @@ public interface IMatchRepository
         CompetitionMatchType? type = null,
         DateTime? matchDate = null);
 
+    /// <summary>
+    /// Retrieves a model from the database for the match
+    /// matching the provided <paramref name="matchId"/>.
+    /// </summary>
+    /// 
+    /// <param name="matchId">
+    /// The id of the required match.
+    /// </param>
+    /// 
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the given <paramref name="matchId"/> matched more than one match.
+    /// </exception>
+    ///
+    /// <returns>
+    /// Returns the matching <see cref="MatchModel"/> or null if
+    /// the given <paramref name="matchId"/> matched no match.
+    /// </returns>
     public MatchModel? GetMatch(long matchId);
 
+    /// <summary>
+    /// Retrieves models for all league matches in the competition
+    /// matching the given <paramref name="competitionId"/>.
+    /// </summary>
+    /// 
+    /// <param name="competitionId">
+    /// The id of the required competition.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of all league <see cref="MatchModel">MatchModels</see>
+    /// for the competition specified by the <paramref name="competitionId"/>.
+    /// Can be empty if the competition contained no league matches.
+    /// </returns>
     public MatchModel[] GetLeagueMatches(long competitionId);
 
+    /// <summary>
+    /// Retrieves models for all play off matches in the competition
+    /// matching the given <paramref name="competitionId"/>.
+    /// </summary>
+    /// 
+    /// <param name="competitionId">
+    /// The id of the required competition.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A collection of all play off <see cref="MatchModel">MatchModels</see>
+    /// for the competition specified by the <paramref name="competitionId"/>.
+    /// Can be empty if the competition contained no play off matches.
+    /// </returns>
     public MatchModel[] GetPlayOffMatches(long competitionId);
 }
 
