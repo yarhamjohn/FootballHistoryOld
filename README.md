@@ -1,28 +1,24 @@
 # Football History
-This is an application for reviewing historical data from the top 4 flights of English football. It consists of a graphical dashboard and a REST API documented via a Swagger UI. The front-end is a React UI built in Typescript whilst the backend is written in C# and backed by a Sql Server database.
 
-| Football History | Build Status |
-|------------------|------------- |
-| **[UI](https://football-history.azurewebsites.net/ "Football History")** | [![Build and deploy UI](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-ui.yml/badge.svg)](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-ui.yml) |
-| **[API](https://football-history-api.azurewebsites.net/swagger/index.html?urls.primaryName=v2 "Football History API")** | [![Build and deploy Api](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-api.yml/badge.svg)](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-api.yml) |
+An application for reviewing historical English Football League data. It is built in React-Typescript and C#, using an Azure-hosted SQL database and uses Github Actions for CI/CD.
 
+The app contains data from the original 1888-1889 season through to the end of the last completed season. Data that can be found in the app includes league tables, match results, historical finishing positions and other information.
 
-## Project status
-Currently the data only covers the period 1992 - present, and therefore the only clubs that can be analysed are those that appeared at least once in the top 4 divisions since 1992-1993. There are 3 pages in the application:
+This app is a continual work in progress and mostly used as an experiment/practice engineering repo so is liable to substantial changes over time. The data within is not guaranteed to be 100% accurate, though this should improve over time.
 
-#### Introduction
-A page with a brief outline of the history of the English football league since 1888, covering major rule changes and changes to the league structure.
+Suggestions for improvements (either technical or feature) are welcome!
 
-#### Club
-A page allowing data for individual clubs to be examined. Data on this page includes the relevant league table for a given season and the historical positioning of the club across the 4 leagues.
+## Build/Deployment Status
 
-#### League
-A page allowing data for specific league seasons (e.g. 2010-2011 Premier League) to be examined. Data on this page includes the relevant league table and match results for the selected season and division.
+| Football History                                                                         | Build Status                                                                                                                                                                                                                        |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[UI](https://football-history.azurewebsites.net/ "Football History")**                 | [![Build and deploy UI](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-ui.yml/badge.svg)](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-ui.yml)    |
+| **[API](https://football-history-api.azurewebsites.net/swagger "Football History API")** | [![Build and deploy Api](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-api.yml/badge.svg)](https://github.com/yarhamjohn/football-history/actions/workflows/main_football-history-api.yml) |
 
+## Possible future work
 
-## Planned future work
-- Extend the available data back to 1888/89
 - Add more metrics (e.g. trophies, records)
 - Add additional analyses such as head-to-head matches
 - Extend to include cup data and other leagues
-- Include more details match-by-match data
+- Include more detailed match-by-match data
+- Technical enhancements, particularly around the front-end (e.g. RTL and Storybook)
