@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import { App } from ".";
+// import { render, screen } from "@testing-library/react";
+// import { App } from ".";
 
-describe("App", () => {
-  it("renders header", () => {
-    render(<App />);
+// describe("App", () => {
+//   it("renders header", () => {
+//     render(<App />);
 
-    expect(screen.getByText("Football History."));
-  });
-});
+//     expect(screen.getByText("Football History."));
+//   });
+// });

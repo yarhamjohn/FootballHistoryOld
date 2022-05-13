@@ -1,11 +1,7 @@
 import { FC, ReactElement } from "react";
 
 const App: FC = (): ReactElement => {
-  return (
-    <>
-      <h1>Football History.</h1>
-    </>
-  );
+  return <div>Helll WOrld</div>;
 };
 
 export { App };
