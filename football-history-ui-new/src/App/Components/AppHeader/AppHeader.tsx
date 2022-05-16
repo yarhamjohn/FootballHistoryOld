@@ -1,17 +1,21 @@
 import { DarkModeToggle } from "./DarkModeToggle/DarkModeToggle";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
-import { TabBar } from "./TabBar/TabBar";
+import { ActiveTab, TabBar } from "./TabBar/TabBar";
 import Toolbar from "@mui/material/Toolbar/Toolbar";
 import AppBar from "@mui/material/AppBar/AppBar";
 import { FC, ReactElement } from "react";
 
-const AppHeader: FC = (): ReactElement => {
+type Props = {
+  activeTab: ActiveTab;
+};
+
+const AppHeader: FC<Props> = ({ activeTab }): ReactElement => {
   return (
     <>
       <AppBar color={"secondary"}>
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <SportsSoccerIcon color={"primary"} fontSize={"large"} />
-          <TabBar />
+          <TabBar activeTab={activeTab} />
           <DarkModeToggle />
         </Toolbar>
       </AppBar>
