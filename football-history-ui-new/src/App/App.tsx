@@ -1,31 +1,23 @@
-import { FC, ReactElement, useState } from "react";
+import { FC, ReactElement } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./Components/Layout/Layout";
 import { Competitions } from "./Pages/Competitions/Competitions";
 import { Home } from "./Pages/Home/Home";
+import { NotFound } from "./Pages/NotFound/NotFound";
 import { Seasons } from "./Pages/Seasons/Seasons";
 import { Teams } from "./Pages/Teams/Teams";
 
-enum Pages {
-  "Home" = 0,
-  "Teams" = 1,
-  "Seasons" = 2,
-  "Competitions" = 3
-}
-
 const App: FC = (): ReactElement => {
-  const [activeTab, setActiveTab] = useState<number>(Pages.Home);
-
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
-      {activeTab === Pages.Home ? (
-        <Home />
-      ) : activeTab === Pages.Teams ? (
-        <Teams />
-      ) : activeTab === Pages.Seasons ? (
-        <Seasons />
-      ) : (
-        <Competitions />
-      )}
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Navigate replace to="home" />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/seasons" element={<Seasons />} />
+        <Route path="/competitions" element={<Competitions />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Layout>
   );
 };

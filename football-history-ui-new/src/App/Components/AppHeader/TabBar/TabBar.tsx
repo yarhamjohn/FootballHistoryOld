@@ -1,19 +1,18 @@
 import Tab from "@mui/material/Tab/Tab";
 import Tabs from "@mui/material/Tabs/Tabs";
-import { FC, ReactElement } from "react";
+import { FC, ReactElement, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-type Props = {
-  activeTab: number;
-  setActiveTab: (index: number) => void;
-};
+const TabBar: FC = (): ReactElement => {
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const navigate = useNavigate();
 
-const TabBar: FC<Props> = ({ activeTab, setActiveTab }): ReactElement => {
   return (
     <Tabs value={activeTab} onChange={(_, i) => setActiveTab(i)}>
-      <Tab label="Home" />
-      <Tab label="Teams" />
-      <Tab label="Seasons" />
-      <Tab label="Competitions" />
+      <Tab label="Home" onClick={() => navigate("home")} />
+      <Tab label="Teams" onClick={() => navigate("teams")} />
+      <Tab label="Seasons" onClick={() => navigate("seasons")} />
+      <Tab label="Competitions" onClick={() => navigate("competitions")} />
     </Tabs>
   );
 };

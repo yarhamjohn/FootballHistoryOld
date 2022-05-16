@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { ColorModeContextProvider } from "./App/Contexts/ColorModeContext";
 import { App } from "./App/App";
+import { BrowserRouter } from "react-router-dom";
 
 const rootElement = document.getElementById("root");
 
@@ -12,6 +13,8 @@ const root = createRoot(rootElement);
 
 root.render(
   <ColorModeContextProvider>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </ColorModeContextProvider>
 );

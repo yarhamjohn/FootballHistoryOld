@@ -5,18 +5,13 @@ import Toolbar from "@mui/material/Toolbar/Toolbar";
 import AppBar from "@mui/material/AppBar/AppBar";
 import { FC, ReactElement } from "react";
 
-type Props = {
-  activeTab: number;
-  setActiveTab: (index: number) => void;
-};
-
-const AppHeader: FC<Props> = ({ activeTab, setActiveTab }): ReactElement => {
+const AppHeader: FC = (): ReactElement => {
   return (
     <>
       <AppBar color={"secondary"}>
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <SportsSoccerIcon color={"primary"} fontSize={"large"} />
-          <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <TabBar />
           <DarkModeToggle />
         </Toolbar>
       </AppBar>
