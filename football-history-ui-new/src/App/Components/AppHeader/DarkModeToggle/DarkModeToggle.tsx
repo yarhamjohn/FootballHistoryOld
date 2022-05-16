@@ -1,4 +1,5 @@
-import { Switch, FormControlLabel } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel";
+import Switch from "@mui/material/Switch/Switch";
 import { useContext } from "react";
 import { ColorModeContext } from "../../../Contexts/ColorModeContext";
 

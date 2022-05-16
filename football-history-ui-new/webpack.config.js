@@ -7,20 +7,20 @@ module.exports = {
   mode: "development",
   devtool: "source-map",
   output: {
-    path: path.resolve(__dirname, "build"),
-    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js"
   },
   plugins: [new HtmlWebpackPlugin({ template: "public/index.html" })],
   module: {
     rules: [
       { test: /\.js$/, loader: "babel-loader", exclude: /node_modules/ },
-      { test: /\.(ts|tsx)?$/, loader: "ts-loader", exclude: /node_modules/ },
-    ],
+      { test: /\.(ts|tsx)?$/, loader: "ts-loader", exclude: /node_modules/ }
+    ]
   },
   resolve: { extensions: [".ts", ".tsx", ".js", ".json"] },
   devServer: {
     port: 3000,
     open: true,
-    hot: true,
-  },
+    hot: true
+  }
 };

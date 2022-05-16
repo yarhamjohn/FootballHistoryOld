@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { ColorModeContextProvider } from "./App/Contexts/ColorModeContext";
-import { Layout } from "./App/Components";
-import { App } from "./App";
+import { App } from "./App/App";
 
 const rootElement = document.getElementById("root");
 
@@ -13,8 +12,6 @@ const root = createRoot(rootElement);
 
 root.render(
   <ColorModeContextProvider>
-    <Layout>
-      <App />
-    </Layout>
+    <App />
   </ColorModeContextProvider>
 );
