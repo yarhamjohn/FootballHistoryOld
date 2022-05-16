@@ -5,7 +5,7 @@ import { FC, ReactElement } from "react";
 
 const NotFound: FC = (): ReactElement => {
   return (
-    <Card sx={{ maxWidth: "lg" }} variant="outlined">
+    <Card variant="outlined">
       <CardContent>
         <Typography gutterBottom variant="h5">
           Page not found :(
