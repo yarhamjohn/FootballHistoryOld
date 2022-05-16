@@ -11,7 +11,7 @@ const Layout: FC<Props> = ({ children, activeTab }): ReactElement => {
   return (
     <>
       <AppHeader activeTab={activeTab} />
-      {children}
+      <div style={{ margin: "2rem", display: "flex", justifyContent: "center" }}>{children}</div>
     </>
   );
 };
