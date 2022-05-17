@@ -1,7 +1,7 @@
 import { CssBaseline } from "@mui/material";
 import { FC, ReactElement } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { ActiveTab } from "./Components/AppHeader/TabBar/TabBar";
+import { ActiveTab } from "./Components/Layout/AppHeader/TabBar/TabBar";
 import { Layout } from "./Components/Layout/Layout";
 import { Competitions } from "./Pages/Competitions/Competitions";
 import { Home } from "./Pages/Home/Home";
