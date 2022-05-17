@@ -10,7 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
-import { amber, blue, green, purple, red } from "@mui/material/colors";
+import { amber, blue, green, grey, purple, red } from "@mui/material/colors";
 
 type Props = {
   year: number;
@@ -60,7 +60,9 @@ const TimelineEntry: FC<Props> = ({ year, title, description, type }): ReactElem
       </TimelineSeparator>
       <TimelineContent>
         <Typography variant={"h6"}>{title}</Typography>
-        <Typography variant={"body2"}>{description}</Typography>
+        <Typography color={grey[700]} variant={"body2"}>
+          {description}
+        </Typography>
       </TimelineContent>
     </TimelineItem>
   );

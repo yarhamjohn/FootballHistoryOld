@@ -4,7 +4,7 @@ import { FC, ReactElement } from "react";
 const Summary: FC = (): ReactElement => {
   return (
     <div style={{ marginBottom: "1.25rem" }}>
-      <Typography gutterBottom variant={"h2"}>
+      <Typography gutterBottom variant={"h3"}>
         History of the English Football League
       </Typography>
       <Typography gutterBottom variant={"body1"}>
