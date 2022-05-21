@@ -11,7 +11,7 @@ const NotFound: FC = (): ReactElement => {
           Page not found :(
         </Typography>
         <Typography variant="body1">
-          Maybe the page you are looking for has been removed, or you typed in the wrong URL
+          The page you are looking for might have been removed, or the url is invalid.
         </Typography>
       </CardContent>
     </Card>
