@@ -5,6 +5,8 @@ const apiUrl =
 
 const getTeamsUrl = () => `${apiUrl}/api/v2/teams`;
 
+const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
+
 const getHistoricalPositionsUrl = () => "";
 
-export { getTeamsUrl, getHistoricalPositionsUrl };
+export { getTeamsUrl, getSeasonsUrl, getHistoricalPositionsUrl };

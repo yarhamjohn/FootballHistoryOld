@@ -5,6 +5,12 @@ type Team = {
   notes: string | null;
 };
 
-type HistoricalPosition = {};
+type Season = {
+  id: number;
+  startYear: number;
+  endYear: number;
+};
 
-export { Team, HistoricalPosition };
+type HistoricalPosition = undefined;
+
+export { Team, Season, HistoricalPosition };
