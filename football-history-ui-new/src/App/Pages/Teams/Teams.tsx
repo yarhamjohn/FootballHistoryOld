@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Divider from "@mui/material/Divider/Divider";
 import TextField from "@mui/material/TextField/TextField";
 import { FC, ReactElement, useState } from "react";
+import { HistoricalPositions } from "../../Components/HistoricalPositions/HistoricalPositions";
 import { Team } from "../../Domain/Types";
 import { useFetchTeams } from "../../Hooks/useFetchTeams";
 
@@ -37,6 +38,7 @@ const Teams: FC = (): ReactElement => {
         renderInput={(params) => <TextField {...params} label="Team" />}
       />
       <Divider style={{ width: "100%" }} />
+      <HistoricalPositions />
     </div>
   );
 };

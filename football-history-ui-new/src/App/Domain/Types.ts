@@ -5,4 +5,6 @@ type Team = {
   notes: string | null;
 };
 
-export { Team };
+type HistoricalPosition = {};
+
+export { Team, HistoricalPosition };
