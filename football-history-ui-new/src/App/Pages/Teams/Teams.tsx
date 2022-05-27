@@ -1,13 +1,12 @@
 import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import Divider from "@mui/material/Divider/Divider";
 import TextField from "@mui/material/TextField/TextField";
-import { FC, ReactElement, useContext, useState } from "react";
+import { FC, ReactElement, useContext } from "react";
 import { Team } from "../../Domain/Types";
-import { TeamsContext } from "../../Domain/TeamsContext";
+import { TeamsContext } from "../../Contexts/TeamsContext";
 
 const Teams: FC = (): ReactElement => {
-  const teams = useContext(TeamsContext);
-  const [activeTeam, setActiveTeam] = useState<Team | null>(null);
+  const { teams, activeTeam, setActiveTeam } = useContext(TeamsContext);
 
   return (
     <div style={{ width: "100%", alignItems: "center", display: "flex", flexDirection: "column" }}>

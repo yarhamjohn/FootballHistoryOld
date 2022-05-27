@@ -7,6 +7,8 @@ const getTeamsUrl = () => `${apiUrl}/api/v2/teams`;
 
 const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
 
+const getCompetitionsUrl = () => `${apiUrl}/api/v2/competitions`;
+
 const getHistoricalPositionsUrl = () => "";
 
-export { getTeamsUrl, getSeasonsUrl, getHistoricalPositionsUrl };
+export { getTeamsUrl, getSeasonsUrl, getCompetitionsUrl, getHistoricalPositionsUrl };
