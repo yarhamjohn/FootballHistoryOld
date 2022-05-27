@@ -67,7 +67,7 @@ public class HistoricalRecordControllerTests
     }
         
     [Test]
-    public async Task GetHistoricalRecord_returns_not_found_given_no_historical_seasons()
+    public async Task GetHistoricalRecord_returns_empty_given_no_historical_seasons()
     {
         var mockHistoricalRecordBuilder = new Mock<IHistoricalRecordBuilder>();
         mockHistoricalRecordBuilder
@@ -78,12 +78,12 @@ public class HistoricalRecordControllerTests
 
         var response = await client.GetAsync("api/v2/historical-record/teamId/1?seasonIds=1");
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
         var responseString = await response.Content.ReadAsStringAsync();
-        Assert.That(responseString, Does.Contain("No historical seasons were found for the specified team"));
-        Assert.That(responseString, Does.Contain("('1') and seasonIds ('1')"));
-    }
+
+        var actualHistoricalRecord = JsonConvert.DeserializeObject<HistoricalRecord>(responseString);
+        Assert.That(actualHistoricalRecord.HistoricalSeasons.Length, Is.EqualTo(0));    }
 
     [Test]
     public async Task GetHistoricalRecord_returns_record()

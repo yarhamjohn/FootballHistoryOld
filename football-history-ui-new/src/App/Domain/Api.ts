@@ -9,6 +9,12 @@ const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
 
 const getCompetitionsUrl = () => `${apiUrl}/api/v2/competitions`;
 
-const getHistoricalPositionsUrl = () => "";
+const getHistoricalPositionsUrl = (teamId: number, seasonIds: number[]) => {
+  const seasonIdsForQuery = seasonIds
+    .map((id, index) => `${index === 0 ? "?" : "&"}seasonIds=${id}`)
+    .join("");
+
+  return `${apiUrl}/api/v2/historical-record/teamId/${teamId}${seasonIdsForQuery}`;
+};
 
 export { getTeamsUrl, getSeasonsUrl, getCompetitionsUrl, getHistoricalPositionsUrl };

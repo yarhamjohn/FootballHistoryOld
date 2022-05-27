@@ -31,6 +31,24 @@ type Competition = {
   rules: CompetitionRules;
 };
 
-type HistoricalPosition = undefined;
+type HistoricalRecord = {
+  teamId: number;
+  historicalSeasons: HistoricalSeason[];
+};
 
-export { Team, Season, Competition, HistoricalPosition };
+type HistoricalSeason = {
+  seasonId: number;
+  seasonStartYear: number;
+  boundaries: number[];
+  historicalPosition: HistoricalPosition | null;
+};
+
+type HistoricalPosition = {
+  competitionId: number;
+  competitionName: string;
+  position: number;
+  overallPosition: number;
+  status: string | null;
+};
+
+export { Team, Season, Competition, HistoricalRecord, HistoricalSeason };

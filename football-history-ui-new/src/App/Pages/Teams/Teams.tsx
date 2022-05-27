@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField/TextField";
 import { FC, ReactElement, useContext } from "react";
 import { Team } from "../../Domain/Types";
 import { TeamsContext } from "../../Contexts/TeamsContext";
+import { HistoricalRecord } from "../../Components/HistoricalRecord/HistoricalRecord";
 
 const Teams: FC = (): ReactElement => {
   const { teams, activeTeam, setActiveTeam } = useContext(TeamsContext);
@@ -22,6 +23,7 @@ const Teams: FC = (): ReactElement => {
         renderInput={(params) => <TextField {...params} label="Team" />}
       />
       <Divider style={{ width: "100%" }} />
+      {activeTeam === null ? <></> : <HistoricalRecord activeTeam={activeTeam} />}
     </div>
   );
 };

@@ -19,15 +19,7 @@ public class HistoricalRecordController : Controller
     {
         try
         {
-            var record = _builder.Build(teamId, seasonIds);
-
-            if (!record.HistoricalSeasons.Any())
-            {
-                return NotFound("No historical seasons were found for the specified team " +
-                                $"('{teamId}') and seasonIds ('{string.Join(",", seasonIds)}')");
-            }
-
-            return record;
+            return _builder.Build(teamId, seasonIds);
         }
         catch (Exception ex)
         {
