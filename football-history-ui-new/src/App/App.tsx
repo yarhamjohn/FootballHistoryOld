@@ -3,55 +3,35 @@ import { FC, ReactElement } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ActiveTab } from "./Components/Layout/AppHeader/TabBar/TabBar";
 import { Layout } from "./Components/Layout/Layout";
-import { useFetchTeams } from "./Hooks/useFetchTeams";
 import { Competitions } from "./Pages/Competitions/Competitions";
 import { Home } from "./Pages/Home/Home";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { Seasons } from "./Pages/Seasons/Seasons";
 import { Teams } from "./Pages/Teams/Teams";
 import { TeamsContextProvider } from "./Contexts/TeamsContext";
-import { useFetchSeasons } from "./Hooks/useFetchSeasons";
 import { SeasonsContextProvider } from "./Contexts/SeasonsContext";
 import { CompetitionsContextProvider } from "./Contexts/CompetitionsContext";
-import { useFetchCompetitions } from "./Hooks/useFetchCompetitions";
+import { useApp } from "./useApp";
 
 const App: FC = (): ReactElement => {
-  const { teamsState } = useFetchTeams();
-  const { seasonsState } = useFetchSeasons();
-  const { competitionsState } = useFetchCompetitions();
+  const state = useApp();
 
-  if (
-    teamsState.status === "FETCH_NOT_STARTED" ||
-    seasonsState.status === "FETCH_NOT_STARTED" ||
-    competitionsState.status === "FETCH_NOT_STARTED"
-  ) {
+  if (state.status === "NOT_LOADED") {
     return <></>;
   }
 
-  if (
-    teamsState.status === "FETCH_IN_PROGRESS" ||
-    seasonsState.status === "FETCH_IN_PROGRESS" ||
-    competitionsState.status === "FETCH_IN_PROGRESS"
-  ) {
+  if (state.status === "LOADING") {
     return <CircularProgress />;
   }
 
-  if (teamsState.status === "FETCH_ERROR") {
-    return <Alert severity="error">{teamsState.error.message}</Alert>;
-  }
-
-  if (seasonsState.status === "FETCH_ERROR") {
-    return <Alert severity="error">{seasonsState.error.message}</Alert>;
-  }
-
-  if (competitionsState.status === "FETCH_ERROR") {
-    return <Alert severity="error">{competitionsState.error.message}</Alert>;
+  if (state.status === "LOAD_FAILED") {
+    return <Alert severity="error">{state.error.message}</Alert>;
   }
 
   return (
-    <TeamsContextProvider teams={teamsState.data}>
-      <SeasonsContextProvider seasons={seasonsState.data}>
-        <CompetitionsContextProvider competitions={competitionsState.data}>
+    <TeamsContextProvider teams={state.data.teams}>
+      <SeasonsContextProvider seasons={state.data.seasons}>
+        <CompetitionsContextProvider competitions={state.data.competitions}>
           <CssBaseline>
             <Routes>
               <Route path="/" element={<Navigate replace to={ActiveTab[ActiveTab.home]} />} />
