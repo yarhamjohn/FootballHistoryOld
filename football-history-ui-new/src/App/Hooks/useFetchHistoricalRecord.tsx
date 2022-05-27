@@ -9,29 +9,25 @@ const useFetchHistoricalRecord = (
   teamId: number
 ): {
   historicalRecordState: FetchState<HistoricalRecord>;
-  historicalRecordRange: number[];
-  updateHistoricalRecord: (newRange: number[]) => void;
+  selectedRange: number[];
+  updateSelectedRange: (newRange: number[]) => void;
 } => {
-  const { seasons } = useContext(SeasonsContext);
-
-  const [selectedSeasons, setSelectedSeasons] = useState<Season[]>(seasons);
   const { state, callApi } = useFetch<HistoricalRecord>();
+  const { seasons, seasonIds } = useContext(SeasonsContext);
+  const [selectedSeasons, setSelectedSeasons] = useState<Season[]>(seasons);
 
   useEffect(() => {
-    const url = getHistoricalPositionsUrl(
-      teamId,
-      seasons.map((x) => x.id)
-    );
+    const url = getHistoricalPositionsUrl(teamId, seasonIds);
 
     callApi(url);
-  }, [teamId, seasons]);
+  }, [teamId, seasonIds]);
 
-  const historicalRecordRange = [
+  const selectedRange = [
     Math.min(...selectedSeasons.map((x) => x.startYear)),
     Math.max(...selectedSeasons.map((x) => x.startYear))
   ];
 
-  const updateHistoricalRecord = (newRange: number[]) => {
+  const updateSelectedRange = (newRange: number[]) => {
     setSelectedSeasons(
       seasons.filter(
         (s) => s.startYear >= Math.min(...newRange) && s.startYear <= Math.max(...newRange)
@@ -41,8 +37,8 @@ const useFetchHistoricalRecord = (
 
   return {
     historicalRecordState: state,
-    historicalRecordRange,
-    updateHistoricalRecord
+    selectedRange,
+    updateSelectedRange
   };
 };
 

@@ -1,7 +1,7 @@
 import { Serie } from "@nivo/line";
 import { HistoricalSeason } from "../../../Domain/Types";
 
-const useHistoricalRecordGraph = (seasons: HistoricalSeason[], range: number[]) => {
+const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: number[]) => {
   const getSeasonStartYears = (start: number, end: number) =>
     Array.from({ length: end - start }, (v, k) => k + start);
 
@@ -30,7 +30,7 @@ const useHistoricalRecordGraph = (seasons: HistoricalSeason[], range: number[]) 
   const series: Serie[] = [
     {
       id: "positions",
-      data: getPositionSeries(seasons, range)
+      data: getPositionSeries(seasons, selectedRange)
     },
     {
       id: "tier1-tier2",

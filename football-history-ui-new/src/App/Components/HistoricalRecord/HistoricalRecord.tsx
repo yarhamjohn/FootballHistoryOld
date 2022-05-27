@@ -9,8 +9,9 @@ import { HistoricalRecordSlider } from "./HistoricalRecordSlider/HistoricalRecor
 type HistoricalPositionProps = { activeTeam: Team };
 
 const HistoricalRecord: FC<HistoricalPositionProps> = ({ activeTeam }): ReactElement => {
-  const { historicalRecordState, historicalRecordRange, updateHistoricalRecord } =
-    useFetchHistoricalRecord(activeTeam.id);
+  const { historicalRecordState, selectedRange, updateSelectedRange } = useFetchHistoricalRecord(
+    activeTeam.id
+  );
 
   if (historicalRecordState.status === "FETCH_NOT_STARTED") {
     return <></>;
@@ -27,12 +28,12 @@ const HistoricalRecord: FC<HistoricalPositionProps> = ({ activeTeam }): ReactEle
   return (
     <>
       <HistoricalRecordSlider
-        historicalRecordRange={historicalRecordRange}
-        updateHistoricalRecord={updateHistoricalRecord}
+        selectedRange={selectedRange}
+        updateSelectedRange={updateSelectedRange}
       />
       <HistoricalRecordGraph
         historicalSeasons={historicalRecordState.data.historicalSeasons}
-        historicalRecordRange={historicalRecordRange}
+        selectedRange={selectedRange}
       />
     </>
   );

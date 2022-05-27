@@ -4,13 +4,13 @@ import { FC, ReactElement, useContext, useState } from "react";
 import { SeasonsContext } from "../../../Contexts/SeasonsContext";
 
 type HistoricalRecordSliderProps = {
-  historicalRecordRange: number[];
-  updateHistoricalRecord: (newRange: number[]) => void;
+  selectedRange: number[];
+  updateSelectedRange: (newRange: number[]) => void;
 };
 
 const HistoricalRecordSlider: FC<HistoricalRecordSliderProps> = ({
-  historicalRecordRange,
-  updateHistoricalRecord
+  selectedRange: historicalRecordRange,
+  updateSelectedRange: updateHistoricalRecord
 }): ReactElement => {
   const { firstSeason, lastSeason } = useContext(SeasonsContext);
   const [range, setRange] = useState<number[]>(historicalRecordRange);
