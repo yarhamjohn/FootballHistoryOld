@@ -150,6 +150,8 @@ def CleanseTeams(team):
         return "Stockport County"
     elif team == "Stoke":
         return "Stoke City"
+    elif team == "Sutton":
+        return "Sutton United"
     elif team == "Swansea":
         return "Swansea City"
     elif team == "Swindon":

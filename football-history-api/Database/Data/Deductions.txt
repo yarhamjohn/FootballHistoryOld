@@ -1,0 +1,54 @@
+CompetitionId,PointsDeducted,Reason,TeamId,Id
+839,2,Failing to control spectators,16,1
+836,3,Unauthorised postponing of a match,64,2
+843,3,Fielding an ineligible player,55,3
+855,9,Financial irregularities,29,4
+863,4,Financial irregularities,13,5
+871,10,Entering administration,22,6
+870,10,Entering administration,109,7
+875,1,Fielding an ineligible player,21,8
+879,10,Entering administration,13,9
+878,10,Entering administration,84,10
+877,10,Entering administration,53,11
+883,10,Entering administration,84,12
+882,10,Entering administration,58,13
+882,15,Breach of insolvency rules,53,14
+882,10,Entering administration,2,15
+887,17,Breach of insolvency rules,84,16
+887,30,Breach of insolvency rules and financial misconduct,58,17
+887,17,Breach of insolvency rules,2,18
+887,10,Entering administration,36,19
+886,10,Entering administration,94,20
+885,1,Fielding an ineligible player,34,21
+890,10,Entering administration,91,22
+890,3,Fielding an ineligible player,47,23
+889,10,Entering administration,34,24
+888,9,Entering administration,79,25
+895,1,Fielding an ineligible player,99,26
+895,3,Fielding an ineligible player,48,27
+894,10,Entering administration,77,28
+899,10,Entering administration,78,29
+897,10,Entering administration,79,30
+902,10,Breach of insolvency rules,79,31
+902,10,Entering administration,31,32
+907,3,Fielding an ineligible player,3,33
+906,10,Breach of insolvency rules,31,34
+909,3,Fielding an ineligible player,84,35
+914,3,Fielding an ineligible player,21,36
+812,2,Brawl in a match with Manchester United,5,37
+812,1,Brawl in a match with Arsenal,61,38
+783,2,Fielding an ineligible player,11,39
+745,1,Fielding an ineligible player,80,40
+747,1,Fielding an ineligible player,69,41
+722,19,Making irregular payments to players,76,42
+558,2,Fielding an ineligible player,94,43
+483,2,Fielding an ineligible player,96,44
+925,9,Breach of insolvency rules,9,45
+929,12,Entering administration,106,46
+930,12,Entering administration,12,47
+930,12,Entering an insolvency event. Then expelled from the league.,21,48
+931,17,4 - failing to pay wages and to fulfil a fixture. 7 - failing to fulfil a fixture. 2 - failing to pay wages. 4 - increased after appeal.,59,49
+747,-2,Scunthorpe United – Exeter City was never played; Exeter failed to turn up and Scunthorpe were awarded the points.,87,50
+933,6,Breaching financial regulations,89,51
+937,6,Breaching financial regulations,82,52
+937,21,12 - entering administration. 9 - financial irregularities,37,53
