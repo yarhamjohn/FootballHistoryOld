@@ -1,0 +1,6 @@
+Id,Type,Stage,ExtraTime,Penalties,NumLegs,AwayGoals,Replays
+1,League,,False,False,,False,False
+9,PlayOff,Final,True,True,1,False,False
+10,PlayOff,Final,True,True,2,False,True
+11,PlayOff,Semi-Final,True,True,2,False,False
+12,PlayOff,Semi-Final,True,False,2,True,False
