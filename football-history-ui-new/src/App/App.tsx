@@ -16,10 +16,6 @@ import { useApp } from "./useApp";
 const App: FC = (): ReactElement => {
   const state = useApp();
 
-  if (state.status === "NOT_LOADED") {
-    return <></>;
-  }
-
   if (state.status === "LOADING") {
     return <CircularProgress />;
   }

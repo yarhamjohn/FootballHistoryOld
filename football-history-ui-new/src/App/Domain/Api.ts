@@ -17,4 +17,13 @@ const getHistoricalPositionsUrl = (teamId: number, seasonIds: number[]) => {
   return `${apiUrl}/api/v2/historical-record/teamId/${teamId}${seasonIdsForQuery}`;
 };
 
-export { getTeamsUrl, getSeasonsUrl, getCompetitionsUrl, getHistoricalPositionsUrl };
+const fetchData = (url: string) =>
+  fetch(url).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+
+    throw new Error(`Oops something went wrong.`);
+  });
+
+export { fetchData, getTeamsUrl, getSeasonsUrl, getCompetitionsUrl, getHistoricalPositionsUrl };

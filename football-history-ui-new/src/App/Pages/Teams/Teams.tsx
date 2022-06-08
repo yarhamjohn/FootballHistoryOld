@@ -23,7 +23,7 @@ const Teams: FC = (): ReactElement => {
         renderInput={(params) => <TextField {...params} label="Team" />}
       />
       <Divider style={{ width: "100%" }} />
-      {activeTeam === null ? <></> : <HistoricalRecord activeTeam={activeTeam} />}
+      {activeTeam === null ? <></> : <HistoricalRecord teamId={activeTeam.id} />}
     </div>
   );
 };

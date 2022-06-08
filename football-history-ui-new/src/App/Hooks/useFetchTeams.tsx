@@ -1,16 +1,7 @@
-import { useEffect } from "react";
-import { getTeamsUrl } from "../Domain/Api";
+import { useQuery } from "react-query";
+import { fetchData, getTeamsUrl } from "../Domain/Api";
 import { Team } from "../Domain/Types";
-import { useFetch } from "./useFetch";
 
-const useFetchTeams = () => {
-  const { state, callApi } = useFetch<Team[]>();
-
-  useEffect(() => {
-    callApi(getTeamsUrl());
-  }, []);
-
-  return { teamsState: state };
-};
+const useFetchTeams = () => useQuery<Team[], Error>("teams", () => fetchData(getTeamsUrl()));
 
 export { useFetchTeams };

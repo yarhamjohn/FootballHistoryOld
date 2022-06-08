@@ -4,7 +4,6 @@ import { useFetchSeasons } from "./Hooks/useFetchSeasons";
 import { useFetchTeams } from "./Hooks/useFetchTeams";
 
 type AppState =
-  | { status: "NOT_LOADED" }
   | { status: "LOADING" }
   | {
       status: "LOAD_SUCCESS";
@@ -13,27 +12,23 @@ type AppState =
   | { status: "LOAD_FAILED"; error: Error };
 
 const useApp = (): AppState => {
-  const { teamsState } = useFetchTeams();
-  const { seasonsState } = useFetchSeasons();
-  const { competitionsState } = useFetchCompetitions();
+  const teamsState = useFetchTeams();
+  const seasonsState = useFetchSeasons();
+  const competitionsState = useFetchCompetitions();
 
-  if (teamsState.status === "FETCH_ERROR") {
+  if (teamsState.isError) {
     return { status: "LOAD_FAILED", error: teamsState.error };
   }
 
-  if (seasonsState.status === "FETCH_ERROR") {
+  if (seasonsState.isError) {
     return { status: "LOAD_FAILED", error: seasonsState.error };
   }
 
-  if (competitionsState.status === "FETCH_ERROR") {
+  if (competitionsState.isError) {
     return { status: "LOAD_FAILED", error: competitionsState.error };
   }
 
-  if (
-    teamsState.status === "FETCH_SUCCESS" &&
-    seasonsState.status === "FETCH_SUCCESS" &&
-    competitionsState.status === "FETCH_SUCCESS"
-  ) {
+  if (teamsState.isSuccess && seasonsState.isSuccess && competitionsState.isSuccess) {
     return {
       status: "LOAD_SUCCESS",
       data: {

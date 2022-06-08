@@ -1,42 +1,35 @@
 import Alert from "@mui/material/Alert/Alert";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import { FC, ReactElement } from "react";
-import { Team } from "../../Domain/Types";
-import { useFetchHistoricalRecord } from "../../Hooks/useFetchHistoricalRecord";
+import { useHistoricalRecord } from "../../Hooks/useHistoricalRecord";
 import { HistoricalRecordGraph } from "./HistoricalRecordGraph/HistoricalRecordGraph";
 import { HistoricalRecordSlider } from "./HistoricalRecordSlider/HistoricalRecordSlider";
 
-type HistoricalPositionProps = { activeTeam: Team };
+type HistoricalPositionProps = { teamId: number };
 
-const HistoricalRecord: FC<HistoricalPositionProps> = ({ activeTeam }): ReactElement => {
-  const { historicalRecordState, selectedRange, updateSelectedRange } = useFetchHistoricalRecord(
-    activeTeam.id
-  );
+const HistoricalRecord: FC<HistoricalPositionProps> = ({ teamId }): ReactElement => {
+  const { historicalRecord, selectedRange, updateSelectedRange } = useHistoricalRecord(teamId);
 
-  if (historicalRecordState.status === "FETCH_NOT_STARTED") {
-    return <></>;
+  if (historicalRecord.isError) {
+    return <Alert severity="error">{historicalRecord.error.message}</Alert>;
   }
 
-  if (historicalRecordState.status === "FETCH_IN_PROGRESS") {
-    return <CircularProgress />;
+  if (historicalRecord.isSuccess) {
+    return (
+      <>
+        <HistoricalRecordSlider
+          selectedRange={selectedRange}
+          updateSelectedRange={updateSelectedRange}
+        />
+        <HistoricalRecordGraph
+          historicalSeasons={historicalRecord.data.historicalSeasons}
+          selectedRange={selectedRange}
+        />
+      </>
+    );
   }
 
-  if (historicalRecordState.status === "FETCH_ERROR") {
-    return <Alert severity="error">{historicalRecordState.error.message}</Alert>;
-  }
-
-  return (
-    <>
-      <HistoricalRecordSlider
-        selectedRange={selectedRange}
-        updateSelectedRange={updateSelectedRange}
-      />
-      <HistoricalRecordGraph
-        historicalSeasons={historicalRecordState.data.historicalSeasons}
-        selectedRange={selectedRange}
-      />
-    </>
-  );
+  return <CircularProgress />;
 };
 
 export { HistoricalRecord as HistoricalRecord };

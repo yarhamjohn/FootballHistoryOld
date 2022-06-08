@@ -1,16 +1,8 @@
-import { useEffect } from "react";
-import { getSeasonsUrl } from "../Domain/Api";
+import { useQuery } from "react-query";
+import { fetchData, getSeasonsUrl } from "../Domain/Api";
 import { Season } from "../Domain/Types";
-import { useFetch } from "./useFetch";
 
-const useFetchSeasons = () => {
-  const { state, callApi } = useFetch<Season[]>();
-
-  useEffect(() => {
-    callApi(getSeasonsUrl());
-  }, []);
-
-  return { seasonsState: state };
-};
+const useFetchSeasons = () =>
+  useQuery<Season[], Error>("seasons", () => fetchData(getSeasonsUrl()));
 
 export { useFetchSeasons };
