@@ -1,6 +1,6 @@
 import { Alert, CircularProgress, CssBaseline } from "@mui/material";
 import { FC, ReactElement } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { ActiveTab } from "./Components/Layout/AppHeader/TabBar/TabBar";
 import { Layout } from "./Components/Layout/Layout";
 import { Competitions } from "./Pages/Competitions/Competitions";
@@ -43,10 +43,13 @@ const App: FC = (): ReactElement => {
                 path="teams"
                 element={
                   <Layout activeTab={ActiveTab.teams}>
-                    <Teams />
+                    <Outlet />
                   </Layout>
                 }
-              />
+              >
+                <Route index element={<Teams />} />
+                <Route path=":teamName" element={<Teams />} />
+              </Route>
               <Route
                 path="seasons"
                 element={

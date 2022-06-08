@@ -1,5 +1,5 @@
 import { Serie } from "@nivo/line";
-import { HistoricalSeason } from "../../../Domain/Types";
+import { HistoricalSeason } from "../Domain/Types";
 
 const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: number[]) => {
   const getSeasonStartYears = (start: number, end: number) =>

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box/Box";
 import Slider from "@mui/material/Slider/Slider";
-import { FC, ReactElement, useContext, useState } from "react";
-import { SeasonsContext } from "../../../Contexts/SeasonsContext";
+import { FC, ReactElement } from "react";
+import { useHistoricalRecordSlider } from "../../../Hooks/useHistoricalRecordSlider";
 
 type HistoricalRecordSliderProps = {
   selectedRange: number[];
@@ -9,23 +9,14 @@ type HistoricalRecordSliderProps = {
 };
 
 const HistoricalRecordSlider: FC<HistoricalRecordSliderProps> = ({
-  selectedRange: historicalRecordRange,
-  updateSelectedRange: updateHistoricalRecord
+  selectedRange,
+  updateSelectedRange
 }): ReactElement => {
-  const { firstSeason, lastSeason } = useContext(SeasonsContext);
-  const [range, setRange] = useState<number[]>(historicalRecordRange);
-
-  const handleOnChangeCommitted = (
-    _: React.SyntheticEvent | Event,
-    newValue: number | number[]
-  ) => {
-    updateHistoricalRecord(newValue as number[]);
-  };
-
-  const handleOnChange = (_: Event, newValue: number | number[]) => setRange(newValue as number[]);
+  const { firstSeason, lastSeason, range, handleOnChange, handleOnChangeCommitted } =
+    useHistoricalRecordSlider(selectedRange, updateSelectedRange);
 
   return (
-    <Box sx={{ width: "50%" }}>
+    <Box sx={{ width: "75%" }}>
       <Slider
         min={firstSeason.startYear}
         max={lastSeason.startYear}

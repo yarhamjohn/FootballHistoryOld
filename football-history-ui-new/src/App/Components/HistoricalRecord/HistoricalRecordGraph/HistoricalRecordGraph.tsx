@@ -1,10 +1,11 @@
 import { FC, ReactElement, useContext } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { SeasonsContext } from "../../../Contexts/SeasonsContext";
-import { useHistoricalRecordGraph } from "./useHistoricalRecordGraph";
 import { HistoricalSeason } from "../../../Domain/Types";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
+import { useHistoricalRecordGraph } from "../../../Hooks/useHistoricalRecordGraph";
+import { Tooltip } from "./Tooltip";
 
 type HistoricalRecordGraphProps = {
   historicalSeasons: HistoricalSeason[];
@@ -41,7 +42,7 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
           gridXValues={seasons.map((x) => x.startYear)}
           enableSlices="x"
           sliceTooltip={({ slice }) => {
-            return <p>here</p>; //TODO: <Tooltip points={slice.points} id={slice.id} seasons={seasons} />;
+            return <Tooltip points={slice.points} id={slice.id} seasons={historicalSeasons} />;
           }}
           axisBottom={{
             tickSize: 5,
