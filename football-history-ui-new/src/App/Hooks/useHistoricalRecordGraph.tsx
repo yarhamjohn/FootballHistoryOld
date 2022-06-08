@@ -1,7 +1,12 @@
+import { amber, blue, green, red } from "@mui/material/colors";
 import { Serie } from "@nivo/line";
+import { useContext } from "react";
+import { ColorModeContext } from "../Contexts/ColorModeContext";
 import { HistoricalSeason } from "../Domain/Types";
 
 const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: number[]) => {
+  const { mode } = useContext(ColorModeContext);
+
   const getSeasonStartYears = (start: number, end: number) =>
     Array.from({ length: end - start }, (v, k) => k + start);
 
@@ -50,7 +55,7 @@ const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: nu
     }
   ];
 
-  const colors = ["black", "#75B266", "#BFA67F", "#B26694", "#6694b2"];
+  const colors = [mode === "dark" ? "white" : "black", green[500], amber[500], red[500], blue[500]];
 
   // TODO: This should be calculated dynamically
   const yValues = [1, 16, 31, 46, 61, 76, 92];

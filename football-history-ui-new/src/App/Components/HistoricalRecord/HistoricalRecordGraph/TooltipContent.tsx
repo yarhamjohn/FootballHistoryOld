@@ -49,15 +49,15 @@ const TooltipContent: FunctionComponent<{ point: Point; season: HistoricalSeason
     <div
       key={point.id}
       style={{
-        color: point.serieColor,
-        padding: "12px 12px",
+        color: "black",
+        padding: "1rem",
         display: "flex",
         flexDirection: "column",
-        boxShadow: `0px 0px 10px ${color} inset`
+        boxShadow: `0 0 1rem ${color} inset`
       }}
     >
       {color === null ? null : (
-        <h3 style={{ color: color.toString() }}>{season.historicalPosition.status}</h3>
+        <h3 style={{ color: color.toString(), margin: 0 }}>{season.historicalPosition.status}</h3>
       )}
       <strong>{season.historicalPosition.competitionName}</strong>
       <span>

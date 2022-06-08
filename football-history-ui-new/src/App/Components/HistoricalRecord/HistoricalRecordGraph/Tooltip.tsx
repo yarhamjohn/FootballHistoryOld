@@ -5,9 +5,8 @@ import { HistoricalSeason } from "../../../Domain/Types";
 
 const Tooltip: FunctionComponent<{
   points: Point[];
-  id: any;
   seasons: HistoricalSeason[];
-}> = ({ points, id, seasons }) => {
+}> = ({ points, seasons }) => {
   const getSeason = (point: Point) => {
     const startDate = Number(point.data.xFormatted);
 

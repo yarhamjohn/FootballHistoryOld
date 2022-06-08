@@ -4,7 +4,7 @@ import { useMediaQuery } from "@mui/material";
 import { amber } from "@mui/material/colors";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const ColorModeContext = createContext({ toggleColorMode: () => {} });
+const ColorModeContext = createContext({ colorMode: { toggleColorMode: () => {} }, mode: "light" });
 
 type Props = {
   children?: ReactNode;
@@ -30,7 +30,7 @@ const ColorModeContextProvider: FC<Props> = ({ children }): ReactElement => {
   );
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <ColorModeContext.Provider value={{ colorMode, mode }}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </ColorModeContext.Provider>
   );
