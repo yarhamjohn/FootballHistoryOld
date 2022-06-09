@@ -1,35 +1,28 @@
 import { FunctionComponent } from "react";
 import { Point } from "@nivo/line";
 import { HistoricalSeason } from "../../../Domain/Types";
-
-enum Color {
-  Green = "#75B266",
-  Blue = "#7FBFBF",
-  Red = "#B26694",
-  Yellow = "#BFA67F",
-  Grey = "#CCCCCC"
-}
+import { blue, green, red, yellow } from "@mui/material/colors";
 
 function getLeagueStatusColor(status: string | null) {
   switch (status) {
     case "Champions":
-      return Color.Green;
+      return yellow[500];
     case "Promoted":
-      return Color.Blue;
+      return green[500];
     case "Relegated":
-      return Color.Red;
+      return red[500];
     case "PlayOffs":
-      return Color.Yellow;
+      return blue[500];
     case "PlayOff Winner":
-      return Color.Blue;
+      return green[500];
     case "Relegation PlayOffs":
-      return Color.Yellow;
+      return blue[500];
     case "Relegated - PlayOffs":
-      return Color.Red;
+      return red[500];
     case "Failed Re-election":
-      return Color.Red;
+      return red[500];
     case "Re-elected":
-      return Color.Yellow;
+      return blue[500];
     default:
       return null;
   }
@@ -70,4 +63,4 @@ const TooltipContent: FunctionComponent<{ point: Point; season: HistoricalSeason
   );
 };
 
-export { TooltipContent };
+export { TooltipContent, getLeagueStatusColor };

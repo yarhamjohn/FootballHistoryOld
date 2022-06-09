@@ -1,12 +1,12 @@
 import { FC, ReactElement, useContext } from "react";
-import { ResponsiveLine } from "@nivo/line";
+import { Datum, ResponsiveLine } from "@nivo/line";
 import { SeasonsContext } from "../../../Contexts/SeasonsContext";
 import { HistoricalSeason } from "../../../Domain/Types";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
 import { useHistoricalRecordGraph } from "../../../Hooks/useHistoricalRecordGraph";
 import { Tooltip } from "./Tooltip";
-import { ColorModeContext } from "../../../Contexts/ColorModeContext";
+import { getLeagueStatusColor } from "./TooltipContent";
 
 type HistoricalRecordGraphProps = {
   historicalSeasons: HistoricalSeason[];
@@ -18,20 +18,66 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
   selectedRange
 }): ReactElement => {
   const { seasons, firstSeason, lastSeason } = useContext(SeasonsContext);
-  const { series, colors, yValues } = useHistoricalRecordGraph(historicalSeasons, selectedRange);
-  const { mode } = useContext(ColorModeContext);
+  const { series, colors, yValues, getTheme } = useHistoricalRecordGraph(
+    historicalSeasons,
+    selectedRange
+  );
 
-  const getTheme = () => {
-    if (mode === "light") return;
-    return {
-      textColor: "#999",
-      grid: {
-        line: {
-          stroke: "#333"
-        }
-      },
-      crosshair: { line: { stroke: "#999" } }
-    };
+  const DashedLine = ({
+    series,
+    lineGenerator,
+    xScale,
+    yScale
+  }: {
+    series: any;
+    lineGenerator: any;
+    xScale: any;
+    yScale: any;
+  }) => {
+    return series.map(({ id, data, color }: { id: any; data: Datum[]; color: any }) => (
+      <>
+        <path
+          key={`point-${id}`}
+          d={lineGenerator(
+            data.map((d: Datum) => {
+              return {
+                x: xScale(d.data.x) ?? null,
+                y: yScale(d.data.y) ?? null
+              };
+            })
+          )}
+          fill="none"
+          stroke={color}
+          style={{ strokeWidth: 1 }}
+        />
+      </>
+    ));
+  };
+
+  const ScatterCircle = ({ series, xScale, yScale }: { series: any; xScale: any; yScale: any }) => {
+    return (
+      <>
+        {series.map(({ id, data, color }: { id: any; data: Datum[]; color: any }) => {
+          return id === "positions"
+            ? data.map((s: Datum) => {
+                return s.data.y === null ? (
+                  <></>
+                ) : (
+                  <circle
+                    key={`circle-${s.data.x}-${s.data.y}-${id}`}
+                    cx={xScale(s.data.x) ?? null}
+                    cy={yScale(s.data.y) ?? null}
+                    r={4}
+                    fill={getLeagueStatusColor(s.data.status) ?? color}
+                    stroke={getLeagueStatusColor(s.data.status) ?? color}
+                    style={{ pointerEvents: "none" }}
+                  />
+                );
+              })
+            : [];
+        })}
+      </>
+    );
   };
 
   return (
@@ -65,6 +111,7 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
             tickPadding: 5,
             tickRotation: 0
           }}
+          layers={["grid", "axes", DashedLine, ScatterCircle, "crosshair", "slices"]}
         />
       </CardContent>
     </Card>
