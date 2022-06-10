@@ -18,8 +18,10 @@ const PromotionAndRelegation: FC = (): ReactElement => {
             primary={"Test Matches"}
             secondary={
               "From 1892-93 to 1897-98, test matches were used to determine promotion " +
-              "and relegation between the First and Second Divisions. These took the " +
-              "form of a mini-league with each team from the First Division playing " +
+              "and relegation between the First and Second Divisions. From 1892-93 to 1894-95 " +
+              "these were one-off matches between the top Second Division teams and the bottom " +
+              "First Division teams whilst from 1895-96 to 1897-98 these matches were part of " +
+              "a mini-league with each team from the First Division playing " +
               "2-legged ties against each team in the Second Division. Second Division " +
               "teams that won had to apply for entry to the First Division whilst First " +
               "Division teams that lost were offered a place in the Second Division."

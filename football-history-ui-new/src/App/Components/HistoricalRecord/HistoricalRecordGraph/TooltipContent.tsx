@@ -7,7 +7,13 @@ function getLeagueStatusColor(status: string | null) {
   switch (status) {
     case "Champions":
       return yellow[500];
+    case "Champions & Promoted - Test Matches":
+      return yellow[500];
+    case "Champions & Test Matches":
+      return yellow[500];
     case "Promoted":
+      return green[500];
+    case "Promoted - Test Matches":
       return green[500];
     case "Relegated":
       return red[500];
@@ -17,7 +23,11 @@ function getLeagueStatusColor(status: string | null) {
       return green[500];
     case "Relegation PlayOffs":
       return blue[500];
+    case "Test Matches":
+      return blue[500];
     case "Relegated - PlayOffs":
+      return red[500];
+    case "Relegated - Test Matches":
       return red[500];
     case "Failed Re-election":
       return red[500];

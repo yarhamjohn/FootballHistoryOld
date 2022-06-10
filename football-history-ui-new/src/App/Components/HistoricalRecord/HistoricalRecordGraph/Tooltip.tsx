@@ -9,7 +9,6 @@ const Tooltip: FunctionComponent<{
 }> = ({ points, seasons }) => {
   const getSeason = (point: Point) => {
     const startDate = Number(point.data.xFormatted);
-
     return seasons.filter((s) => s.seasonStartYear === startDate)[0];
   };
 

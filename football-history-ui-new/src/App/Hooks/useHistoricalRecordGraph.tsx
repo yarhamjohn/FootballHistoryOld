@@ -1,14 +1,20 @@
-import { amber, blue, green, red } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import { Datum, Serie } from "@nivo/line";
 import { useContext } from "react";
 import { ColorModeContext } from "../Contexts/ColorModeContext";
+import { SeasonsContext } from "../Contexts/SeasonsContext";
 import { HistoricalSeason } from "../Domain/Types";
 
-const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: number[]) => {
+const useHistoricalRecordGraph = (
+  historicalSeasons: HistoricalSeason[],
+  selectedRange: number[]
+) => {
+  const { seasons } = useContext(SeasonsContext);
   const { mode } = useContext(ColorModeContext);
 
   const getTheme = () => {
     if (mode === "light") return;
+
     return {
       textColor: "#999",
       grid: {
@@ -19,28 +25,25 @@ const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: nu
       crosshair: { line: { stroke: "#999" } }
     };
   };
-  const getSeasonStartYears = (start: number, end: number) =>
-    Array.from({ length: end - start }, (v, k) => k + start);
 
-  const getPositionSeries = (seasons: HistoricalSeason[], range: number[]): Datum[] =>
-    getSeasonStartYears(range[0] - 1, range[1] + 2).map((d) => {
-      const test: Datum = {
-        x: d,
-        y: seasons.some((p) => p.seasonStartYear === d)
-          ? seasons.filter((p) => p.seasonStartYear === d)[0].historicalPosition?.overallPosition ??
-            null
-          : null
+  const getSelectedHistoricalSeasons = () =>
+    historicalSeasons.filter(
+      (x) =>
+        x.seasonStartYear >= Math.min(...selectedRange) &&
+        x.seasonStartYear <= Math.max(...selectedRange)
+    );
+
+  const getPositionSeries = (): Datum[] =>
+    getSelectedHistoricalSeasons().map((s) => {
+      return {
+        x: s.seasonStartYear,
+        y: s.historicalPosition?.overallPosition ?? null,
+        status: s.historicalPosition?.status ?? null
       };
-
-      test.status = seasons.some((p) => p.seasonStartYear === d)
-        ? seasons.filter((p) => p.seasonStartYear === d)[0].historicalPosition?.status ?? null
-        : null;
-
-      return test;
     });
 
-  const getBoundarySeries = (boundaryIndex: number, seasons: HistoricalSeason[]) => {
-    return seasons
+  const getBoundarySeries = (boundaryIndex: number) => {
+    return getSelectedHistoricalSeasons()
       .sort((i, j) => i.seasonStartYear - j.seasonStartYear)
       .map((s) => {
         return {
@@ -53,32 +56,41 @@ const useHistoricalRecordGraph = (seasons: HistoricalSeason[], selectedRange: nu
   const series: Serie[] = [
     {
       id: "positions",
-      data: getPositionSeries(seasons, selectedRange)
+      data: getPositionSeries(),
+      color: mode === "dark" ? "white" : "black"
     },
     {
       id: "tier1-tier2",
-      data: getBoundarySeries(0, seasons)
+      data: getBoundarySeries(0),
+      color: grey[500]
     },
     {
       id: "tier2-tier3",
-      data: getBoundarySeries(1, seasons)
+      data: getBoundarySeries(1),
+      color: grey[500]
     },
     {
       id: "tier3-tier4",
-      data: getBoundarySeries(2, seasons)
+      data: getBoundarySeries(2),
+      color: grey[500]
     },
     {
       id: "tier4-tier5",
-      data: getBoundarySeries(3, seasons)
+      data: getBoundarySeries(3),
+      color: grey[500]
     }
   ];
 
-  const colors = [mode === "dark" ? "white" : "black", green[500], amber[500], red[500], blue[500]];
-
-  // TODO: This should be calculated dynamically
+  // This represents an attempt to apply evenly-spaced y-axis grid lines
   const yValues = [1, 16, 31, 46, 61, 76, 92];
 
-  return { series, colors, yValues, getTheme };
+  const xValues = seasons
+    .filter(
+      (x) => x.startYear >= Math.min(...selectedRange) && x.startYear <= Math.max(...selectedRange)
+    )
+    .map((x) => x.startYear);
+
+  return { series, yValues, xValues, getTheme };
 };
 
 export { useHistoricalRecordGraph };
