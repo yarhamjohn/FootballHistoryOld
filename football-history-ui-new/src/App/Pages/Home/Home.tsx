@@ -5,7 +5,7 @@ import { Summary } from "./Summary/Summary";
 
 const Home: FC = (): ReactElement => {
   return (
-    <div>
+    <div style={{ width: "80%" }}>
       <Summary />
       <LeagueStructure style={{ marginBottom: "1.25rem" }} />
       <RulesAndRegulations />
