@@ -7,7 +7,11 @@ const getTeamsUrl = () => `${apiUrl}/api/v2/teams`;
 
 const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
 
-const getCompetitionsUrl = () => `${apiUrl}/api/v2/competitions`;
+const getLeagueTableUrl = (competitionId: number) =>
+  `${apiUrl}/api/v2/league-table/competition/${competitionId}`;
+
+const getCompetitionsUrl = (seasonId?: number) =>
+  `${apiUrl}/api/v2/competitions${seasonId === undefined ? "" : `/season/${seasonId}`}`;
 
 const getHistoricalPositionsUrl = (teamId: number, seasonIds: number[]) => {
   const seasonIdsForQuery = seasonIds
@@ -26,4 +30,11 @@ const fetchData = (url: string) =>
     throw new Error(`Oops something went wrong.`);
   });
 
-export { fetchData, getTeamsUrl, getSeasonsUrl, getCompetitionsUrl, getHistoricalPositionsUrl };
+export {
+  fetchData,
+  getTeamsUrl,
+  getSeasonsUrl,
+  getLeagueTableUrl,
+  getCompetitionsUrl,
+  getHistoricalPositionsUrl
+};

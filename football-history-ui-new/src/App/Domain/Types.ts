@@ -51,4 +51,28 @@ type HistoricalPosition = {
   status: string | null;
 };
 
-export { Team, Season, Competition, HistoricalRecord, HistoricalSeason };
+type Row = {
+  position: number;
+  teamId: number;
+  team: string;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
+  goalAverage: number;
+  points: number;
+  pointsPerGame: number;
+  pointsDeducted: number;
+  pointsDeductionReason: string | null;
+  status: string | null;
+};
+
+type League = {
+  table: Row[];
+  competition: Competition;
+};
+
+export { Team, Season, Competition, HistoricalRecord, HistoricalSeason, League, Row };

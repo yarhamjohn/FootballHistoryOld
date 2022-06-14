@@ -1,4 +1,4 @@
-import { yellow, green, red, blue, amber } from "@mui/material/colors";
+import { green, red, blue, amber } from "@mui/material/colors";
 
 const getLeagueStatusColor = (status: string | null) => {
   switch (status) {
