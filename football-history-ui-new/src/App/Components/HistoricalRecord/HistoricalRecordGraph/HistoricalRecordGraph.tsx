@@ -1,11 +1,10 @@
 import { FC, ReactElement } from "react";
-import { CustomLayerProps, Datum, ResponsiveLine } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
 import { HistoricalSeason } from "../../../Domain/Types";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
 import { useHistoricalRecordGraph } from "../../../Hooks/useHistoricalRecordGraph";
 import { Tooltip } from "./Tooltip";
-import { getLeagueStatusColor } from "./TooltipContent";
 
 type HistoricalRecordGraphProps = {
   historicalSeasons: HistoricalSeason[];
@@ -16,47 +15,10 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
   historicalSeasons,
   selectedRange
 }): ReactElement => {
-  const { series, yValues, xValues, getTheme } = useHistoricalRecordGraph(
+  const { series, yValues, xValues, theme, customLine, customPoint } = useHistoricalRecordGraph(
     historicalSeasons,
     selectedRange
   );
-
-  const CustomLine = ({ series, lineGenerator, xScale, yScale }: CustomLayerProps) =>
-    series.map(({ id, data, color }) => (
-      <path
-        key={`line-${id}`}
-        d={lineGenerator(
-          data.map((d: Datum) => {
-            return {
-              x: xScale(d.data.x) ?? null,
-              y: yScale(d.data.y) ?? null
-            };
-          })
-        )}
-        fill="none"
-        stroke={color}
-        style={{ strokeWidth: 1 }}
-      />
-    ));
-
-  const CustomPoint = ({ series, xScale, yScale }: CustomLayerProps) =>
-    series.map(({ id, data, color }) =>
-      id === "positions"
-        ? data.map((d: Datum) =>
-            d.data.y === null ? null : (
-              <circle
-                key={`point-${d.data.x}-${d.data.y}-${id}`}
-                cx={Number(xScale(d.data.x))}
-                cy={Number(yScale(d.data.y))}
-                r={4}
-                fill={getLeagueStatusColor(d.data.status) ?? color}
-                stroke={getLeagueStatusColor(d.data.status) ?? color}
-                style={{ pointerEvents: "none" }}
-              />
-            )
-          )
-        : []
-    );
 
   return (
     <Card style={{ height: "40rem", position: "relative", width: "75%" }}>
@@ -64,7 +26,7 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
         <ResponsiveLine
           data={series}
           colors={series.map((s) => s.color)}
-          theme={getTheme()}
+          theme={theme}
           curve={"monotoneX"}
           margin={{ left: 25, bottom: 25, top: 10 }}
           yScale={{
@@ -89,7 +51,7 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
             tickPadding: 5,
             tickRotation: 0
           }}
-          layers={["grid", "axes", CustomLine, CustomPoint, "crosshair", "slices"]}
+          layers={["grid", "axes", customLine, customPoint, "crosshair", "slices"]}
         />
       </CardContent>
     </Card>

@@ -1,8 +1,9 @@
 import { grey } from "@mui/material/colors";
-import { Datum, Serie } from "@nivo/line";
+import { CustomLayerProps, Datum, Serie } from "@nivo/line";
 import { useContext } from "react";
 import { ColorModeContext } from "../Contexts/ColorModeContext";
 import { SeasonsContext } from "../Contexts/SeasonsContext";
+import { getLeagueStatusColor } from "../Domain/Colors";
 import { HistoricalSeason } from "../Domain/Types";
 
 const useHistoricalRecordGraph = (
@@ -90,7 +91,46 @@ const useHistoricalRecordGraph = (
     )
     .map((x) => x.startYear);
 
-  return { series, yValues, xValues, getTheme };
+  const customLine = ({ series, lineGenerator, xScale, yScale }: CustomLayerProps) =>
+    series.map(({ id, data, color }) => (
+      <path
+        key={`line-${id}`}
+        d={lineGenerator(
+          data
+            .sort((a, b) => Number(a.data.x) - Number(b.data.x))
+            .map((d: Datum) => {
+              return {
+                x: xScale(d.data.x) ?? null,
+                y: yScale(d.data.y) ?? null
+              };
+            })
+        )}
+        fill="none"
+        stroke={color}
+        style={{ strokeWidth: 1 }}
+      />
+    ));
+
+  const customPoint = ({ series, xScale, yScale }: CustomLayerProps) =>
+    series.map(({ id, data, color }) =>
+      id === "positions"
+        ? data.map((d: Datum) =>
+            d.data.y === null ? null : (
+              <circle
+                key={`point-${d.data.x}-${d.data.y}-${id}`}
+                cx={Number(xScale(d.data.x))}
+                cy={Number(yScale(d.data.y))}
+                r={4}
+                fill={getLeagueStatusColor(d.data.status) ?? color}
+                stroke={getLeagueStatusColor(d.data.status) ?? color}
+                style={{ pointerEvents: "none" }}
+              />
+            )
+          )
+        : []
+    );
+
+  return { series, yValues, xValues, theme: getTheme(), customLine, customPoint };
 };
 
 export { useHistoricalRecordGraph };
