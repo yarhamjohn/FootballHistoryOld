@@ -2,7 +2,6 @@ import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import Divider from "@mui/material/Divider/Divider";
 import TextField from "@mui/material/TextField/TextField";
 import { FC, ReactElement, useContext } from "react";
-import { LeagueTable } from "../../Components/LeagueTable/LeagueTable";
 import { SeasonsContext } from "../../Contexts/SeasonsContext";
 import { Season } from "../../Domain/Types";
 import { TabbedLeagues } from "./TabbedLeagues/TabbedLeagues";

@@ -14,9 +14,9 @@ import { Competition } from "../../Domain/Types";
 import { useFetchLeague } from "../../Hooks/useFetchLeague";
 import { LeagueTableRow } from "./LeagueTableRow";
 
-type Props = { competition: Competition };
+type Props = { competition: Competition; size: "small" | "large" };
 
-const LeagueTable: FC<Props> = ({ competition }): ReactElement => {
+const LeagueTable: FC<Props> = ({ competition, size }): ReactElement => {
   const leagueTable = useFetchLeague(competition.id);
 
   if (leagueTable.isError) {
@@ -36,11 +36,11 @@ const LeagueTable: FC<Props> = ({ competition }): ReactElement => {
               <TableCell>W</TableCell>
               <TableCell>D</TableCell>
               <TableCell>L</TableCell>
-              <TableCell>GF</TableCell>
-              <TableCell>GA</TableCell>
+              {size === "large" && <TableCell>GF</TableCell>}
+              {size === "large" && <TableCell>GF</TableCell>}
               <TableCell>Diff</TableCell>
-              <TableCell>GAv</TableCell>
-              <TableCell>PPG</TableCell>
+              {size === "large" && <TableCell>GAv</TableCell>}
+              {size === "large" && <TableCell>PPG</TableCell>}
               <TableCell>Points</TableCell>
               <TableCell />
             </TableRow>
@@ -49,7 +49,7 @@ const LeagueTable: FC<Props> = ({ competition }): ReactElement => {
             {leagueTable.data.table
               .sort((a, b) => a.position - b.position)
               .map((row) => (
-                <LeagueTableRow key={row.teamId} row={row} />
+                <LeagueTableRow key={row.teamId} row={row} size={size} />
               ))}
           </TableBody>
         </Table>

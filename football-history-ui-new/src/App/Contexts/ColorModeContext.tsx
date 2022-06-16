@@ -25,7 +25,10 @@ const ColorModeContextProvider: FC<Props> = ({ children }): ReactElement => {
   );
 
   const theme = useMemo(
-    () => createTheme({ palette: { mode, secondary: { main: amber[500] } } }),
+    () =>
+      createTheme({
+        palette: { mode, secondary: { main: amber[500] } }
+      }),
     [mode]
   );
 

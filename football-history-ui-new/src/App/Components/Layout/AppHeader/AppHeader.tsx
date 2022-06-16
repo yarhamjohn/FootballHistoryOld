@@ -14,9 +14,13 @@ const AppHeader: FC<Props> = ({ activeTab }): ReactElement => {
     <>
       <AppBar color={"secondary"}>
         <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-          <SportsSoccerIcon color={"primary"} fontSize={"large"} />
+          <div style={{ width: "10rem", display: "flex", justifyContent: "left" }}>
+            <SportsSoccerIcon color={"primary"} fontSize={"large"} />
+          </div>
           <TabBar activeTab={activeTab} />
-          <DarkModeToggle />
+          <div style={{ width: "10rem", display: "flex", justifyContent: "right" }}>
+            <DarkModeToggle />
+          </div>
         </Toolbar>
       </AppBar>
       {/* Hack (as per docs: https://mui.com/#fixed-placement)
