@@ -75,4 +75,6 @@ type League = {
   competition: Competition;
 };
 
-export { Team, Season, Competition, HistoricalRecord, HistoricalSeason, League, Row };
+type Size = "small" | "large";
+
+export { Team, Season, Competition, HistoricalRecord, HistoricalSeason, League, Row, Size };

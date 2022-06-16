@@ -10,11 +10,11 @@ import {
   TableRow
 } from "@mui/material";
 import { FC, ReactElement } from "react";
-import { Competition } from "../../Domain/Types";
+import { Competition, Size } from "../../Domain/Types";
 import { useFetchLeague } from "../../Hooks/useFetchLeague";
 import { LeagueTableRow } from "./LeagueTableRow";
 
-type Props = { competition: Competition; size: "small" | "large" };
+type Props = { competition: Competition; size: Size };
 
 const LeagueTable: FC<Props> = ({ competition, size }): ReactElement => {
   const leagueTable = useFetchLeague(competition.id);
@@ -30,8 +30,8 @@ const LeagueTable: FC<Props> = ({ competition, size }): ReactElement => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell />
-              <TableCell />
+              <TableCell>Pos</TableCell>
+              <TableCell>Team</TableCell>
               <TableCell>P</TableCell>
               <TableCell>W</TableCell>
               <TableCell>D</TableCell>
