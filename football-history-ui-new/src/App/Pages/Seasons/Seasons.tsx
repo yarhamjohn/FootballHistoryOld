@@ -1,23 +1,19 @@
 import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import Divider from "@mui/material/Divider/Divider";
 import TextField from "@mui/material/TextField/TextField";
-import { FC, ReactElement, useContext } from "react";
-import { SeasonsContext } from "../../Contexts/SeasonsContext";
+import { FC, ReactElement } from "react";
 import { Season } from "../../Domain/Types";
+import { useSeasons } from "../../Hooks/useSeasons";
 import { TabbedLeagues } from "./TabbedLeagues/TabbedLeagues";
 
 const Seasons: FC = (): ReactElement => {
-  const { seasons, activeSeason, setActiveSeason } = useContext(SeasonsContext);
+  const { seasons, activeSeason, changeSeason } = useSeasons();
 
   return (
     <div style={{ width: "100%", alignItems: "center", display: "flex", flexDirection: "column" }}>
       <Autocomplete
         value={activeSeason}
-        onChange={(_, newValue: Season | null) => {
-          if (newValue !== null) {
-            setActiveSeason(newValue);
-          }
-        }}
+        onChange={(_, newSeason: Season | null) => newSeason !== null && changeSeason(newSeason)}
         id="season-select"
         disableClearable
         options={seasons}

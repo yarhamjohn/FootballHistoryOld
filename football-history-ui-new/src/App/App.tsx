@@ -54,10 +54,13 @@ const App: FC = (): ReactElement => {
                 path="seasons"
                 element={
                   <Layout activeTab={ActiveTab.seasons}>
-                    <Seasons />
+                    <Outlet />
                   </Layout>
                 }
-              />
+              >
+                <Route index element={<Seasons />} />
+                <Route path=":season" element={<Seasons />} />
+              </Route>
               <Route
                 path="competitions"
                 element={

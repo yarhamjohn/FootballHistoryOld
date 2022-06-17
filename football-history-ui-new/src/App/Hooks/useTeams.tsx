@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TeamsContext } from "../Contexts/TeamsContext";
+import { Team } from "../Domain/Types";
 
 const useTeams = () => {
   const navigate = useNavigate();
@@ -21,11 +22,12 @@ const useTeams = () => {
     }
   }, [teamName]);
 
-  useEffect(() => {
-    navigate(`/teams/${activeTeam?.name.replace(" ", "-").toLowerCase() ?? ""}`);
-  }, [activeTeam]);
+  const changeTeam = (newTeam: Team | null) => {
+    navigate(`/teams/${newTeam?.name.replace(" ", "-").toLowerCase() ?? ""}`);
+    setActiveTeam(newTeam);
+  };
 
-  return { teams, activeTeam, setActiveTeam };
+  return { teams, activeTeam, changeTeam };
 };
 
 export { useTeams };

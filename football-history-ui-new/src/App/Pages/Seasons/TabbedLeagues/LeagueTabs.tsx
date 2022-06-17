@@ -13,7 +13,7 @@ const LeagueTabs: FC<Props> = ({ activeTab, setActiveTab, competitions, size }):
   const sx: SxProps<Theme> =
     size === "large"
       ? {
-          marginRight: "20%",
+          marginRight: "2rem",
           position: "sticky",
           top: "5rem",
           borderRight: 1,
@@ -21,6 +21,7 @@ const LeagueTabs: FC<Props> = ({ activeTab, setActiveTab, competitions, size }):
         }
       : {
           marginBottom: "2rem",
+          borderBottom: 1,
           borderColor: "divider"
         };
 

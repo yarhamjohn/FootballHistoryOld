@@ -7,15 +7,13 @@ import { Team } from "../../Domain/Types";
 import { useTeams } from "../../Hooks/useTeams";
 
 const Teams: FC = (): ReactElement => {
-  const { teams, activeTeam, setActiveTeam } = useTeams();
+  const { teams, activeTeam, changeTeam } = useTeams();
 
   return (
     <div style={{ width: "100%", alignItems: "center", display: "flex", flexDirection: "column" }}>
       <Autocomplete
         value={activeTeam}
-        onChange={(_, newValue: Team | null) => {
-          setActiveTeam(newValue);
-        }}
+        onChange={(_, newTeam: Team | null) => changeTeam(newTeam)}
         id="team-select"
         options={teams}
         getOptionLabel={(option) => option.name}
