@@ -17,13 +17,13 @@ import { LeagueTableRow } from "./LeagueTableRow";
 type Props = { competition: Competition; size: Size };
 
 const LeagueTable: FC<Props> = ({ competition, size }): ReactElement => {
-  const leagueTable = useFetchLeague(competition.id);
+  const league = useFetchLeague(competition.id);
 
-  if (leagueTable.isError) {
-    return <Alert severity="error">{leagueTable.error.message}</Alert>;
+  if (league.isError) {
+    return <Alert severity="error">{league.error.message}</Alert>;
   }
 
-  if (leagueTable.isSuccess) {
+  if (league.isSuccess) {
     return (
       <TableContainer component={Paper}>
         <Table size="small">
@@ -46,10 +46,15 @@ const LeagueTable: FC<Props> = ({ competition, size }): ReactElement => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {leagueTable.data.table
+            {league.data.table
               .sort((a, b) => a.position - b.position)
               .map((row) => (
-                <LeagueTableRow key={row.teamId} row={row} size={size} />
+                <LeagueTableRow
+                  key={row.teamId}
+                  row={row}
+                  size={size}
+                  competition={league.data.competition}
+                />
               ))}
           </TableBody>
         </Table>

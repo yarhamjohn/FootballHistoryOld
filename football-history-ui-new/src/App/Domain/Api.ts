@@ -7,6 +7,9 @@ const getTeamsUrl = () => `${apiUrl}/api/v2/teams`;
 
 const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
 
+const getLeaguePositionsUrl = (competitionId: number, teamId: number) =>
+  `${apiUrl}/api/v2/league-positions/competition/${competitionId}/team/${teamId}`;
+
 const getLeagueTableUrl = (competitionId: number) =>
   `${apiUrl}/api/v2/league-table/competition/${competitionId}`;
 
@@ -36,5 +39,6 @@ export {
   getSeasonsUrl,
   getLeagueTableUrl,
   getCompetitionsUrl,
-  getHistoricalPositionsUrl
+  getHistoricalPositionsUrl,
+  getLeaguePositionsUrl
 };

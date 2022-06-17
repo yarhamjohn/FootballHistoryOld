@@ -1,6 +1,6 @@
 import { Collapse, IconButton, TableCell, TableRow } from "@mui/material";
 import { FC, ReactElement, useContext, useState } from "react";
-import { Row, Size } from "../../Domain/Types";
+import { Competition, Row, Size } from "../../Domain/Types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { getLeagueStatusColor } from "../../Domain/Colors";
@@ -8,9 +8,9 @@ import { LeagueTableDrillDown } from "./LeagueTableDrilldown";
 import { blue, red } from "@mui/material/colors";
 import { ColorModeContext } from "../../Contexts/ColorModeContext";
 
-type Props = { row: Row; size: Size };
+type Props = { row: Row; size: Size; competition: Competition };
 
-const LeagueTableRow: FC<Props> = ({ row, size }): ReactElement => {
+const LeagueTableRow: FC<Props> = ({ row, size, competition }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
   const { mode } = useContext(ColorModeContext);
 
@@ -57,7 +57,7 @@ const LeagueTableRow: FC<Props> = ({ row, size }): ReactElement => {
       <TableRow>
         <TableCell colSpan={size === "large" ? 14 : 10} style={{ padding: 0 }}>
           <Collapse in={open} timeout="auto">
-            <LeagueTableDrillDown />
+            {open ? <LeagueTableDrillDown competition={competition} teamId={row.teamId} /> : null}
           </Collapse>
         </TableCell>
       </TableRow>
