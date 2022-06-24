@@ -16,6 +16,9 @@ const getLeagueTableUrl = (competitionId: number) =>
 const getCompetitionsUrl = (seasonId?: number) =>
   `${apiUrl}/api/v2/competitions${seasonId === undefined ? "" : `/season/${seasonId}`}`;
 
+const getMatchesUrl = (competitionId: number, teamId: number) =>
+  `${apiUrl}/api/v2/matches?teamId=${teamId}&competitionId=${competitionId}`;
+
 const getHistoricalPositionsUrl = (teamId: number, seasonIds: number[]) => {
   const seasonIdsForQuery = seasonIds
     .map((id, index) => `${index === 0 ? "?" : "&"}seasonIds=${id}`)
@@ -40,5 +43,6 @@ export {
   getLeagueTableUrl,
   getCompetitionsUrl,
   getHistoricalPositionsUrl,
-  getLeaguePositionsUrl
+  getLeaguePositionsUrl,
+  getMatchesUrl
 };

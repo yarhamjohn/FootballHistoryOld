@@ -4,7 +4,7 @@ import { Competition, Row, Size } from "../../Domain/Types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { getLeagueStatusColor } from "../../Domain/Colors";
-import { LeagueTableDrillDown } from "./LeagueTableDrilldown";
+import { LeagueTableDrillDown } from "./DrillDown/LeagueTableDrilldown";
 import { blue, red } from "@mui/material/colors";
 import { ColorModeContext } from "../../Contexts/ColorModeContext";
 

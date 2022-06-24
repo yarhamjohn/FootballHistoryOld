@@ -80,6 +80,43 @@ type LeaguePosition = {
   position: number;
 };
 
+type MatchCompetition = {
+  id: number;
+  name: string;
+  startYear: number;
+  endYear: number;
+  level: string;
+};
+
+type MatchRules = {
+  type: string;
+  stage: string;
+  extraTime: boolean;
+  penalties: boolean;
+  numLegs: number;
+  awayGoals: boolean;
+  replays: boolean;
+};
+
+type MatchTeam = {
+  id: number;
+  name: string;
+  abbreviation: string;
+  goals: number;
+  goalsExtraTime: number;
+  penaltiesTaken: number;
+  penaltiesScored: number;
+};
+
+type Match = {
+  id: number;
+  matchDate: Date;
+  competition: MatchCompetition;
+  rules: MatchRules;
+  homeTeam: MatchTeam;
+  awayTeam: MatchTeam;
+};
+
 type Size = "small" | "large";
 
 export {
@@ -92,5 +129,6 @@ export {
   Row,
   Size,
   LeaguePosition,
-  CompetitionRules
+  CompetitionRules,
+  Match
 };

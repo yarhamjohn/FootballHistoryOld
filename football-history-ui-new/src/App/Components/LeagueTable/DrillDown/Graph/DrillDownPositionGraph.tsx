@@ -1,7 +1,7 @@
 import { FC, ReactElement } from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { CompetitionRules, LeaguePosition } from "../../../Domain/Types";
-import { useDrillDownPositionGraph } from "../../../Hooks/useDrillDownPositionGraph";
+import { CompetitionRules, LeaguePosition } from "../../../../Domain/Types";
+import { useDrillDownPositionGraph } from "../../../../Hooks/useDrillDownPositionGraph";
 import { DrillDownTooltip } from "./DrillDownTooltip";
 
 type Props = { positions: LeaguePosition[]; rules: CompetitionRules };
