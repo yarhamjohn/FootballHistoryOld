@@ -1,7 +1,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { FC, ReactElement } from "react";
-import { Competition } from "../../../Domain/Types";
+import { Competition } from "../../../../../Domain/Types";
 import { DrillDownForm } from "./Form/DrillDownForm";
 import { DrillDownGraph } from "./Graph/DrillDownGraph";
 

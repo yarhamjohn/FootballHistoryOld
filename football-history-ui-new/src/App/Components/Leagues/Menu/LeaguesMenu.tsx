@@ -9,7 +9,7 @@ type Props = {
   size: "small" | "large";
 };
 
-const LeagueTabs: FC<Props> = ({ activeTab, setActiveTab, competitions, size }): ReactElement => {
+const LeaguesMenu: FC<Props> = ({ activeTab, setActiveTab, competitions, size }): ReactElement => {
   const sx: SxProps<Theme> =
     size === "large"
       ? {
@@ -34,4 +34,4 @@ const LeagueTabs: FC<Props> = ({ activeTab, setActiveTab, competitions, size }):
   );
 };
 
-export { LeagueTabs };
+export { LeaguesMenu };

@@ -1,6 +1,6 @@
 import { FC, ReactElement, useContext } from "react";
 import { Point } from "@nivo/line";
-import { ColorModeContext } from "../../../../Contexts/ColorModeContext";
+import { ColorModeContext } from "../../../../../../Contexts/ColorModeContext";
 
 type Props = { points: Point[] };
 

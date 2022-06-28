@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField/TextField";
 import { FC, ReactElement } from "react";
 import { Season } from "../../Domain/Types";
 import { useSeasons } from "../../Hooks/useSeasons";
-import { TabbedLeagues } from "./TabbedLeagues/TabbedLeagues";
+import { Leagues } from "../../Components/Leagues/Leagues";
 
 const Seasons: FC = (): ReactElement => {
   const { seasons, activeSeason, changeSeason } = useSeasons();
@@ -23,7 +23,7 @@ const Seasons: FC = (): ReactElement => {
       />
       <Divider style={{ width: "100%", marginBottom: "2rem" }} />
       <div style={{ width: "80%" }}>
-        <TabbedLeagues />
+        <Leagues />
       </div>
     </div>
   );

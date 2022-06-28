@@ -1,7 +1,7 @@
 import { blue, green, red } from "@mui/material/colors";
 import { FC, ReactElement } from "react";
-import { Match } from "../../../../Domain/Types";
-import { useDrillDownMatchForm } from "../../../../Hooks/useDrillDownMatchForm";
+import { Match } from "../../../../../../Domain/Types";
+import { useDrillDownMatchForm } from "../../../../../../Hooks/useDrillDownMatchForm";
 
 type Props = { matches: Match[]; teamId: number };
 

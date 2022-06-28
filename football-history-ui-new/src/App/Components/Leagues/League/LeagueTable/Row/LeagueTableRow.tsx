@@ -1,12 +1,12 @@
 import { Collapse, IconButton, TableCell, TableRow } from "@mui/material";
 import { FC, ReactElement, useContext, useState } from "react";
-import { Competition, Row, Size } from "../../Domain/Types";
+import { Competition, Row, Size } from "../../../../../Domain/Types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { getLeagueStatusColor } from "../../Domain/Colors";
-import { LeagueTableDrillDown } from "./DrillDown/LeagueTableDrilldown";
+import { getLeagueStatusColor } from "../../../../../Domain/Colors";
+import { LeagueTableDrillDown } from "../DrillDown/LeagueTableDrilldown";
 import { blue, red } from "@mui/material/colors";
-import { ColorModeContext } from "../../Contexts/ColorModeContext";
+import { ColorModeContext } from "../../../../../Contexts/ColorModeContext";
 
 type Props = { row: Row; size: Size; competition: Competition };
 
@@ -51,7 +51,10 @@ const LeagueTableRow: FC<Props> = ({ row, size, competition }): ReactElement => 
             {+(Math.round(parseFloat(row.pointsPerGame + "e+2")) + "e-2")}
           </TableCell>
         )}
-        <TableCell sx={{ color: fontColor }}>{row.points}</TableCell>
+        <TableCell sx={{ color: fontColor }}>
+          {row.points}
+          {row.pointsDeducted > 0 ? " *" : ""}
+        </TableCell>
         <TableCell sx={{ color: fontColor }}>{row.status}</TableCell>
       </TableRow>
       <TableRow>

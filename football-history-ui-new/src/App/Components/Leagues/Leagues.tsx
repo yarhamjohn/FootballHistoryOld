@@ -1,12 +1,12 @@
 import { Alert, CircularProgress, Grid, Box } from "@mui/material";
 import { FC, ReactElement, useContext, useState } from "react";
-import { LeagueTable } from "../../../Components/LeagueTable/LeagueTable";
-import { SeasonsContext } from "../../../Contexts/SeasonsContext";
-import { useFetchCompetitionsInSeason } from "../../../Hooks/useFetchCompetitionsInSeason";
+import { SeasonsContext } from "../../Contexts/SeasonsContext";
+import { useFetchCompetitionsInSeason } from "../../Hooks/useFetchCompetitionsInSeason";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { LeagueTabs } from "./LeagueTabs";
+import { LeaguesMenu } from "./Menu/LeaguesMenu";
+import { League } from "./League/League";
 
-const TabbedLeagues: FC = (): ReactElement => {
+const Leagues: FC = (): ReactElement => {
   const { activeSeason } = useContext(SeasonsContext);
   const [activeTab, setActiveTab] = useState<number>(0);
   const largeScreen = useMediaQuery("(min-width:1400px)");
@@ -22,7 +22,7 @@ const TabbedLeagues: FC = (): ReactElement => {
       return (
         <Grid container justifyContent="center">
           <Grid item xs={2}>
-            <LeagueTabs
+            <LeaguesMenu
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               competitions={competitionsInSeason.data}
@@ -30,7 +30,7 @@ const TabbedLeagues: FC = (): ReactElement => {
             />
           </Grid>
           <Grid item xs={10}>
-            <LeagueTable competition={competitionsInSeason.data[activeTab]} size="large" />
+            <League competition={competitionsInSeason.data[activeTab]} size="large" />
           </Grid>
         </Grid>
       );
@@ -43,13 +43,13 @@ const TabbedLeagues: FC = (): ReactElement => {
             alignItems: "center"
           }}
         >
-          <LeagueTabs
+          <LeaguesMenu
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             competitions={competitionsInSeason.data}
             size="small"
           />
-          <LeagueTable competition={competitionsInSeason.data[activeTab]} size="small" />
+          <League competition={competitionsInSeason.data[activeTab]} size="small" />
         </Box>
       );
     }
@@ -58,4 +58,4 @@ const TabbedLeagues: FC = (): ReactElement => {
   return <CircularProgress />;
 };
 
-export { TabbedLeagues };
+export { Leagues };

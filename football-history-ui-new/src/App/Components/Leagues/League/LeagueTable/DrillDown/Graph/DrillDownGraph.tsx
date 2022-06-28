@@ -1,7 +1,7 @@
 import { Alert, CircularProgress } from "@mui/material";
 import { FC, ReactElement } from "react";
-import { Competition } from "../../../../Domain/Types";
-import { useFetchLeaguePositions } from "../../../../Hooks/useFetchLeaguePositions";
+import { Competition } from "../../../../../../Domain/Types";
+import { useFetchLeaguePositions } from "../../../../../../Hooks/useFetchLeaguePositions";
 import { DrillDownPositionGraph } from "./DrillDownPositionGraph";
 
 type Props = { competition: Competition; teamId: number };
