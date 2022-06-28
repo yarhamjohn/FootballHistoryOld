@@ -16,8 +16,10 @@ const getLeagueTableUrl = (competitionId: number) =>
 const getCompetitionsUrl = (seasonId?: number) =>
   `${apiUrl}/api/v2/competitions${seasonId === undefined ? "" : `/season/${seasonId}`}`;
 
-const getMatchesUrl = (competitionId: number, teamId: number) =>
-  `${apiUrl}/api/v2/matches?teamId=${teamId}&competitionId=${competitionId}`;
+const getMatchesUrl = (competitionId: number, teamId?: number) =>
+  `${apiUrl}/api/v2/matches?competitionId=${competitionId}${
+    teamId === undefined ? "" : `&teamId=${teamId}`
+  }`;
 
 const getHistoricalPositionsUrl = (teamId: number, seasonIds: number[]) => {
   const seasonIdsForQuery = seasonIds
