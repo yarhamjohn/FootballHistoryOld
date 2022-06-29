@@ -1,7 +1,7 @@
 import { blue, green, red } from "@mui/material/colors";
 import { useContext } from "react";
-import { ColorModeContext } from "../Contexts/ColorModeContext";
-import { CompetitionRules, LeaguePosition } from "../Domain/Types";
+import { ColorModeContext } from "../../../../../../../Contexts/ColorModeContext";
+import { LeaguePosition, CompetitionRules } from "../../../../../../../Domain/Types";
 
 const useDrillDownPositionGraph = (
   positions: LeaguePosition[],

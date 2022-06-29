@@ -27,7 +27,7 @@ const League: FC<Props> = ({ competition, size }): ReactElement => {
         </Box>
         <Divider style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }} />
         <Box sx={{ marginTop: "1rem", width: "100%" }}>
-          <ResultGrid competitionId={competition.id} />
+          <ResultGrid competitionId={competition.id} size={size} />
         </Box>
       </>
     );

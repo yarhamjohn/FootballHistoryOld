@@ -1,7 +1,6 @@
-import { blue, green, red } from "@mui/material/colors";
 import { FC, ReactElement } from "react";
-import { Match } from "../../../../../../Domain/Types";
-import { useDrillDownMatchForm } from "../../../../../../Hooks/useDrillDownMatchForm";
+import { Match } from "../../../../../../../Domain/Types";
+import { useDrillDownMatchForm } from "./useDrillDownMatchForm";
 
 type Props = { matches: Match[]; teamId: number };
 
@@ -12,13 +11,11 @@ const DrillDownMatchForm: FC<Props> = ({ matches, teamId }): ReactElement => {
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
       {form.map((result, i) => (
         <span
+          title={result.title}
           key={i}
-          style={{
-            fontWeight: "bold",
-            color: result === "W" ? green[500] : result === "L" ? red[500] : blue[500]
-          }}
+          style={{ fontWeight: "bold", cursor: "default", color: result.color }}
         >
-          {result}
+          {result.outcome}
         </span>
       ))}
     </div>

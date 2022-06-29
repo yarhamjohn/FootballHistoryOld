@@ -1,24 +1,16 @@
 import { Collapse, IconButton, TableCell, TableRow } from "@mui/material";
-import { FC, ReactElement, useContext, useState } from "react";
+import { FC, ReactElement, useState } from "react";
 import { Competition, Row, Size } from "../../../../../Domain/Types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { getLeagueStatusColor } from "../../../../../Domain/Colors";
 import { LeagueTableDrillDown } from "../DrillDown/LeagueTableDrilldown";
-import { blue, red } from "@mui/material/colors";
-import { ColorModeContext } from "../../../../../Contexts/ColorModeContext";
+import { useLeagueTableRow } from "./useLeagueTableRow";
 
 type Props = { row: Row; size: Size; competition: Competition };
 
 const LeagueTableRow: FC<Props> = ({ row, size, competition }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
-  const { mode } = useContext(ColorModeContext);
-
-  const rowColor = getLeagueStatusColor(row.status);
-  const fontColor =
-    rowColor === red[500] || rowColor === blue[500] || (rowColor === null && mode === "dark")
-      ? "white"
-      : "black";
+  const { rowColor, fontColor, goalAverage, pointsPerGame, points } = useLeagueTableRow(row);
 
   return (
     <>
@@ -41,20 +33,9 @@ const LeagueTableRow: FC<Props> = ({ row, size, competition }): ReactElement => 
         {size === "large" && <TableCell sx={{ color: fontColor }}>{row.goalsFor}</TableCell>}
         {size === "large" && <TableCell sx={{ color: fontColor }}>{row.goalsAgainst}</TableCell>}
         <TableCell sx={{ color: fontColor }}>{row.goalDifference}</TableCell>
-        {size === "large" && (
-          <TableCell sx={{ color: fontColor }}>
-            {+(Math.round(parseFloat(row.goalAverage + "e+2")) + "e-2")}
-          </TableCell>
-        )}
-        {size === "large" && (
-          <TableCell sx={{ color: fontColor }}>
-            {+(Math.round(parseFloat(row.pointsPerGame + "e+2")) + "e-2")}
-          </TableCell>
-        )}
-        <TableCell sx={{ color: fontColor }}>
-          {row.points}
-          {row.pointsDeducted > 0 ? " *" : ""}
-        </TableCell>
+        {size === "large" && <TableCell sx={{ color: fontColor }}>{goalAverage}</TableCell>}
+        {size === "large" && <TableCell sx={{ color: fontColor }}>{pointsPerGame}</TableCell>}
+        <TableCell sx={{ color: fontColor }}>{points}</TableCell>
         <TableCell sx={{ color: fontColor }}>{row.status}</TableCell>
       </TableRow>
       <TableRow>

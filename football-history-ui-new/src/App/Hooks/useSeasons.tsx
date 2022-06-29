@@ -41,7 +41,7 @@ const useSeasons = () => {
     setActiveSeason(newSeason);
   };
 
-  return { seasons, activeSeason, changeSeason };
+  return { changeSeason };
 };
 
 export { useSeasons };

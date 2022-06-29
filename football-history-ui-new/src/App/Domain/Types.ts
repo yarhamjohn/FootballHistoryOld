@@ -119,6 +119,10 @@ type Match = {
 
 type Size = "small" | "large";
 
+type Outcome = "W" | "D" | "L";
+
+type Form = { outcome: Outcome; color: string; title: string }[];
+
 export {
   Team,
   Season,
@@ -130,5 +134,7 @@ export {
   Size,
   LeaguePosition,
   CompetitionRules,
-  Match
+  Match,
+  Form,
+  Outcome
 };

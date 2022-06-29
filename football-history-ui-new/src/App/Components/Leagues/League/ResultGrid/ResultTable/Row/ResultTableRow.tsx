@@ -2,11 +2,16 @@ import { green, red, blue, grey } from "@mui/material/colors";
 import TableCell from "@mui/material/TableCell/TableCell";
 import TableRow from "@mui/material/TableRow/TableRow";
 import { FC, ReactElement } from "react";
-import { Match } from "../../../../../../Domain/Types";
+import { Match, Size } from "../../../../../../Domain/Types";
 
-type Props = { matches: Match[]; abbreviations: string[]; teamAbbreviation: string };
+type Props = { matches: Match[]; abbreviations: string[]; teamAbbreviation: string; size: Size };
 
-const ResultTableRow: FC<Props> = ({ matches, abbreviations, teamAbbreviation }): ReactElement => {
+const ResultTableRow: FC<Props> = ({
+  matches,
+  abbreviations,
+  teamAbbreviation,
+  size
+}): ReactElement => {
   const homeGames = matches.filter((m) => m.homeTeam.abbreviation === teamAbbreviation);
   const missingAbbreviations = abbreviations.filter(
     (x) => !homeGames.map((m) => m.awayTeam.abbreviation).includes(x)
@@ -42,9 +47,13 @@ const ResultTableRow: FC<Props> = ({ matches, abbreviations, teamAbbreviation })
     return blue[500];
   };
 
+  const getFullName = (abbreviation: string) => {
+    return homeGames.filter((m) => m.homeTeam.abbreviation === abbreviation)[0].homeTeam.name;
+  };
+
   return (
-    <TableRow key={`Row: ${teamAbbreviation}`}>
-      <TableCell>{teamAbbreviation}</TableCell>
+    <TableRow key={`Row: ${teamAbbreviation}`} hover>
+      <TableCell>{size === "small" ? teamAbbreviation : getFullName(teamAbbreviation)}</TableCell>
       {homeGames.map((match) => {
         if (missingAbbreviations.includes(match.awayTeam.abbreviation)) {
           return (

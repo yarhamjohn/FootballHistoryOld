@@ -8,16 +8,14 @@ import {
   TableRow
 } from "@mui/material";
 import { FC, ReactElement } from "react";
-import { Match } from "../../../../../Domain/Types";
+import { Match, Size } from "../../../../../Domain/Types";
 import { ResultTableRow } from "./Row/ResultTableRow";
+import { useResultTable } from "./useResultTable";
 
-type Props = { matches: Match[] };
+type Props = { matches: Match[]; size: Size };
 
-const ResultTable: FC<Props> = ({ matches }): ReactElement => {
-  const leagueMatches = matches.filter((m) => m.rules.type === "League");
-  const abbreviations = Array.from(
-    new Set(leagueMatches.map((m) => m.homeTeam.abbreviation))
-  ).sort();
+const ResultTable: FC<Props> = ({ matches, size }): ReactElement => {
+  const { leagueMatches, abbreviations } = useResultTable(matches);
 
   return (
     <TableContainer component={Paper}>
@@ -39,6 +37,7 @@ const ResultTable: FC<Props> = ({ matches }): ReactElement => {
               matches={leagueMatches}
               abbreviations={abbreviations}
               teamAbbreviation={a}
+              size={size}
             />
           ))}
         </TableBody>

@@ -1,7 +1,7 @@
 import { Alert, CircularProgress } from "@mui/material";
 import { FC, ReactElement } from "react";
 import { useFetchMatches } from "../../../../../../Hooks/useFetchMatches";
-import { DrillDownMatchForm } from "./DrillDownMatchForm";
+import { DrillDownMatchForm } from "./MatchForm/DrillDownMatchForm";
 
 type Props = { competitionId: number; teamId: number };
 
