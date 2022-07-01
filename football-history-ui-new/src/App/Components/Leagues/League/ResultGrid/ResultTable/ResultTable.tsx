@@ -12,10 +12,10 @@ import { Match, Size } from "../../../../../Domain/Types";
 import { ResultTableRow } from "./Row/ResultTableRow";
 import { useResultTable } from "./useResultTable";
 
-type Props = { matches: Match[]; size: Size };
+type Props = { leagueMatches: Match[]; size: Size };
 
-const ResultTable: FC<Props> = ({ matches, size }): ReactElement => {
-  const { leagueMatches, abbreviations } = useResultTable(matches);
+const ResultTable: FC<Props> = ({ leagueMatches, size }): ReactElement => {
+  const { abbreviations } = useResultTable(leagueMatches);
 
   return (
     <TableContainer component={Paper}>

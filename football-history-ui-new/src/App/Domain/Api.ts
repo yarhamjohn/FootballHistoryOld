@@ -16,8 +16,8 @@ const getLeagueTableUrl = (competitionId: number) =>
 const getCompetitionsUrl = (seasonId?: number) =>
   `${apiUrl}/api/v2/competitions${seasonId === undefined ? "" : `/season/${seasonId}`}`;
 
-const getMatchesUrl = (competitionId: number, teamId?: number) =>
-  `${apiUrl}/api/v2/matches?competitionId=${competitionId}${
+const getMatchesUrl = (type: "League" | "PlayOff", competitionId: number, teamId?: number) =>
+  `${apiUrl}/api/v2/matches?type=${type}&competitionId=${competitionId}${
     teamId === undefined ? "" : `&teamId=${teamId}`
   }`;
 

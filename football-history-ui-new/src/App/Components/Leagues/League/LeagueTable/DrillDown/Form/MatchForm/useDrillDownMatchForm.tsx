@@ -26,7 +26,6 @@ const useDrillDownMatchForm = (matches: Match[], teamId: number): { form: Form }
   };
 
   const form = matches
-    .filter((m) => m.rules.type === "League")
     // Although they look like Date types, they are in fact strings and need recreating as Dates.
     // See https://stackoverflow.com/questions/2627650/why-javascript-gettime-is-not-a-function.
     .sort((a, b) => new Date(a.matchDate).valueOf() - new Date(b.matchDate).valueOf())

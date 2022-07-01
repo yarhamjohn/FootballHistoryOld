@@ -6,12 +6,12 @@ import { DrillDownMatchForm } from "./MatchForm/DrillDownMatchForm";
 type Props = { competitionId: number; teamId: number };
 
 const DrillDownForm: FC<Props> = ({ competitionId, teamId }): ReactElement => {
-  const matches = useFetchMatches(competitionId, teamId);
+  const leagueMatches = useFetchMatches("League", competitionId, teamId);
 
-  return matches.isError ? (
-    <Alert severity="error">{matches.error.message}</Alert>
-  ) : matches.isSuccess ? (
-    <DrillDownMatchForm matches={matches.data} teamId={teamId} />
+  return leagueMatches.isError ? (
+    <Alert severity="error">{leagueMatches.error.message}</Alert>
+  ) : leagueMatches.isSuccess ? (
+    <DrillDownMatchForm matches={leagueMatches.data} teamId={teamId} />
   ) : (
     <CircularProgress />
   );

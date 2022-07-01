@@ -3,7 +3,6 @@ import { FC, ReactElement } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { ActiveTab } from "./Components/Layout/AppHeader/TabBar/TabBar";
 import { Layout } from "./Components/Layout/Layout";
-import { Competitions } from "./Pages/Competitions/Competitions";
 import { Home } from "./Pages/Home/Home";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { Seasons } from "./Pages/Seasons/Seasons";
@@ -61,14 +60,6 @@ const App: FC = (): ReactElement => {
                 <Route index element={<Seasons />} />
                 <Route path=":season" element={<Seasons />} />
               </Route>
-              <Route
-                path="competitions"
-                element={
-                  <Layout activeTab={ActiveTab.competitions}>
-                    <Competitions />
-                  </Layout>
-                }
-              />
               <Route
                 path="*"
                 element={

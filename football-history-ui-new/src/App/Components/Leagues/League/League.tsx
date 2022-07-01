@@ -6,6 +6,7 @@ import { FC, ReactElement } from "react";
 import { Competition, Size } from "../../../Domain/Types";
 import { useFetchLeague } from "../../../Hooks/useFetchLeague";
 import { LeagueTable } from "./LeagueTable/LeagueTable";
+import { PlayOffs } from "./PlayOffTable";
 import { PointDeduction } from "./PointDeduction/PointDeduction";
 import { ResultGrid } from "./ResultGrid/ResultGrid";
 
@@ -25,6 +26,12 @@ const League: FC<Props> = ({ competition, size }): ReactElement => {
         <Box sx={{ marginTop: "1rem", width: "100%" }}>
           <PointDeduction leagueTableRows={league.data.table} />
         </Box>
+        {league.data.competition.rules.playOffPlaces > 0 && (
+          <>
+            <Divider style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }} />
+            <PlayOffs competitionId={competition.id} />
+          </>
+        )}
         <Divider style={{ marginTop: "2rem", marginBottom: "2rem", width: "100%" }} />
         <Box sx={{ marginTop: "1rem", width: "100%" }}>
           <ResultGrid competitionId={competition.id} size={size} />

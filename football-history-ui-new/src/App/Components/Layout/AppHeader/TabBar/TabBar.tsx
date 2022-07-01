@@ -39,11 +39,6 @@ const TabBar: FC<Props> = ({ activeTab }): ReactElement => {
         label="Seasons"
         onClick={() => navigate(`/${ActiveTab[ActiveTab.seasons]}`)}
       />
-      <Tab
-        value={ActiveTab.competitions}
-        label="Competitions"
-        onClick={() => navigate(`/${ActiveTab[ActiveTab.competitions]}`)}
-      />
     </Tabs>
   );
 };

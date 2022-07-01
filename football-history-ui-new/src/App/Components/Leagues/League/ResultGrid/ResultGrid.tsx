@@ -8,14 +8,14 @@ import { ResultTable } from "./ResultTable/ResultTable";
 type Props = { competitionId: number; size: Size };
 
 const ResultGrid: FC<Props> = ({ competitionId, size }): ReactElement => {
-  const matches = useFetchMatches(competitionId);
+  const leagueMatches = useFetchMatches("League", competitionId);
 
-  if (matches.isError) {
-    return <Alert severity="error">{matches.error.message}</Alert>;
+  if (leagueMatches.isError) {
+    return <Alert severity="error">{leagueMatches.error.message}</Alert>;
   }
 
-  if (matches.isSuccess) {
-    return <ResultTable matches={matches.data} size={size} />;
+  if (leagueMatches.isSuccess) {
+    return <ResultTable leagueMatches={leagueMatches.data} size={size} />;
   }
 
   return <CircularProgress />;
