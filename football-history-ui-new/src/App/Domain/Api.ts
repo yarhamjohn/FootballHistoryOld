@@ -10,8 +10,11 @@ const getSeasonsUrl = () => `${apiUrl}/api/v2/seasons`;
 const getLeaguePositionsUrl = (competitionId: number, teamId: number) =>
   `${apiUrl}/api/v2/league-positions/competition/${competitionId}/team/${teamId}`;
 
-const getLeagueTableUrl = (competitionId: number) =>
+const getLeagueTableByCompetitionUrl = (competitionId: number) =>
   `${apiUrl}/api/v2/league-table/competition/${competitionId}`;
+
+const getLeagueTableBySeasonAndTeamUrl = (seasonId: number, teamId: number) =>
+  `${apiUrl}/api/v2/league-table/season/${seasonId}/team/${teamId}`;
 
 const getCompetitionsUrl = (seasonId?: number) =>
   `${apiUrl}/api/v2/competitions${seasonId === undefined ? "" : `/season/${seasonId}`}`;
@@ -42,7 +45,8 @@ export {
   fetchData,
   getTeamsUrl,
   getSeasonsUrl,
-  getLeagueTableUrl,
+  getLeagueTableByCompetitionUrl,
+  getLeagueTableBySeasonAndTeamUrl,
   getCompetitionsUrl,
   getHistoricalPositionsUrl,
   getLeaguePositionsUrl,

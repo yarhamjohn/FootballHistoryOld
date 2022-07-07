@@ -16,7 +16,7 @@ const HistoricalRecordSlider: FC<HistoricalRecordSliderProps> = ({
     useHistoricalRecordSlider(selectedRange, updateSelectedRange);
 
   return (
-    <Box sx={{ width: "75%" }}>
+    <Box>
       <Slider
         min={firstSeason.startYear}
         max={lastSeason.startYear}

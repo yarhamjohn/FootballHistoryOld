@@ -1,4 +1,4 @@
-import { createContext, FC, ReactElement, ReactNode, useState } from "react";
+import { createContext, FC, ReactElement, ReactNode, useEffect, useState } from "react";
 import { Season } from "../Domain/Types";
 
 type SeasonContextType = {
@@ -8,6 +8,12 @@ type SeasonContextType = {
   firstSeason: Season;
   lastSeason: Season;
   seasonIds: number[];
+  next: Season | undefined;
+  previous: Season | undefined;
+  moveNext: () => void;
+  movePrevious: () => void;
+  moveOldest: () => void;
+  moveNewest: () => void;
 };
 
 const SeasonsContext = createContext<SeasonContextType>({} as SeasonContextType);
@@ -19,6 +25,33 @@ const SeasonsContextProvider: FC<Props> = ({ children, seasons }): ReactElement 
     seasons.sort((a, b) => b.startYear - a.startYear)[0]
   );
 
+  const [next, setNext] = useState<Season | undefined>(undefined);
+  const [previous, setPrevious] = useState<Season | undefined>(undefined);
+
+  useEffect(() => {
+    const newNext = seasons.filter((s) => s.startYear === activeSeason.startYear - 1)[0];
+    const newPrevious = seasons.filter((s) => s.startYear === activeSeason.startYear + 1)[0];
+
+    setNext(newNext);
+    setPrevious(newPrevious);
+  }, [activeSeason, seasons]);
+
+  const moveNext = () => {
+    next && setActiveSeason(next);
+  };
+
+  const movePrevious = () => {
+    previous && setActiveSeason(previous);
+  };
+
+  const moveOldest = () => {
+    setActiveSeason(firstSeason);
+  };
+
+  const moveNewest = () => {
+    setActiveSeason(lastSeason);
+  };
+
   const oldestSeasonStartYear = Math.min(...seasons.map((x) => x.startYear));
   const newestSeasonStartYear = Math.max(...seasons.map((x) => x.startYear));
 
@@ -29,7 +62,20 @@ const SeasonsContextProvider: FC<Props> = ({ children, seasons }): ReactElement 
 
   return (
     <SeasonsContext.Provider
-      value={{ seasons, activeSeason, setActiveSeason, firstSeason, lastSeason, seasonIds }}
+      value={{
+        seasons,
+        activeSeason,
+        setActiveSeason,
+        firstSeason,
+        lastSeason,
+        seasonIds,
+        next,
+        previous,
+        moveNext,
+        movePrevious,
+        moveOldest,
+        moveNewest
+      }}
     >
       {children}
     </SeasonsContext.Provider>

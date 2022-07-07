@@ -2,15 +2,21 @@ import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import TextField from "@mui/material/TextField/TextField";
 import { FC, ReactElement, useContext } from "react";
 import { Season } from "../../Domain/Types";
-import { useSeasons } from "../../Hooks/useSeasons";
 import Button from "@mui/material/Button/Button";
 import { SeasonsContext } from "../../Contexts/SeasonsContext";
-import { useSeasonFilter } from "./useSeasonFilter";
 
 const SeasonFilter: FC = (): ReactElement => {
-  const { changeSeason } = useSeasons();
-  const { seasons, activeSeason } = useContext(SeasonsContext);
-  const { next, previous, moveNext, movePrevious, moveOldest, moveNewest } = useSeasonFilter();
+  const {
+    seasons,
+    activeSeason,
+    setActiveSeason,
+    moveNext,
+    movePrevious,
+    moveOldest,
+    moveNewest,
+    next,
+    previous
+  } = useContext(SeasonsContext);
 
   return (
     <div style={{ display: "flex", columnGap: "1rem", marginBottom: "2rem" }}>
@@ -22,7 +28,7 @@ const SeasonFilter: FC = (): ReactElement => {
       </Button>
       <Autocomplete
         value={activeSeason}
-        onChange={(_, newSeason: Season | null) => newSeason !== null && changeSeason(newSeason)}
+        onChange={(_, newSeason: Season | null) => newSeason !== null && setActiveSeason(newSeason)}
         id="season-select"
         disableClearable
         options={seasons}

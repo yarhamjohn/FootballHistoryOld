@@ -1,10 +1,19 @@
 import { useQuery } from "react-query";
-import { fetchData, getLeagueTableUrl } from "../Domain/Api";
+import {
+  fetchData,
+  getLeagueTableByCompetitionUrl,
+  getLeagueTableBySeasonAndTeamUrl
+} from "../Domain/Api";
 import { League } from "../Domain/Types";
 
-const useFetchLeague = (competitionId: number) =>
-  useQuery<League, Error>(["league-table", { competitionId }], () =>
-    fetchData(getLeagueTableUrl(competitionId))
+const useFetchLeagueByCompetition = (competitionId: number) =>
+  useQuery<League, Error>(["league-table-competition", { competitionId }], () =>
+    fetchData(getLeagueTableByCompetitionUrl(competitionId))
   );
 
-export { useFetchLeague };
+const useFetchLeagueBySeasonAndTeam = (seasonId: number, teamId: number) =>
+  useQuery<League, Error>(["league-table-season-team", { seasonId, teamId }], () =>
+    fetchData(getLeagueTableBySeasonAndTeamUrl(seasonId, teamId))
+  );
+
+export { useFetchLeagueByCompetition, useFetchLeagueBySeasonAndTeam };

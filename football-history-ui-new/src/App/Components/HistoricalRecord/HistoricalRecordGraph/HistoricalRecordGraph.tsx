@@ -1,10 +1,12 @@
-import { FC, ReactElement } from "react";
+import { FC, ReactElement, useContext } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { HistoricalSeason } from "../../../Domain/Types";
 import Card from "@mui/material/Card/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
 import { useHistoricalRecordGraph } from "../../../Hooks/useHistoricalRecordGraph";
 import { Tooltip } from "./Tooltip";
+import { SeasonsContext } from "../../../Contexts/SeasonsContext";
+import grey from "@mui/material/colors/grey";
 
 type HistoricalRecordGraphProps = {
   historicalSeasons: HistoricalSeason[];
@@ -15,13 +17,14 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
   historicalSeasons,
   selectedRange
 }): ReactElement => {
+  const { activeSeason } = useContext(SeasonsContext);
   const { series, yValues, xValues, theme, customLine, customPoint } = useHistoricalRecordGraph(
     historicalSeasons,
     selectedRange
   );
 
   return (
-    <Card style={{ height: "40rem", position: "relative", width: "75%" }}>
+    <Card style={{ height: "40rem", position: "relative" }}>
       <CardContent style={{ position: "absolute", top: 0, left: 0, height: "100%", width: "100%" }}>
         <ResponsiveLine
           data={series}
@@ -51,7 +54,14 @@ const HistoricalRecordGraph: FC<HistoricalRecordGraphProps> = ({
             tickPadding: 5,
             tickRotation: 0
           }}
-          layers={["grid", "axes", customLine, customPoint, "crosshair", "slices"]}
+          layers={["grid", "markers", "axes", customLine, customPoint, "crosshair", "slices"]}
+          markers={[
+            {
+              axis: "x",
+              value: activeSeason.startYear,
+              lineStyle: { stroke: grey[500], strokeWidth: 2 }
+            }
+          ]}
         />
       </CardContent>
     </Card>

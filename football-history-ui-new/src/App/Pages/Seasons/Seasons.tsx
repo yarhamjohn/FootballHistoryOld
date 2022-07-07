@@ -2,8 +2,11 @@ import Divider from "@mui/material/Divider/Divider";
 import { FC, ReactElement } from "react";
 import { Leagues } from "../../Components/Leagues/Leagues";
 import { SeasonFilter } from "../../Components/SeasonFilter/SeasonFilter";
+import { useSeasons } from "../../Hooks/useSeasons";
 
 const Seasons: FC = (): ReactElement => {
+  useSeasons();
+
   return (
     <div style={{ width: "100%", alignItems: "center", display: "flex", flexDirection: "column" }}>
       <SeasonFilter />

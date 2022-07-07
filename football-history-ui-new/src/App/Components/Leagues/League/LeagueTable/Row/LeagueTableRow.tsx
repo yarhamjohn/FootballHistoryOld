@@ -1,15 +1,17 @@
 import { Collapse, IconButton, TableCell, TableRow } from "@mui/material";
-import { FC, ReactElement, useState } from "react";
+import { FC, ReactElement, useContext, useState } from "react";
 import { Competition, Row, Size } from "../../../../../Domain/Types";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { LeagueTableDrillDown } from "../DrillDown/LeagueTableDrilldown";
 import { useLeagueTableRow } from "./useLeagueTableRow";
+import { TeamsContext } from "../../../../../Contexts/TeamsContext";
 
-type Props = { row: Row; size: Size; competition: Competition };
+type Props = { row: Row; size: Size; competition: Competition; openActiveTeamRow: boolean };
 
-const LeagueTableRow: FC<Props> = ({ row, size, competition }): ReactElement => {
-  const [open, setOpen] = useState<boolean>(false);
+const LeagueTableRow: FC<Props> = ({ row, size, competition, openActiveTeamRow }): ReactElement => {
+  const { activeTeam } = useContext(TeamsContext);
+  const [open, setOpen] = useState<boolean>(openActiveTeamRow && activeTeam?.id === row.teamId);
   const { rowColor, fontColor, goalAverage, pointsPerGame, points } = useLeagueTableRow(row);
 
   return (

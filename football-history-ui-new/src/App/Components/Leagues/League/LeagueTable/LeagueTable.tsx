@@ -11,9 +11,9 @@ import { FC, ReactElement } from "react";
 import { League, Size } from "../../../../Domain/Types";
 import { LeagueTableRow } from "./Row/LeagueTableRow";
 
-type Props = { league: League; size: Size };
+type Props = { league: League; size: Size; openActiveTeamRow: boolean };
 
-const LeagueTable: FC<Props> = ({ league, size }): ReactElement => {
+const LeagueTable: FC<Props> = ({ league, size, openActiveTeamRow }): ReactElement => {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -44,6 +44,7 @@ const LeagueTable: FC<Props> = ({ league, size }): ReactElement => {
                 row={row}
                 size={size}
                 competition={league.competition}
+                openActiveTeamRow={openActiveTeamRow}
               />
             ))}
         </TableBody>

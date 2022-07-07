@@ -4,7 +4,7 @@ import Box from "@mui/material/Box/Box";
 import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import { FC, ReactElement } from "react";
 import { Competition, Size } from "../../../Domain/Types";
-import { useFetchLeague } from "../../../Hooks/useFetchLeague";
+import { useFetchLeagueByCompetition } from "../../../Hooks/useFetchLeague";
 import { LeagueTable } from "./LeagueTable/LeagueTable";
 import { PlayOffs } from "./PlayOffTable";
 import { PointDeduction } from "./PointDeduction/PointDeduction";
@@ -13,7 +13,7 @@ import { ResultGrid } from "./ResultGrid/ResultGrid";
 type Props = { competition: Competition; size: Size };
 
 const League: FC<Props> = ({ competition, size }): ReactElement => {
-  const league = useFetchLeague(competition.id);
+  const league = useFetchLeagueByCompetition(competition.id);
 
   if (league.isError) {
     return <Alert severity="error">{league.error.message}</Alert>;
@@ -22,7 +22,7 @@ const League: FC<Props> = ({ competition, size }): ReactElement => {
   if (league.isSuccess) {
     return (
       <>
-        <LeagueTable league={league.data} size={size} />
+        <LeagueTable league={league.data} size={size} openActiveTeamRow={false} />
         <Box sx={{ marginTop: "1rem", width: "100%" }}>
           <PointDeduction leagueTableRows={league.data.table} />
         </Box>

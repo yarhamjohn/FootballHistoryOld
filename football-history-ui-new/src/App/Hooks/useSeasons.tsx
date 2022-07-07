@@ -1,9 +1,8 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SeasonsContext } from "../Contexts/SeasonsContext";
-import { Season } from "../Domain/Types";
 
-const useSeasons = () => {
+const useSeasons = (): void => {
   const navigate = useNavigate();
   const { seasons, activeSeason, setActiveSeason } = useContext(SeasonsContext);
   const { season } = useParams();
@@ -35,13 +34,6 @@ const useSeasons = () => {
       navigate("/not-found");
     }
   }, [season]);
-
-  const changeSeason = (newSeason: Season) => {
-    navigate(`/seasons/${newSeason?.startYear}-${newSeason?.endYear}`);
-    setActiveSeason(newSeason);
-  };
-
-  return { changeSeason };
 };
 
 export { useSeasons };
