@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Jqb52GVoAhZQvkERSrJMvv1XuNYLAarhPMi/EOoZrlbX7XYpEKBmT8VgDpX5KLbVCLFtGFDhiPoEeOujKA1qlg==",
+  "dgSpecHash": "0JgOhxrm4egmby0xgIcXcxdYBYk8riJcs3iR+wKdXREBJvSHXeTHKNQxF8zveQov2dsbKfNNmEEvOWHCP8SBXQ==",
   "success": true,
-  "projectFilePath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
+  "projectFilePath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\johny\\.nuget\\packages\\google.protobuf\\3.22.5\\google.protobuf.3.22.5.nupkg.sha512",
     "C:\\Users\\johny\\.nuget\\packages\\grpc.core.api\\2.52.0\\grpc.core.api.2.52.0.nupkg.sha512",

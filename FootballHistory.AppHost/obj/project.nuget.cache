@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zsprg02UVzcrpeZ1sa1fciqsjJWZAy+c+p6ozpaBRbKBzMaFEyeol7SxL6a5YAK2UEFlnTydrBNc/Xt2qWhvxg==",
+  "dgSpecHash": "cpT1MIf6RDIfyUdFZJ7rqmR8s9vdZp856AqtS76Se/qBJLHbcNUyFXpmOa2fy7I0udMjUPAE/No+6RU0wsk0+A==",
   "success": true,
-  "projectFilePath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.AppHost\\FootballHistory.AppHost.csproj",
+  "projectFilePath": "C:\\repos\\FootballHistory\\FootballHistory.AppHost\\FootballHistory.AppHost.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\johny\\.nuget\\packages\\aspire.dashboard\\8.0.0-preview.1.23557.2\\aspire.dashboard.8.0.0-preview.1.23557.2.nupkg.sha512",
     "C:\\Users\\johny\\.nuget\\packages\\aspire.hosting\\8.0.0-preview.1.23557.2\\aspire.hosting.8.0.0-preview.1.23557.2.nupkg.sha512",

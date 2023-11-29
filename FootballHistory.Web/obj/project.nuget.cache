@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RPjjdhtB0zJjSJoWjIL+5DGtT1PiWy18155LuvPMGk8f3h7edYQrE8rF7lYwCuylTGQ3iDnt0Ar8S39DysnuRg==",
+  "dgSpecHash": "cDohOfcRAeSb0UfOiFVpnEV2k4c/EZ/QiYVQu0F4z9d396LBbh31msbWwPWTOX6d2MIuTrllFPbyDw2NF+E01Q==",
   "success": true,
-  "projectFilePath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
+  "projectFilePath": "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\johny\\.nuget\\packages\\aspire.stackexchange.redis\\8.0.0-preview.1.23557.2\\aspire.stackexchange.redis.8.0.0-preview.1.23557.2.nupkg.sha512",
     "C:\\Users\\johny\\.nuget\\packages\\aspire.stackexchange.redis.outputcaching\\8.0.0-preview.1.23557.2\\aspire.stackexchange.redis.outputcaching.8.0.0-preview.1.23557.2.nupkg.sha512",

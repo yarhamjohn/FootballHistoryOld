@@ -2424,11 +2424,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
+      "projectUniqueName": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
       "projectName": "FootballHistory.ServiceDefaults",
-      "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
+      "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
       "packagesPath": "C:\\Users\\johny\\.nuget\\packages\\",
-      "outputPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\obj\\",
+      "outputPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\johny\\AppData\\Roaming\\NuGet\\NuGet.Config",

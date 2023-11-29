@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj": {}
+    "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj": {}
   },
   "projects": {
-    "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
+    "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
+        "projectUniqueName": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
         "projectName": "FootballHistory.ServiceDefaults",
-        "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
+        "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj",
         "packagesPath": "C:\\Users\\johny\\.nuget\\packages\\",
-        "outputPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\obj\\",
+        "outputPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\johny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -97,14 +97,14 @@
         }
       }
     },
-    "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj": {
+    "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
+        "projectUniqueName": "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
         "projectName": "FootballHistory.Web",
-        "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
+        "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
         "packagesPath": "C:\\Users\\johny\\.nuget\\packages\\",
-        "outputPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\",
+        "outputPath": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\johny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -122,8 +122,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
-                "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj"
+              "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
+                "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj"
               }
             }
           }

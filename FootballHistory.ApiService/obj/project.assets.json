@@ -2445,11 +2445,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
+      "projectUniqueName": "C:\\repos\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
       "projectName": "FootballHistory.ApiService",
-      "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
+      "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
       "packagesPath": "C:\\Users\\johny\\.nuget\\packages\\",
-      "outputPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ApiService\\obj\\",
+      "outputPath": "C:\\repos\\FootballHistory\\FootballHistory.ApiService\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\johny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2467,8 +2467,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
-              "projectPath": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj"
+            "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj": {
+              "projectPath": "C:\\repos\\FootballHistory\\FootballHistory.ServiceDefaults\\FootballHistory.ServiceDefaults.csproj"
             }
           }
         }
