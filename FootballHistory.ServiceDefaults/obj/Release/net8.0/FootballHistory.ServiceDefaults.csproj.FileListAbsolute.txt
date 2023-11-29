@@ -1,0 +1,13 @@
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\bin\Release\net8.0\FootballHistory.ServiceDefaults.deps.json
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\bin\Release\net8.0\FootballHistory.ServiceDefaults.dll
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\bin\Release\net8.0\FootballHistory.ServiceDefaults.pdb
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.csproj.AssemblyReference.cache
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.AssemblyInfoInputs.cache
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.AssemblyInfo.cs
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.sourcelink.json
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.dll
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\refint\FootballHistory.ServiceDefaults.dll
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\FootballHistory.ServiceDefaults.pdb
+C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Release\net8.0\ref\FootballHistory.ServiceDefaults.dll

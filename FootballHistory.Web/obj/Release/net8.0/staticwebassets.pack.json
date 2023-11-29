@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
+      "PackagePath": "staticwebassets\\FootballHistory.Web.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.FootballHistory.Web.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.FootballHistory.Web.props",
+      "PackagePath": "build\\FootballHistory.Web.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.FootballHistory.Web.props",
+      "PackagePath": "buildMultiTargeting\\FootballHistory.Web.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.FootballHistory.Web.props",
+      "PackagePath": "buildTransitive\\FootballHistory.Web.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

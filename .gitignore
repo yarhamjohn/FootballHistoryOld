@@ -1,4 +1,2 @@
-.idea/
-*.user
-bin/
-obj/
+.azure
+.vs
