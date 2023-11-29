@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\FootballHistory.ApiService.props" />
-</Project>
