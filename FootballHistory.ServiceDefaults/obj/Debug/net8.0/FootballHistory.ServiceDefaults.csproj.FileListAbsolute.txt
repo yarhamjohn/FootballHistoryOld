@@ -11,3 +11,16 @@ C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\De
 C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\refint\FootballHistory.ServiceDefaults.dll
 C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.pdb
 C:\repos\football-history\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\ref\FootballHistory.ServiceDefaults.dll
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\bin\Debug\net8.0\FootballHistory.ServiceDefaults.deps.json
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\bin\Debug\net8.0\FootballHistory.ServiceDefaults.dll
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\bin\Debug\net8.0\FootballHistory.ServiceDefaults.pdb
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.csproj.AssemblyReference.cache
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.AssemblyInfoInputs.cache
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.AssemblyInfo.cs
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.sourcelink.json
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.dll
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\refint\FootballHistory.ServiceDefaults.dll
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\FootballHistory.ServiceDefaults.pdb
+C:\repos\FootballHistory\FootballHistory.ServiceDefaults\obj\Debug\net8.0\ref\FootballHistory.ServiceDefaults.dll

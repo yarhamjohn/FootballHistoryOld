@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "Hash": "0JNaLWwM6N3S56ero0tq8hhNU8vZV9EE1vuItrwuLew=",
+  "Hash": "ZYk4xSXV1erG/joZaVOx4NBN0/pLq2f1IHQHmD8uJCs=",
   "Source": "FootballHistory.AppHost",
   "BasePath": "_content/FootballHistory.AppHost",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.ApiService\\FootballHistory.ApiService.csproj",
       "Version": 2,
       "Source": "FootballHistory.ApiService",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
@@ -18,7 +18,7 @@
       "AdditionalBuildPropertiesToRemove": "TargetFramework"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\FootballHistory.Web.csproj",
       "Version": 2,
       "Source": "FootballHistory.Web",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
@@ -33,17 +33,17 @@
     {
       "Name": "FootballHistory.Web\\wwwroot",
       "Source": "FootballHistory.Web",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.AppHost\\obj\\Debug\\net8.0\\jsmodules\\jsmodules.build.manifest.json",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.AppHost\\obj\\Debug\\net8.0\\jsmodules\\jsmodules.build.manifest.json",
       "SourceId": "FootballHistory.AppHost",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.AppHost\\obj\\Debug\\net8.0\\jsmodules\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.AppHost\\obj\\Debug\\net8.0\\jsmodules\\",
       "BasePath": "_content/FootballHistory.AppHost",
       "RelativePath": "FootballHistory.AppHost.modules.json",
       "AssetKind": "Build",
@@ -59,10 +59,10 @@
       "OriginalItemSpec": "obj\\Debug\\net8.0\\jsmodules\\jsmodules.build.manifest.json"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Project",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "FootballHistory.Web.bundle.scp.css",
       "AssetKind": "All",
@@ -75,13 +75,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css"
+      "OriginalItemSpec": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Project",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -97,10 +97,10 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Project",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -116,10 +116,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Project",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -135,10 +135,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Project",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "favicon.png",
       "AssetKind": "All",

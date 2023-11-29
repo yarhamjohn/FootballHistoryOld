@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vAMNXC9kYNwTioznyLZXT/JWrh1b8XWsch6tUZvaeKA=",
+  "Hash": "VQ0rmOS0ViKRArdbPtylFVeeHQLh0bjJVlgk7auUI+c=",
   "Source": "FootballHistory.Web",
   "BasePath": "_content/FootballHistory.Web",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "FootballHistory.Web\\wwwroot",
       "Source": "FootballHistory.Web",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FootballHistory.Web.styles.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FootballHistory.Web.styles.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "FootballHistory.Web.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FootballHistory.Web.styles.css"
+      "OriginalItemSpec": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\FootballHistory.Web.styles.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "FootballHistory.Web.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css"
+      "OriginalItemSpec": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
+      "Identity": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
       "SourceId": "FootballHistory.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
+      "ContentRoot": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\",
       "BasePath": "_content/FootballHistory.Web",
       "RelativePath": "favicon.png",
       "AssetKind": "All",

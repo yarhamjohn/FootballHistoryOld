@@ -1,23 +1,23 @@
 {
   "Files": [
     {
-      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
+      "Id": "C:\\repos\\FootballHistory\\FootballHistory.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FootballHistory.Web.bundle.scp.css",
       "PackagePath": "staticwebassets\\FootballHistory.Web.bundle.scp.css"
     },
     {
-      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
+      "Id": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\repos\\football-history\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
+      "Id": "C:\\repos\\FootballHistory\\FootballHistory.Web\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
